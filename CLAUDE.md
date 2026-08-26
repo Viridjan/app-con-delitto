@@ -22,6 +22,7 @@ A narrator drives it live in front of a table of players.
   quiz maths. Run it after touching the script block.
 - `voci.html` — the voice bench: sliders per character, plays them, prints the `VOCE` block to
   paste into the app. Its synth engine is a **deliberate copy** — change it in both files.
+- `copione.txt` — the approved script. The verbatim reference; `smoke.js` checks the app against it.
 - `img/ART.md` — the illustration brief Codex works from.
 - `assets/images/` — Codex's deliveries, named by subject (`donazione`, `brindisi`, `malore`,
   `indagine`, `sala2`), mapped to slots in `SCELTE`. `assets/web/` and `assets/images/bocciate/`
@@ -29,11 +30,12 @@ A narrator drives it live in front of a table of players.
 
 ## Rules that matter
 
-**The dialogue is verbatim.** Every spoken line in `STORY` is Gervasio's text, unchanged. Check
-with: extract the PDF (`pdftotext`), pull the 53 quoted strings, assert each is in the HTML — the
-only expected misses are the eight occurrences of the heading "Lo sapevi?", see the next rule. Do
-not paraphrase or "fix" dialogue, including `Adoro l'Olo` in scene 2. Cutting whole blocks is a
-product decision and needs the user; rewording a line never is.
+**`copione.txt` is the approved text.** It is the reference from now on — the PDF stays as the
+original it was drawn from, but the txt is what the app must show, word for word. `node smoke.js`
+asserts every line between `«` `»` appears in the HTML and fails naming the changed line. Do not
+paraphrase or "fix" dialogue, including `Adoro l'Olo` in scene 2. Cutting or adding whole blocks
+is a product decision that needs the user, and when one is agreed, `copione.txt` is updated in
+the same commit — never left behind.
 
 **Ask before pushing aesthetic changes.** The repo is public with Pages on `main`, so every push
 goes live in a minute. Show the result (screenshot, or republish the artifact) and wait for a yes.

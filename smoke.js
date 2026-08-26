@@ -51,4 +51,15 @@ for (const [scelta, atteso] of [[0, "4 "], [1, "0 "]]) {
 assert.ok(app.STORY.scene[3].blu, "scena 4 senza flag blu");
 assert.ok(quizN > 0 && app.SLIDES[quizN - 1].t === "narr", "la frase del narratore deve precedere il quiz");
 
+// il copione approvato e' copione.txt: ogni battuta fra virgolette basse deve
+// comparire identica nell'app. E' il controllo che protegge il testo dalle
+// riscritture involontarie.
+const html = fs.readFileSync("oliva-blu.html", "utf8").replace(/\s+/g, " ");
+const copione = fs.readFileSync("copione.txt", "utf8").replace(/\r/g, "");
+const dette = [...copione.matchAll(/«([^»]+)»/g)].map(m => m[1]);
+assert.ok(dette.length >= 35, `copione.txt: solo ${dette.length} battute trovate`);
+const perse = dette.filter(t => !html.includes(t.replace(/\s+/g, " ")));
+assert.deepStrictEqual(perse, [], `battute del copione assenti dall'app: ${perse.join(" | ")}`);
+
+console.log(`copione: ${dette.length} battute verificate`);
 console.log(`ok — ${app.SLIDES.length} schermate, ${battute} battute, quiz verificato`);

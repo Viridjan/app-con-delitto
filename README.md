@@ -112,8 +112,10 @@ push su `main`.
 node smoke.js    # percorre ogni schermata e controlla i conti del quiz
 ```
 
-Il copione è verbatim e va tenuto tale: le 53 battute fra virgolette del PDF devono comparire
-identiche nell'app, refusi dell'originale compresi.
+Il copione approvato è **[`copione.txt`](copione.txt)**: è quello che l'app deve mostrare, parola
+per parola, refusi dell'originale compresi. Il controllo verifica che ogni battuta fra «virgolette
+basse» compaia identica nell'HTML, e se cambia dice quale. Il PDF resta l'originale da cui il
+copione è tratto.
 
 ## Diritti
 
