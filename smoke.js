@@ -7,7 +7,7 @@ const node = () => ({
   _html: "", set innerHTML(v) { this._html = v; }, get innerHTML() { return this._html; },
   textContent: "", disabled: false, hidden: false, dataset: {},
   classList: { toggle() {}, add() {}, remove() {} },
-  addEventListener() {}, focus() {}, scrollIntoView() {},
+  addEventListener() {}, focus() {}, scrollIntoView() {}, scrollTo() {},
   querySelector: () => node(), querySelectorAll: () => [],
 });
 const stage = node();

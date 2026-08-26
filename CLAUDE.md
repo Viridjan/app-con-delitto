@@ -47,9 +47,17 @@ never by darkening the others. That was tried and rejected.
 ## The scene screen
 
 Two declared regions: the top holds scene number, title and the stage, and never moves; the
-bottom scrolls on its own. The bottom is split `25% 1fr` — the speaker's **actor cutout**
-(`attore-*.png`, not the portrait), standing on the baseline, and the dialogue column. Use
-`1fr`, not `75%`: two fixed percentages plus a gap overflow and produce a horizontal scrollbar.
+bottom scrolls on its own. The bottom is split `32% 1fr` — the speaker's **actor cutout**
+(`attore-*.png`, not the portrait) in a 3:4 frame cropped from the top, head to waist, faded out
+at the bottom — and the dialogue column. Use `1fr`, not a second percentage: two fixed
+percentages plus a gap overflow and produce a horizontal scrollbar.
+
+Newest line on **top**, older ones below and dimmed to 40%; the column scrolls back to the top
+on each new line. Keep the entrance animation on `:first-child` only — its final frame sets
+opacity to 1 and would cancel the dimming of the rest.
+
+Highlighting the speaker must **not** change the stacking order: no `z-index` on `.attivo`. The
+depth is what the staging decided.
 
 A percentage `max-height` needs a definite height on the container, or it is ignored and the
 figure spills out of its half.

@@ -83,17 +83,19 @@ kbd{font:inherit; font-size:.78em; border:1px solid var(--line); border-bottom-w
   gap:0}
 .scena-doppia .alto{display:flex; flex-direction:column; gap:clamp(.6rem,1.6vh,1.2rem);
   padding-bottom:clamp(.7rem,2vh,1.2rem); border-bottom:1px solid var(--line)}
-.scena-doppia .basso{display:grid; grid-template-columns:25% 1fr; min-height:0; overflow:hidden;
+.scena-doppia .basso{display:grid; grid-template-columns:32% 1fr; min-height:0; overflow:hidden;
   padding-top:clamp(.9rem,2.4vh,1.6rem)}
 /* la figura intera, non il ritratto: si appoggia in basso come sul palco */
 .parlante{padding-right:clamp(.6rem,1.6vw,1.2rem); min-width:0; height:100%; min-height:0;
   overflow:hidden; display:flex; align-items:flex-start; justify-content:center}
 /* mezzo busto: del ritaglio intero si mostra solo la parte alta */
-.parlante .figura-parlante{display:block; width:100%; height:100%;
-  object-fit:cover; object-position:top center; animation:entra .35s ease-out both;
-  /* il taglio sul petto sfuma, se no sembra un ritaglio sbagliato */
-  -webkit-mask-image:linear-gradient(to bottom,#000 72%,transparent 98%);
-  mask-image:linear-gradient(to bottom,#000 72%,transparent 98%)}
+/* Tre quarti di figura, dalla testa alla vita: riquadro verticale 3:4 alto quanto
+   la meta' bassa, ritaglio ancorato in alto e sfumatura sul fondo. */
+.parlante .figura-parlante{display:block; height:100%; width:auto; max-width:100%;
+  aspect-ratio:3 / 4; object-fit:cover; object-position:top center;
+  animation:entra .35s ease-out both;
+  -webkit-mask-image:linear-gradient(to bottom,#000 76%,transparent 99%);
+  mask-image:linear-gradient(to bottom,#000 76%,transparent 99%)}
 .parlante .ph.sigla{display:none; width:100%; aspect-ratio:1; place-items:center; font-family:"Bodoni Moda",serif;
   font-size:clamp(2rem,6vw,3.4rem); color:var(--speaker,var(--line)); opacity:.55;
   border:1px solid var(--line); border-radius:2px; background:var(--surface)}
@@ -114,8 +116,8 @@ kbd{font:inherit; font-size:.78em; border:1px solid var(--line); border-bottom-w
 /* bubbles */
 .bubbles{display:flex; flex-direction:column; gap:.85rem}
 .bubble{display:flex; gap:.9rem; align-items:flex-start; opacity:.4; transition:opacity .4s ease}
-.bubbles .bubble:last-child{opacity:1; animation:rise .32s ease-out both}
-@keyframes rise{from{opacity:0; transform:translateY(10px)}to{opacity:1; transform:none}}
+.bubbles .bubble:first-child{opacity:1; animation:rise .32s ease-out both}
+@keyframes rise{from{opacity:0; transform:translateY(-10px)}to{opacity:1; transform:none}}
 .who{flex:none; width:clamp(6rem,11vw,10rem); text-align:right; font-weight:700; font-size:.9em;
   letter-spacing:.01em; color:var(--speaker,var(--muted)); padding-top:.18em}
 .who small{display:block; font-weight:400; font-style:italic; color:var(--muted); letter-spacing:0}
@@ -237,15 +239,16 @@ kbd{font:inherit; font-size:.78em; border:1px solid var(--line); border-bottom-w
 .slot.empty .ph.mono,.clue.slot.empty .ph,.detail figure.slot.empty .ph{display:grid}
 .plate figure{margin:0}
 /* palco: lo sfondo sta sotto, i personaggi ritagliati sopra, chi parla viene avanti */
-.palco{position:relative; width:min(100%,42vh); margin-inline:auto; aspect-ratio:1;
+.palco{position:relative; width:min(100%,33vh); margin-inline:auto; aspect-ratio:1;
   overflow:hidden; border:1px solid var(--line); border-radius:2px; box-shadow:var(--shadow)}
 .palco .sfondo{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; border-radius:1px}
 .palco .attore{position:absolute; width:auto; transform:translateX(-50%); transform-origin:bottom center;
   z-index:1; filter:brightness(.72); transition:transform .35s cubic-bezier(.2,.7,.3,1), filter .35s ease}
 /* oggetti in primo piano: davanti agli attori, ancorati agli angoli bassi */
 .palco .primo{position:absolute; width:auto; transform:translateX(-50%); z-index:5; pointer-events:none}
-/* chi parla cresce appena e resta in piena luce; gli altri arretrano di luminosita' */
-.palco .attore.attivo{z-index:3;
+/* Chi parla cresce appena e resta in piena luce; gli altri arretrano di luminosita'.
+   Nessun salto di z-index: l'ordine dei piani e' quello deciso in regia e non cambia. */
+.palco .attore.attivo{
   transform:translateX(-50%) translateY(-1%) scale(1.03);
   filter:brightness(1.04) drop-shadow(0 .6vh 1.1vh rgba(0,0,0,.45))}
 .slot.empty .palco{display:none}
@@ -345,8 +348,8 @@ const STORY = {
       titolo:"L’inaugurazione degli Oliviani",
       img:null,
       descrizione:"L’immagine mostra l’interno della nuova sede degli Oliviani. La sala è decorata con rami d’ulivo, stoffe verdi e bianche, candele e piccole ciotole piene di olive. Al centro c’è un piccolo palco o altare con il simbolo degli Oliviani: una grande oliva stilizzata. Roberto e Augusto accolgono gli ospiti con aria solenne ma sorridente. Giuseppe Maria De Robertis entra elegante e sicuro di sé. Accanto a lui c’è Rosalia, che sembra più preoccupata che felice. In fondo alla sala si vede Mauro, in disparte. Osserva Giuseppe con attenzione. L’atmosfera deve essere accogliente, curiosa e un po’ misteriosa.",
-      cast:[{c:"Mauro",x:82.2,b:30.6,h:42},{c:"Roberto",x:57.8,b:11.6,h:63},{c:"Augusto",x:41.8,b:17.6,h:55},{c:"Giuseppe",x:25.6,b:17.3,h:63},{c:"Rosalia",x:69,b:30.7,h:41}],
-      primo:[{lato:"sx",x:13.2,b:0.8,h:34},{lato:"dx",x:94.6,b:-24.4,h:76}],
+      cast:[{c:"Mauro",x:82.2,b:30.6,h:42},{c:"Augusto",x:32.4,b:20.8,h:59},{c:"Giuseppe",x:12.5,b:15.4,h:63},{c:"Rosalia",x:69,b:30.7,h:41},{c:"Roberto",x:48.9,b:-5.5,h:74}],
+      primo:[{lato:"sx",x:19.4,b:8.4,h:44},{lato:"dx",x:96.5,b:-32.7,h:76}],
       battute:[
         {c:"Roberto", t:"Benvenuti nella prima casa degli Oliviani!"},
         {c:"Augusto", t:"Questa sera celebriamo l’ulivo, simbolo di pace e rinascita."},
@@ -637,7 +640,7 @@ function vCast() {
 function vScene(i) {
   const s = STORY.scene[i];
   const attivo = state.step > 0 ? s.battute[state.step - 1].c : null;  // chi ha appena parlato viene avanti
-  const shown = s.battute.slice(0, state.step).map(b => `
+  const shown = s.battute.slice(0, state.step).reverse().map(b => `
     <div class="bubble ${b.c === "Narratore" ? "narr" : ""}" data-c="${esc(b.c)}">
       <div class="who">${esc(b.c)}${b.m ? `<small>${esc(b.m)}</small>` : ""}</div>
       <p class="said">${esc(b.t)}</p>
@@ -808,8 +811,8 @@ function render() {
     // dopo l'impaginazione: partendo subito, le altezze non sono ancora quelle
     // definitive e la battuta nuova restava sotto il bordo
     requestAnimationFrame(() => {
-      const ultima = stage.querySelector(".bubbles > .bubble:last-child");
-      ultima?.scrollIntoView({ block: "end", behavior: matchMedia("(prefers-reduced-motion:reduce)").matches ? "auto" : "smooth" });
+      stage.querySelector(".dialoghi")?.scrollTo({
+        top: 0, behavior: matchMedia("(prefers-reduced-motion:reduce)").matches ? "auto" : "smooth" });
     });
   }
   stage.classList.toggle("stage-blu", s.t === "scene" && !!STORY.scene[s.i].blu && state.step >= STORY.scene[s.i].battute.length);
@@ -899,7 +902,7 @@ const VOCE = {
   Rosalia:   { f: 395, onda: "triangle", passo: .092, nota: .070, deriva:  .20, taglio: 4500, den: 3.4, vol: .48 },
   Roberto:   { f: 198, onda: "sawtooth", passo: .094, nota: .095, deriva:  .02, taglio: 1300, den: 4.5, vol: .28 },
   Augusto:   { f: 312, onda: "square",   passo: .076, nota: .075, deriva:  .07, taglio: 2600, den: 3, vol: .14 },
-  Mauro:     { f: 239, onda: "square",   passo: .108, nota: .130, deriva:  .14, taglio: 4500, den: 4.9, vol: .07 }
+  Mauro:     { f: 183, onda: "square",   passo: .082, nota: .130, deriva:  .14, taglio: 4500, den: 6, vol: .07 }
 };
 let audio = null, muto = false;
 
