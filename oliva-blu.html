@@ -50,6 +50,7 @@ button{font:inherit; color:inherit; background:none; border:none; cursor:pointer
   border-radius:50%; background:color-mix(in srgb,var(--surface) 82%,transparent);
   backdrop-filter:blur(6px); opacity:.55; transition:opacity .2s, border-color .2s}
 .aiuto:hover,.aiuto:focus-visible{opacity:1}
+.aiuto.muto{right:3.4rem; font-size:.9rem}
 .spacer{flex:1}
 .btn{border:1px solid var(--line); border-radius:999px; padding:.34rem .9rem; font-size:.9rem;
   background:var(--surface-2); transition:border-color .15s, color .15s}
@@ -73,9 +74,9 @@ kbd{font:inherit; font-size:.78em; border:1px solid var(--line); border-bottom-w
 .plate{border:1px dashed var(--line); border-radius:2px; background:var(--surface);
   padding:clamp(1rem,2.5vw,1.9rem); position:relative; box-shadow:var(--shadow)}
 /* la fascia appiccicata copre tutta la larghezza, se no le battute le passano sotto ai lati */
-.plate:not(.empty){border:none; background:var(--bg); box-shadow:none; padding:0 0 .6rem;
+.plate.scena:not(.empty){border:none; background:var(--bg); box-shadow:none; padding:0 0 .6rem;
   width:100%; position:sticky; top:0; z-index:4}
-.plate:not(.empty)::before{display:none}
+.plate.scena:not(.empty)::before{display:none}
 .plate::before{content:""; position:absolute; inset:6px; border:1px solid var(--line); border-radius:1px; pointer-events:none; opacity:.6}
 .plate > img{display:block; width:100%; height:auto; border-radius:1px}
 .plate .brief{font-family:ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
@@ -234,6 +235,8 @@ kbd{font:inherit; font-size:.78em; border:1px solid var(--line); border-bottom-w
 .detail figure{float:right; width:min(38%,14rem); margin:0 0 .8rem 1.2rem; border:1px solid var(--line); border-radius:2px; overflow:hidden}
 .detail figure img{display:block; width:100%; aspect-ratio:1; object-fit:cover}
 .cover figure{width:min(100%,52rem); margin:0}
+.cover .plate{width:min(100%,calc(36vh * 16 / 9 + 1rem)); margin-inline:auto; padding:.5rem}
+.cover .plate > img{max-height:36vh; object-fit:cover}
 .cover figure img{width:100%; aspect-ratio:16/9; max-height:46vh; object-fit:cover; border:1px solid var(--line); border-radius:2px; box-shadow:var(--shadow)}
 @media (max-width:640px){
   .bubble .side{width:auto; justify-content:flex-start; align-items:center}
@@ -274,6 +277,7 @@ kbd{font:inherit; font-size:.78em; border:1px solid var(--line); border-bottom-w
 </style>
 
 <div id="app">
+  <button class="btn aiuto muto" id="k-muto" title="Voce dei personaggi" aria-label="Voce dei personaggi" aria-pressed="false">🔈</button>
   <button class="btn aiuto" id="k-help" title="Comandi" aria-label="Comandi">?</button>
   <main id="stage" tabindex="-1"></main>
   <footer class="bar foot">
@@ -524,7 +528,8 @@ const ASSETS = {
 };                           // nome atteso -> URL reale (artifact pubblicato, o nome diverso)
 const src = p => ASSETS[p] || IMG_DIR + p;
 const SCENE_IMG = i => src(`scena${i + 1}.png`);
-const COVER_IMG = src("copertina.png");
+// finche' non arriva una copertina sua, la copertina usa la sala della scena 1
+const COVER_IMG = ASSETS["copertina.png"] ? src("copertina.png") : src("scena1.png");
 const RITRATTO = c => src(`ritratto-${c.toLowerCase()}.png`);
 const ATTORE = c => src(`attore-${c.toLowerCase()}.png`);
 const OGGETTO_ID = ["bicchiere", "bottiglietta", "foglio", "biglietto"];
@@ -632,7 +637,7 @@ function vScene(i) {
       <span class="scene-no">${i + 1}</span>
       <div><p class="eyebrow">Scena ${i + 1} di ${STORY.scene.length}</p><h2 class="scene-title">${esc(s.titolo)}</h2></div>
     </header>
-    <div class="slot plate">
+    <div class="slot plate scena">
       <div class="palco">
         ${opt(SCENE_IMG(i), "sfondo", `Scena ${i + 1}`)}
         ${(s.cast || []).map(a => `<img class="attore ${a.c === attivo ? "attivo" : ""}" src="${esc(ATTORE(a.c))}" alt="" style="left:${a.x}%; bottom:${a.b}%; height:${a.h}%">`).join("")}
@@ -797,7 +802,12 @@ function scorriScheda(verso) {
 function avanti() {
   const s = SLIDES[state.n];
   if (s.t === "cast" && scorriScheda(1)) return;
-  if (s.t === "scene" && state.step < STORY.scene[s.i].battute.length) { state.step++; return render(); }
+  if (s.t === "scene" && state.step < STORY.scene[s.i].battute.length) {
+    state.step++;
+    const b = STORY.scene[s.i].battute[state.step - 1];
+    parla(b.c, b.t);
+    return render();
+  }
   if (s.t === "tavolo" && state.clue !== null) { state.clue = null; return render(); }
   vai(state.n + 1);
 }
@@ -833,6 +843,54 @@ function demo() {
     Object.keys(DEMO_COL).forEach(c => ASSETS[`attore-${c}.png`] = demoAttore(c));
   } else chiavi.forEach(k => delete ASSETS[k]);
   render();
+}
+
+/* ---------- voce dei personaggi ----------
+   Niente file audio: qualche bip sintetizzato al volo, come nei giochi a
+   fumetti. Ogni personaggio ha la sua altezza - Mauro cupo, Rosalia acuta -
+   e la battuta piu' lunga fa piu' bip. Si zittisce con "m". */
+const VOCE = { Giuseppe: 200, Rosalia: 310, Roberto: 165, Augusto: 225, Mauro: 125, Narratore: 245 };
+let audio = null, muto = false;
+
+function suona(c, testo) {
+  const base = VOCE[c] || 200;
+  const bip = Math.max(3, Math.min(14, Math.round(testo.length / 4)));
+  for (let i = 0; i < bip; i++) {
+    const t = audio.currentTime + .01 + i * .058;
+    const o = audio.createOscillator(), g = audio.createGain();
+    o.type = c === "Mauro" ? "square" : "triangle";
+    o.frequency.setValueAtTime(base * (.92 + Math.random() * .16), t);
+    g.gain.setValueAtTime(.0001, t);
+    g.gain.exponentialRampToValueAtTime(.3, t + .008);
+    g.gain.exponentialRampToValueAtTime(.0001, t + .05);
+    o.connect(g).connect(audio.destination);
+    o.start(t); o.stop(t + .06);
+  }
+}
+
+/* Il contesto nasce sospeso finche' non c'e' un gesto dell'utente, e resume()
+   e' asincrono: programmare i bip prima che sia partito li manda nel vuoto.
+   Per questo si aspetta il resume, e si sblocca al primo tocco o tasto. */
+function parla(c, testo) {
+  if (muto || typeof AudioContext !== "function") return;
+  audio = audio || new AudioContext();
+  if (audio.state === "suspended") audio.resume().then(() => suona(c, testo), () => {});
+  else suona(c, testo);
+}
+
+function sblocca() {
+  if (muto || typeof AudioContext !== "function") return;
+  audio = audio || new AudioContext();
+  if (audio.state === "suspended") audio.resume().catch(() => {});
+}
+addEventListener("pointerdown", sblocca);
+addEventListener("keydown", sblocca);
+
+function muta() {
+  muto = !muto;
+  const b = document.getElementById("k-muto");
+  if (b) { b.textContent = muto ? "🔇" : "🔈"; b.setAttribute("aria-pressed", muto); }
+  if (!muto) parla("Giuseppe", "prova prova");   // riaccendendo si sente subito se funziona
 }
 
 /* ---------- modalita' regia ----------
@@ -960,6 +1018,7 @@ function ovHelp() {
     ["1–4", "apre un indizio sul tavolo"],
     ["d", "sagome di prova al posto delle illustrazioni mancanti"],
     ["r", "regia: sposta e ridimensiona personaggi e oggetti"],
+    ["m", "zittisce la voce dei personaggi"],
     ["f", "schermo intero"],
     ["esc", "chiude questa finestra"]
   ].map(([a, b]) => `<div><kbd>${esc(a)}</kbd><span>${esc(b)}</span></div>`).join("");
@@ -980,6 +1039,7 @@ function apri() {
 function chiudi() { state.overlay = false; overlayEl.hidden = true; stage.focus(); }
 overlayEl.addEventListener("click", e => { if (e.target === overlayEl || e.target.closest("[data-close]")) chiudi(); });
 document.getElementById("k-help").addEventListener("click", apri);
+document.getElementById("k-muto").addEventListener("click", muta);
 
 document.addEventListener("keydown", e => {
   if (e.metaKey || e.ctrlKey || e.altKey) return;
@@ -1000,6 +1060,7 @@ document.addEventListener("keydown", e => {
     case "i": case "I": if (SLIDES[state.n].t === "scene") { state.indizi = !state.indizi; render(); } break;
     case "d": case "D": demo(); break;
     case "r": case "R": regia(); break;
+    case "m": case "M": muta(); break;
     case "+": case "=": case "-": case "_":
       if (state.regia && sel) {
         sel.dato.h = Math.max(2, sel.dato.h + (e.key === "+" || e.key === "=" ? 1 : -1));
