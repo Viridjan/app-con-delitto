@@ -17,7 +17,8 @@ const doc = {
   getElementById: id => (id === "stage" ? stage : node()),
   documentElement: { requestFullscreen: () => Promise.resolve() },
 };
-const ctx = { document: doc, Image: class { set src(_) {} }, matchMedia: () => ({ matches: false }), console };
+const ctx = { document: doc, Image: class { set src(_) {} }, matchMedia: () => ({ matches: false }),
+  addEventListener() {}, console };
 const js = [...fs.readFileSync("oliva-blu.html", "utf8").matchAll(/<script>([\s\S]*?)<\/script>/g)].map(m => m[1]).join("\n");
 const app = vm.runInNewContext(js + ";({state,SLIDES,STORY,vai,avanti,indietro,render})", ctx);
 

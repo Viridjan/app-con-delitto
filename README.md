@@ -29,6 +29,17 @@ percentuali (`x` orizzontale, `b` altezza da terra, `h` altezza della figura —
 la distanza). Quando qualcuno parla, l'app lo porta avanti e lo riaccende, lasciando gli altri
 indietro e in penombra. Le posizioni stanno in `STORY.scene[i].cast`.
 
+## La voce dei personaggi
+
+Scoprendo una battuta la pagina sintetizza qualche bip con la Web Audio API — nessun file audio.
+Ogni personaggio ha la sua altezza (Mauro cupo e con onda quadra, Rosalia acuta), e la battuta
+più lunga fa più bip, fino a un tetto di quattordici. Si zittisce con `m` o con la pastiglia
+accanto al `?`; riaccendendola si sente una prova.
+
+Il contesto audio nasce sospeso finché non c'è un gesto dell'utente e `resume()` è asincrono:
+i bip vanno programmati **dopo** che è partito, altrimenti finiscono a un istante già passato e
+non si sente nulla.
+
 ## Regia delle scene
 
 Le posizioni di personaggi e oggetti si decidono a occhio, non a numeri indovinati. Premendo `r`
@@ -67,6 +78,7 @@ per giudicare posizioni e ritmo prima che l'arte sia pronta.
 | `p` | elenco delle illustrazioni, con quali mancano |
 | `d` | sagome di prova |
 | `r` | regia: sposta e ridimensiona personaggi e oggetti sulla scena |
+| `m` | zittisce la voce dei personaggi |
 | `f` | schermo intero |
 | `?` | tutti i comandi |
 
