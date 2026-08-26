@@ -89,9 +89,14 @@ python3 sync-assets.py   # newest -vN per slot, web-sized WebP, embedded as data
 node smoke.js
 ```
 
-Codex names files its own way; `SCELTE` in the script declares which file fills which slot
-(`scena1.png ← scena3-sala2`). Anything outside the expected slots is skipped, and the script
-prints what is still missing.
+Codex names files its own way **and renames them between deliveries** — `scena3-sala2-*` became
+`sala2-*` mid-project. `SCELTE` declares which file fills which slot (`copertina.png ←
+quadro-oliva-animato`); when a scene silently falls back to its text brief, that map is the first
+thing to check. Anything outside the expected slots is skipped, and the script prints what is
+still missing.
+
+Animated files (the cover is a 21-frame WebP) are resized frame by frame and re-saved with
+`save_all`; a plain re-encode keeps one frame and silently kills the animation.
 
 ## Deliberate omissions
 
