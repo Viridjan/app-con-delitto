@@ -15,9 +15,12 @@ doppio clic e funziona anche senza rete. Dentro ci sono tre blocchi:
 
 - `<style>` — palette oliva e lume di candela, Bodoni Moda per i titoli, Alegreya Sans per le
   battute (leggibile a distanza di proiezione). Chiaro e scuro entrambi previsti.
-- `const STORY` — **tutto il copione**: scene, battute con i loro incisi, box "Lo sapevi?",
-  indizi, oggetti sul tavolo con le battute collegate, quiz, soluzione.
+- `const STORY` — **tutto il copione**: scene, battute con i loro incisi, indizi, oggetti sul
+  tavolo con le battute collegate, quiz e soluzione.
 - `<script>` — uno stato, una `render()`, una lista di schermate. Nessun framework.
+
+I precedenti box educativi “Lo sapevi?” sono stati rimossi insieme ai loro contenuti. Rimane
+soltanto “Osserva bene!” nella scena 4, perché contiene un indizio necessario alla storia.
 
 Le immagini viaggiano dentro l'HTML come data URI: l'app resta un file unico, condivisibile
 com'è.
@@ -54,6 +57,10 @@ cambiandolo va cambiato in tutti e due.
 
 ## Regia delle scene
 
+Ogni scena ha anche le sue **pose**: `POSE_SCENA` dice quale variante usare per ciascun
+personaggio (`giuseppe-malore` nella scena 4, `mauro-guardingo` nelle prime tre), e chi non ne ha
+una torna al ritaglio neutro. I nomi sono semantici, non versioni.
+
 Le posizioni di personaggi e oggetti si decidono a occhio, non a numeri indovinati. Premendo `r`
 su una scena si accende la **modalità regia**: si trascina per spostare, la rotella (o `+` / `-`)
 cambia la taglia, le frecce fanno lo scatto fine. Il pannello in basso mostra dal vivo le righe
@@ -86,12 +93,12 @@ per giudicare posizioni e ritmo prima che l'arte sia pronta.
 |---|---|
 | `spazio` / `→` | battuta successiva, poi schermata successiva |
 | `←` | indietro di una battuta |
-| `s` | mostra il box "Lo sapevi?" |
+| `s` | mostra “Osserva bene!” nella scena 4 |
 | `i` | mostra gli indizi di gioco |
 | `1`–`4` | apre un indizio sul tavolo |
-| `p` | elenco delle illustrazioni, con quali mancano |
-| `d` | sagome di prova |
+| `d` | sagome di prova al posto delle illustrazioni mancanti |
 | `r` | regia: sposta e ridimensiona personaggi e oggetti sulla scena |
+| `[` `]` | in regia: porta il selezionato in secondo o in primo piano |
 | `m` | zittisce la voce dei personaggi |
 
 Il sito pubblico sta su **https://viridjan.github.io/app-con-delitto/** e si aggiorna a ogni

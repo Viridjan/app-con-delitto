@@ -18,14 +18,22 @@ ALIAS = {"investigatore": "narratore"}          # il meeple investigatore e' il 
 SCELTE = {"copertina.png": "quadro-oliva-animato",
           "scena1.png": "sala2",
           "scena1-sx.png": "sala2-oggettoSX",
-          "scena1-dx.png": "sala2-oggettoDX"}
+          "scena1-dx.png": "sala2-oggettoDX",
+          "scena2.png": "donazione",
+          "scena3.png": "brindisi",
+          "scena4.png": "malore",
+          "scena5.png": "indagine"}
 PERSONE = ["giuseppe", "rosalia", "roberto", "augusto", "mauro"]
+POSE = ["giuseppe-malore", "rosalia-allarmata", "rosalia-pensierosa",
+        "roberto-preoccupato", "augusto-sorpreso", "mauro-nervoso",
+        "mauro-guardingo"]
 OGGETTI = ["bicchiere", "bottiglietta", "foglio", "biglietto"]
 # solo le caselle che l'app sa mostrare: le varianti e le prove restano fuori dal file
 ATTESI = ({"copertina.png"}
           | {f"scena{i}.png" for i in range(1, 6)}
           | {f"scena{i}-{lato}.png" for i in range(1, 6) for lato in ("sx", "dx")}
           | {f"attore-{n}.png" for n in PERSONE}
+          | {f"attore-{n}.png" for n in POSE}
           | {f"ritratto-{n}.png" for n in PERSONE + ["narratore"]}
           | {f"indizio-{n}.png" for n in OGGETTI})
 
@@ -58,6 +66,14 @@ def main():
     mappa = {}
     for key, (_, f) in sorted(migliori.items()):
         if key not in ATTESI: continue
+        out = WEB / (Path(key).stem + ".webp")
+        # Non ricodificare asset invariati. Oltre a velocizzare il sync, evita
+        # di tenere in memoria i 21 fotogrammi della copertina a ogni consegna.
+        if out.is_file() and out.stat().st_size and out.stat().st_mtime >= f.stat().st_mtime:
+            b64 = base64.b64encode(out.read_bytes()).decode()
+            mappa[key] = f"data:image/webp;base64,{b64}"
+            print(f"{f.name:32} -> {out.name:28} {out.stat().st_size // 1024:4}KB  cache")
+            continue
         im = Image.open(f)
         if getattr(im, "n_frames", 1) > 1:
             # animata: si ridimensiona fotogramma per fotogramma, se no ne resta uno solo
@@ -70,7 +86,6 @@ def main():
                     d = d.resize((largh, round(d.height * largh / d.width)), Image.LANCZOS)
                 fotogrammi.append(d)
                 durate.append(im.info.get("duration") or 80)
-            out = WEB / (Path(key).stem + ".webp")
             fotogrammi[0].save(out, "WEBP", save_all=True, append_images=fotogrammi[1:],
                                duration=durate, loop=0, quality=68, method=6)
             b64 = base64.b64encode(out.read_bytes()).decode()
@@ -90,8 +105,9 @@ def main():
             largh = LARGH.get(famiglia(key), 800)
             if im.width > largh:
                 im = im.resize((largh, round(im.height * largh / im.width)), Image.LANCZOS)
-        out = WEB / (Path(key).stem + ".webp")
-        im.save(out, "WEBP", quality=86, method=6)
+        # method=6 arrivava a saturare la memoria con le tavole quadrate RGBA
+        # degli indizi; 4 mantiene una resa indistinguibile alle dimensioni web.
+        im.save(out, "WEBP", quality=86, method=4)
         # L'artifact pubblicato non puo' leggere file locali (niente capability assets),
         # quindi le immagini viaggiano dentro l'HTML come data URI.
         b64 = base64.b64encode(out.read_bytes()).decode()
