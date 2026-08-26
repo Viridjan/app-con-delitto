@@ -131,6 +131,9 @@ const MANOPOLE = [
   { k: "vol",    eti: "volume",   min: .05, max: .6,   passo: .01,  suff: "" }
 ];
 const ONDE = { triangle: "triangolo", sine: "sinusoide", square: "quadra", sawtooth: "dente di sega" };
+// Fuori dal banco ma dentro il blocco esportato: senza la sua riga, incollando
+// nell'app il narratore resterebbe con la voce di ripiego.
+const NASCOSTI = ["Narratore"];
 
 let VOCE = structuredClone(PARTENZA);
 let audio = null;
@@ -175,7 +178,7 @@ function testo() {
 }
 
 function schede() {
-  document.getElementById("voci").innerHTML = Object.keys(VOCE).map(c => `
+  document.getElementById("voci").innerHTML = Object.keys(VOCE).filter(c => !NASCOSTI.includes(c)).map(c => `
     <section class="voce" style="--c:var(${COLORE[c]})">
       <div class="capo"><h2>${c}</h2><span style="flex:1"></span>
         <button data-ascolta="${c}">Ascolta</button></div>
