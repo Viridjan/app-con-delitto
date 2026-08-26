@@ -40,14 +40,16 @@ h1,h2,h3{font-family:"Bodoni Moda","Didot","Times New Roman",serif; font-weight:
 button{font:inherit; color:inherit; background:none; border:none; cursor:pointer}
 :focus-visible{outline:2px solid var(--gold); outline-offset:3px; border-radius:4px}
 
-#app{height:100vh; height:100dvh; display:grid; grid-template-rows:auto 1fr auto; grid-template-columns:minmax(0,1fr)}
+#app{height:100vh; height:100dvh; display:grid; grid-template-rows:1fr auto; grid-template-columns:minmax(0,1fr)}
 
 /* ---- chrome ---- */
 .bar{display:flex; align-items:center; gap:.75rem; min-width:0; padding:.55rem clamp(.75rem,2.5vw,2rem);
-  border-bottom:1px solid var(--line); background:var(--surface)}
-.bar.foot{border-bottom:none; border-top:1px solid var(--line)}
-.mark{font-family:"Bodoni Moda",serif; letter-spacing:.02em; font-size:.95rem; white-space:nowrap; min-width:0}
-.mark i{font-style:normal; color:var(--olive)}
+  border-top:1px solid var(--line); background:var(--surface)}
+/* il "?" galleggia sopra la scena: discreto finche' non lo si cerca */
+.aiuto{position:fixed; top:.7rem; right:.7rem; z-index:6; width:2.2rem; height:2.2rem; padding:0;
+  border-radius:50%; background:color-mix(in srgb,var(--surface) 82%,transparent);
+  backdrop-filter:blur(6px); opacity:.55; transition:opacity .2s, border-color .2s}
+.aiuto:hover,.aiuto:focus-visible{opacity:1}
 .spacer{flex:1}
 .btn{border:1px solid var(--line); border-radius:999px; padding:.34rem .9rem; font-size:.9rem;
   background:var(--surface-2); transition:border-color .15s, color .15s}
@@ -70,8 +72,9 @@ kbd{font:inherit; font-size:.78em; border:1px solid var(--line); border-bottom-w
 /* art plate */
 .plate{border:1px dashed var(--line); border-radius:2px; background:var(--surface);
   padding:clamp(1rem,2.5vw,1.9rem); position:relative; box-shadow:var(--shadow)}
-.plate:not(.empty){border-style:solid; padding:.5rem; position:sticky; top:0; z-index:4;
-  width:min(100%,calc(44vh * 16 / 9 + 1rem)); margin-inline:auto}
+/* la fascia appiccicata copre tutta la larghezza, se no le battute le passano sotto ai lati */
+.plate:not(.empty){border:none; background:var(--bg); box-shadow:none; padding:0 0 .6rem;
+  width:100%; position:sticky; top:0; z-index:4}
 .plate:not(.empty)::before{display:none}
 .plate::before{content:""; position:absolute; inset:6px; border:1px solid var(--line); border-radius:1px; pointer-events:none; opacity:.6}
 .plate > img{display:block; width:100%; height:auto; border-radius:1px}
@@ -206,15 +209,14 @@ kbd{font:inherit; font-size:.78em; border:1px solid var(--line); border-bottom-w
 .slot.empty .ph.mono,.clue.slot.empty .ph,.detail figure.slot.empty .ph{display:grid}
 .plate figure{margin:0}
 /* palco: lo sfondo sta sotto, i personaggi ritagliati sopra, chi parla viene avanti */
-.palco{position:relative; width:100%; aspect-ratio:16/9;
-  overflow:hidden; box-shadow:var(--shadow)}
+.palco{position:relative; width:min(100%,calc(44vh * 16 / 9)); margin-inline:auto; aspect-ratio:16/9;
+  overflow:hidden; border:1px solid var(--line); border-radius:2px; box-shadow:var(--shadow)}
 .palco .sfondo{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; border-radius:1px}
 .palco .attore{position:absolute; width:auto; transform:translateX(-50%); transform-origin:bottom center;
-  filter:saturate(.38) brightness(.6); opacity:.9; z-index:1;
-  transition:transform .35s cubic-bezier(.2,.7,.3,1), filter .35s ease, opacity .35s ease}
-.palco .attore.attivo{z-index:3; opacity:1;
-  transform:translateX(-50%) translateY(-2.5%) scale(1.07);
-  filter:drop-shadow(0 .6vh 1.2vh rgba(0,0,0,.45))}
+  z-index:1; transition:transform .35s cubic-bezier(.2,.7,.3,1), filter .35s ease}
+.palco .attore.attivo{z-index:3;
+  transform:translateX(-50%) translateY(-3%) scale(1.09);
+  filter:drop-shadow(0 .8vh 1.4vh rgba(0,0,0,.5)) brightness(1.06)}
 .slot.empty .palco{display:none}
 .avatar{width:clamp(30px,3.2vw,42px); height:clamp(30px,3.2vw,42px); border-radius:50%; flex:none;
   object-fit:cover; border:1px solid var(--speaker,var(--line)); background:var(--surface-2)}
@@ -239,9 +241,6 @@ kbd{font:inherit; font-size:.78em; border:1px solid var(--line); border-bottom-w
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important}
 }
-@media (max-width:900px){
-  .mark{overflow:hidden; text-overflow:ellipsis; flex:0 1 auto}
-}
 @media (max-width:700px){
   /* col testo piu' grande la barra andava a capo: qui i tasti non servono,
      si tocca lo schermo */
@@ -253,16 +252,11 @@ kbd{font:inherit; font-size:.78em; border:1px solid var(--line); border-bottom-w
   .bubble{flex-direction:column; gap:.2rem}
   .who{width:auto; text-align:left}
   .said{border-radius:2px 10px 10px 10px}
-  .mark{font-size:.85rem}
 }
 </style>
 
 <div id="app">
-  <header class="bar">
-    <span class="mark">Il mistero dell’<i>oliva blu</i></span>
-    <span class="spacer"></span>
-    <button class="btn" id="k-help" title="Comandi">?</button>
-  </header>
+  <button class="btn aiuto" id="k-help" title="Comandi" aria-label="Comandi">?</button>
   <main id="stage" tabindex="-1"></main>
   <footer class="bar foot">
     <button class="btn" id="prev">← Indietro</button>
@@ -299,7 +293,7 @@ const STORY = {
       titolo:"L’inaugurazione degli Oliviani",
       img:null,
       descrizione:"L’immagine mostra l’interno della nuova sede degli Oliviani. La sala è decorata con rami d’ulivo, stoffe verdi e bianche, candele e piccole ciotole piene di olive. Al centro c’è un piccolo palco o altare con il simbolo degli Oliviani: una grande oliva stilizzata. Roberto e Augusto accolgono gli ospiti con aria solenne ma sorridente. Giuseppe Maria De Robertis entra elegante e sicuro di sé. Accanto a lui c’è Rosalia, che sembra più preoccupata che felice. In fondo alla sala si vede Mauro, in disparte. Osserva Giuseppe con attenzione. L’atmosfera deve essere accogliente, curiosa e un po’ misteriosa.",
-      cast:[{c:"Mauro",x:63,b:38,h:17},{c:"Roberto",x:29,b:13,h:38},{c:"Augusto",x:44,b:15,h:36},{c:"Giuseppe",x:57,b:5,h:50},{c:"Rosalia",x:71,b:5,h:46}],
+      cast:[{c:"Mauro",x:50,b:26,h:34},{c:"Roberto",x:25,b:13,h:60},{c:"Augusto",x:41,b:15,h:56},{c:"Giuseppe",x:60,b:4,h:76},{c:"Rosalia",x:78,b:4,h:70}],
       battute:[
         {c:"Roberto", t:"Benvenuti nella prima casa degli Oliviani!"},
         {c:"Augusto", t:"Questa sera celebriamo l’ulivo, simbolo di pace e rinascita."},
