@@ -23,13 +23,17 @@ A narrator drives it live in front of a table of players.
 - `voci.html` — the voice bench: sliders per character, plays them, prints the `VOCE` block to
   paste into the app. Its synth engine is a **deliberate copy** — change it in both files.
 - `img/ART.md` — the illustration brief Codex works from.
-- `assets/images/` — Codex's deliveries. `assets/web/` and `assets/images/bocciate/` are gitignored.
+- `assets/images/` — Codex's deliveries, named by subject (`donazione`, `brindisi`, `malore`,
+  `indagine`, `sala2`), mapped to slots in `SCELTE`. `assets/web/` and `assets/images/bocciate/`
+  are gitignored.
 
 ## Rules that matter
 
-**The script is verbatim.** Every line in `STORY` is Gervasio's text, unchanged. Check with:
-extract the PDF (`pdftotext`), pull the 53 quoted lines, assert each is present in the HTML. Do
-not paraphrase or "fix" dialogue — including `Adoro l'Olo` in scene 2.
+**The dialogue is verbatim.** Every spoken line in `STORY` is Gervasio's text, unchanged. Check
+with: extract the PDF (`pdftotext`), pull the 53 quoted strings, assert each is in the HTML — the
+only expected misses are the eight occurrences of the heading "Lo sapevi?", see the next rule. Do
+not paraphrase or "fix" dialogue, including `Adoro l'Olo` in scene 2. Cutting whole blocks is a
+product decision and needs the user; rewording a line never is.
 
 **Ask before pushing aesthetic changes.** The repo is public with Pages on `main`, so every push
 goes live in a minute. Show the result (screenshot, or republish the artifact) and wait for a yes.
@@ -37,6 +41,11 @@ Bug fixes, scripts and docs follow normal behaviour.
 
 **Blue is spent once.** `--blu` is Mauro's speech colour, the "Osserva bene!" box and the scene-4
 vignette — because the victim's mouth turns blue. Never use it for anything else.
+
+**No “Lo sapevi?” boxes.** They and their educational text were deliberately removed from scenes
+1, 2, 3 and 5 on 26 August 2026. Do not restore them from the source PDF. Scene 4 keeps the
+distinct “Osserva bene!” clue box, opened with `s`; it is part of the mystery, not an educational
+aside — so `s` does nothing on the other four scenes, by design.
 
 **Nobody gets dimmed on stage.** The speaker stands out by coming forward (lift, scale, shadow),
 never by darkening the others. That was tried and rejected.
@@ -66,6 +75,14 @@ back once already.
 
 A percentage `max-height` needs a definite height on the container, or it is ignored and the
 figure spills out of its half.
+
+## Poses
+
+`POSE_SCENA` maps scene index → character → pose, and `ATTORE(c, scena)` builds
+`attore-<nome>-<posa>.png`. Names are semantic, never versions: `giuseppe-malore`,
+`rosalia-allarmata`, `mauro-guardingo`. A character with no pose for that scene falls back to the
+neutral cutout, and a missing file falls back like any other image — so a half-delivered set
+never breaks a scene. Scene 4 is where they earn their keep: the whole cast reacts.
 
 ## How a scene is composed
 
@@ -110,6 +127,10 @@ still missing.
 
 Animated files (the cover is a 21-frame WebP) are resized frame by frame and re-saved with
 `save_all`; a plain re-encode keeps one frame and silently kills the animation.
+
+Already-converted files are reused from `assets/web/` when the copy is newer than the source —
+without that, every run re-encoded the cover's 21 frames. Stills are saved with `method=4`: `6`
+exhausted memory on the square RGBA clue plates and buys nothing at these sizes.
 
 ## Deliberate omissions
 

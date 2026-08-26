@@ -1,7 +1,29 @@
 # Illustrazioni — *Il mistero dell'oliva blu*
 
-21 immagini. I file vanno in `assets/images/` (dove sta già scrivendo Codex). I nomi sono **esatti**: l'app li cerca così e, finché non li trova,
-mostra al loro posto il brief testuale (quindi si può consegnare a lotti).
+I sorgenti vanno in `assets/images/`; `assets/web/` contiene le copie ottimizzate prodotte da
+`sync-assets.py` e non va modificata a mano. Se un'immagine non è disponibile, l'app mostra il
+brief testuale al suo posto.
+
+## Stato attuale — 26 agosto 2026
+
+Tutte le caselle narrative obbligatorie sono complete: copertina animata, cinque ambienti,
+cinque attori canonici con pose narrative, sei ritratti e quattro indizi trasparenti. Sono
+presenti anche i due oggetti in primo piano della scena 1.
+
+Non risultano immagini obbligatorie mancanti. Gli eventuali oggetti `scena2-sx/dx` fino a
+`scena5-sx/dx` sono espansioni facoltative: il codice non li mostra finché non vengono inseriti
+in `STORY.scene[i].primo`.
+
+| Casella dell'app | Sorgente attuale |
+|---|---|
+| `copertina.png` | `quadro-oliva-animato.webp` |
+| `scena1.png` | `sala2-v5.png` |
+| `scena1-sx.png` | `sala2-oggettoSX-v2.png` |
+| `scena1-dx.png` | `sala2-oggettoDX-v3.png` |
+| `scena2.png` | `donazione.png` |
+| `scena3.png` | `brindisi.png` |
+| `scena4.png` | `malore.png` |
+| `scena5.png` | `indagine.png` |
 
 ## Stile condiviso (vale per tutte)
 
@@ -78,6 +100,23 @@ relativa e stessa luce per tutti e cinque, piedi appoggiati al bordo inferiore d
 | `attore-augusto.png` | Augusto, solenne ma sorridente. |
 | `attore-mauro.png` | Mauro, rigido, teso. |
 
+### Pose narrative aggiuntive
+
+Le pose aggiuntive hanno nomi semantici e convivono con gli attori canonici:
+
+| File | Uso |
+|---|---|
+| `attore-giuseppe-malore.png` | Giuseppe dopo aver bevuto, scena 4. |
+| `attore-rosalia-pensierosa.png` | Rosalia turbata, scene 1–3. |
+| `attore-rosalia-allarmata.png` | Rosalia durante il malore e l'indagine. |
+| `attore-roberto-preoccupato.png` | Roberto nelle scene 4–5. |
+| `attore-augusto-sorpreso.png` | Augusto nelle scene 4–5. |
+| `attore-mauro-guardingo.png` | Mauro in disparte, scene 1–3. |
+| `attore-mauro-nervoso.png` | Mauro teso, scene 4–5. |
+
+Restano disponibili, ma non collegate, anche `attore-giuseppe-presentazione.png`,
+`attore-roberto-accoglienza.png` e `attore-augusto-spiegazione.png`.
+
 ## Ritratti — 1:1, mezzo busto, cornice lignea e trasparenza
 
 Ogni ritratto usa una cornice di legno diversa, intagliata con motivi legati al personaggio.
@@ -98,9 +137,10 @@ Narratore salvia con dettagli dorati.
 | `ritratto-mauro.png` | Mauro Damiani — nuovo adepto, molto serio, rigido, sospettoso. |
 | `ritratto-narratore.png` | Il Narratore — mascotte guida, un meeple investigatore. |
 
-Consegna: PNG dentro `assets/images/`. **Non sovrascrivere mai un'immagine esistente**:
-salvare ogni revisione con suffisso progressivo (`-v2`, `-v3`, ecc.). Aprire l'app e premere
-`p` per vedere quali file risultano consegnati e quali mancano ancora.
+Consegna: PNG dentro `assets/images/`. **Non sovrascrivere mai un'immagine esistente**. Per una
+revisione dello stesso disegno usare il suffisso progressivo (`-v2`, `-v3`, ecc.); per una posa
+o funzione realmente diversa usare un nome semantico (`-malore`, `-nervoso`, `-accoglienza`).
+Aprire l'app e premere `p` per controllare le caselle collegate.
 
 ## Regola di selezione delle versioni
 
@@ -108,6 +148,7 @@ La cartella `assets/images/bocciate/` contiene immagini scartate e va sempre esc
 selezione dei file di partenza. Per ogni nuova revisione, lavorare sull'ultima versione numerica
 presente in `assets/images/` **al di fuori di `bocciate/`** (per esempio, tra `-v2` e `-v4` usare
 `-v4`). Un numero di versione più alto dentro `bocciate/` non rende quell'immagine attiva e non
-deve mai essere usato come riferimento. Anche il nuovo output va versionato senza sovrascrivere
-file esistenti; il suffisso deve restare progressivo e non riutilizzare numeri già presenti,
-compresi quelli delle immagini bocciate.
+deve mai essere usato come riferimento. Una revisione dello stesso soggetto va versionata senza
+sovrascrivere file esistenti; il suffisso deve restare progressivo e non riutilizzare numeri già
+presenti, compresi quelli delle immagini bocciate. Una nuova posa può invece ricevere un nome
+semantico univoco. In entrambi i casi, non usare mai come riferimento un file in `bocciate/`.
