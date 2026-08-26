@@ -13,6 +13,9 @@ from PIL import Image
 SRC, WEB, HTML = Path("assets/images"), Path("assets/web"), Path("oliva-blu.html")
 LARGH = {"ritratto": 768, "attore": 700, "scena": 1600, "indizio": 512, "copertina": 1600}
 ALIAS = {"investigatore": "narratore"}          # il meeple investigatore e' il Narratore
+# Codex consegna varianti con nomi suoi: qui si dice quale riempie quale casella.
+# La versione (-vN) la sceglie comunque lo script, tenendo la piu' alta.
+SCELTE = {"scena1.png": "scena3-sala2"}
 PERSONE = ["giuseppe", "rosalia", "roberto", "augusto", "mauro"]
 OGGETTI = ["bicchiere", "bottiglietta", "foglio", "biglietto"]
 # solo le caselle che l'app sa mostrare: le varianti e le prove restano fuori dal file
@@ -33,10 +36,12 @@ def logico(nome):
 
 def main():
     if not SRC.is_dir(): sys.exit(f"manca {SRC}/")
+    scelto = {v + ".png": k for k, v in SCELTE.items()}
     migliori = {}                                # nome logico -> (versione, file)
     for f in sorted(SRC.iterdir()):
         if not f.is_file(): continue             # salta bocciate/
         key, ver = logico(f.name)
+        key = scelto.get(key, key)               # variante promossa a casella
         if key and ver >= migliori.get(key, (-1, None))[0]:
             migliori[key] = (ver, f)
 
