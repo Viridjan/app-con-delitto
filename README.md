@@ -5,7 +5,8 @@ esaminare in ordine libero, la scheda finale e la soluzione. Il narratore la gui
 tavolo dei giocatori — da proiettore, da tablet o da telefono.
 
 Tratta dal copione **_Il mistero dell'oliva blu_** di **Carlo Maria Gervasio**
-(`ullgi_L-inaugurazione_COSTA_rev.pdf`). Il testo nell'app è quello originale, parola per parola.
+(`ullgi_L-inaugurazione_COSTA_rev.pdf`), usato con la sua autorizzazione. Il testo nell'app è
+quello originale, parola per parola.
 
 ## Com'è fatta
 
@@ -67,6 +68,11 @@ node smoke.js    # percorre ogni schermata e controlla i conti del quiz
 Il copione è verbatim e va tenuto tale: le 53 battute fra virgolette del PDF devono comparire
 identiche nell'app, refusi dell'originale compresi.
 
-## Licenza
+## Diritti
 
-Nessuna. Il copione è dell'autore; chiedere a lui prima di riusarlo.
+Il copione — il PDF e il testo dentro `STORY` — è di **Carlo Maria Gervasio**, ed è usato qui
+**con la sua autorizzazione**. I diritti restano suoi: per riusare il testo altrove, chiedere a
+lui.
+
+Il codice dell'app è di chi lo ha scritto; nessuna licenza dichiarata, quindi valgono i diritti
+d'autore di default.
