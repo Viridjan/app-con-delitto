@@ -24,10 +24,16 @@ com'è.
 
 ## Il palco a strati
 
-Ogni scena è composta al volo: lo sfondo sotto, i personaggi ritagliati sopra, posizionati in
-percentuali (`x` orizzontale, `b` altezza da terra, `h` altezza della figura — è l'altezza a dare
-la distanza). Quando qualcuno parla, l'app lo porta avanti e lo riaccende, lasciando gli altri
-indietro e in penombra. Le posizioni stanno in `STORY.scene[i].cast`.
+Ogni scena è composta al volo, su tre livelli:
+
+1. lo **sfondo**, disegnato con il primo piano sgombro;
+2. i **personaggi ritagliati**, posizionati in percentuali — `x` orizzontale, `b` altezza da
+   terra, `h` altezza della figura: è l'altezza a dare la distanza, mai la larghezza;
+3. gli **oggetti in primo piano** (`scenaN-sx.png`, `scenaN-dx.png`), che stanno davanti a tutti,
+   ancorati agli angoli bassi e tagliati dal bordo. Facoltativi.
+
+Quando qualcuno parla, l'app lo porta avanti — si alza, cresce, prende un'ombra. Nessuno viene
+scurito. Le posizioni stanno in `STORY.scene[i].cast` e `.primo`.
 
 ## La voce dei personaggi
 
@@ -60,7 +66,9 @@ python3 sync-assets.py     # tiene la versione più alta di ogni file, ne fa cop
                            # leggere e le incorpora in oliva-blu.html
 ```
 
-Lo script dice anche cosa manca ancora. **Ogni casella vuota mostra il brief al posto
+Codex usa nomi suoi: la mappa `SCELTE` dentro lo script dichiara quale file riempie quale
+casella (`scena1.png ← scena3-sala2`), mentre la versione (`-v4`, `-v5`) la sceglie da solo
+tenendo la più alta. Lo script dice anche cosa manca ancora. **Ogni casella vuota mostra il brief al posto
 dell'immagine**, quindi l'app resta presentabile anche a consegna incompleta.
 
 Premendo `d` dentro l'app compaiono sagome di prova al posto delle illustrazioni mancanti, utili
@@ -79,6 +87,9 @@ per giudicare posizioni e ritmo prima che l'arte sia pronta.
 | `d` | sagome di prova |
 | `r` | regia: sposta e ridimensiona personaggi e oggetti sulla scena |
 | `m` | zittisce la voce dei personaggi |
+
+Il sito pubblico sta su **https://viridjan.github.io/app-con-delitto/** e si aggiorna a ogni
+push su `main`.
 | `f` | schermo intero |
 | `?` | tutti i comandi |
 

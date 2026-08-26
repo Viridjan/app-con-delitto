@@ -4,37 +4,79 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-A presenter webapp for *Il mistero dell'oliva blu*, an Italian "cena con delitto" script
-(`ullgi_L-inaugurazione_COSTA_rev.pdf`, by Carlo Maria Gervasio). A narrator drives it live in
-front of a table of players. Published as an Artifact:
-https://claude.ai/code/artifact/ae31691c-accf-409e-bf55-64800d0de882
+A presenter webapp for *Il mistero dell'oliva blu*, an Italian "cena con delitto" script by
+Carlo Maria Gervasio (`ullgi_L-inaugurazione_COSTA_rev.pdf`), used with the author's permission.
+A narrator drives it live in front of a table of players.
+
+- Public site: https://viridjan.github.io/app-con-delitto/ (Pages builds from `main`, root)
+- Artifact (private preview): https://claude.ai/code/artifact/ae31691c-accf-409e-bf55-64800d0de882
+- Repo: https://github.com/Viridjan/app-con-delitto
 
 ## Files
 
 - `oliva-blu.html` — the whole app. One self-contained file: `<style>`, `const STORY`, `<script>`.
-  No build, no dependencies, no server. Open it directly.
-- `smoke.js` — `node smoke.js`. Walks every screen with a hand-rolled DOM stub (no jsdom) and
-  checks the quiz maths. Run it after any change to the script block.
-- `img/ART.md` — the illustration brief. Codex generates the images.
-- `assets/images/` — where Codex delivers. Not `img/`.
+  No build, no dependencies, no server. Images are embedded as data URIs.
+- `index.html` — redirect for Pages, which serves `index.html` at the root.
+- `sync-assets.py` — hooks Codex's deliveries into the app. Run after every delivery.
+- `smoke.js` — `node smoke.js`. Walks every screen with a hand-rolled DOM stub and checks the
+  quiz maths. Run it after touching the script block.
+- `img/ART.md` — the illustration brief Codex works from.
+- `assets/images/` — Codex's deliveries. `assets/web/` and `assets/images/bocciate/` are gitignored.
 
 ## Rules that matter
 
-**The script is verbatim.** Every line in `STORY` is Gervasio's text, unchanged. There is a
-checker for it: extract the PDF (`pdftotext`), pull the 53 quoted lines, assert each is present
-in the HTML. Do not paraphrase, tidy, or "fix" dialogue — including `Adoro l'Olo` in scene 2.
+**The script is verbatim.** Every line in `STORY` is Gervasio's text, unchanged. Check with:
+extract the PDF (`pdftotext`), pull the 53 quoted lines, assert each is present in the HTML. Do
+not paraphrase or "fix" dialogue — including `Adoro l'Olo` in scene 2.
 
-**Blue is spent once.** `--blu` is Mauro's speech colour, the "Osserva bene!" box, and the
-scene-4 vignette — because the victim's mouth turns blue. Never use it for anything else.
+**Ask before pushing aesthetic changes.** The repo is public with Pages on `main`, so every push
+goes live in a minute. Show the result (screenshot, or republish the artifact) and wait for a yes.
+Bug fixes, scripts and docs follow normal behaviour.
 
-**Images must be optional.** Every image slot has a typographic fallback (art brief, monogram,
-olive-leaf mark) wired via `slots()` on `error`. The app must look finished with `assets/images/`
-completely empty. `ASSETS` maps expected filenames to real URLs — that is also how the published
-artifact points at uploaded assets (`_blob/{id}`), which needs the `assets` capability declared.
+**Blue is spent once.** `--blu` is Mauro's speech colour, the "Osserva bene!" box and the scene-4
+vignette — because the victim's mouth turns blue. Never use it for anything else.
 
-**Publishing:** redeploy the same file path to keep the URL. The artifact CSP allows Google
-Fonts and nothing else external; no inline event handlers, no page-initiated downloads.
+**Nobody gets dimmed on stage.** The speaker stands out by coming forward (lift, scale, shadow),
+never by darkening the others. That was tried and rejected.
+
+**Images must be optional.** Every slot falls back to a typographic placeholder via `slots()` on
+`error`. The app must look finished with `assets/images/` empty.
+
+## How a scene is composed
+
+Three layers inside `.palco`, all positioned in percentages of the frame:
+
+1. `scenaN.png` — background, foreground deliberately left clear.
+2. `attore-*.png` — one transparent cutout per character, from `STORY.scene[i].cast`:
+   `x` (centre), `b` (height above the floor), `h` (figure height). **Height carries the depth** —
+   never width. Array order is the stacking order: farthest first.
+3. `scenaN-sx.png` / `scenaN-dx.png` — foreground props, in front of everyone, from
+   `STORY.scene[i].primo`. Optional.
+
+**Positions are decided by eye, not by guessing numbers.** Press `r` on a scene for staging mode:
+drag to move, wheel or `+`/`-` to resize, arrows for fine steps. The panel prints the `cast:` and
+`primo:` lines to paste back into `STORY`. Changes live only in the open page.
+
+## Voices
+
+Each character is a synth profile in `VOCE` — waveform, pitch, blip rate, pitch drift across the
+line, lowpass cutoff — so they are told apart by timbre, not only pitch. Gain is `.3` for all;
+the filter is what tames square and sawtooth. Muted with `m` or the pill next to `?`.
+
+The audio context starts suspended and `resume()` is async: schedule the blips **after** it has
+started, or they land in the past and nothing plays.
+
+## Images pipeline
+
+```sh
+python3 sync-assets.py   # newest -vN per slot, web-sized WebP, embedded as data URIs
+node smoke.js
+```
+
+Codex names files its own way; `SCELTE` in the script declares which file fills which slot
+(`scena1.png ← scena3-sala2`). Anything outside the expected slots is skipped, and the script
+prints what is still missing.
 
 ## Deliberate omissions
 
-No player devices, no sync, no score persistence, no framework. The presenter is one screen.
+No player devices, no sync, no score persistence, no framework, no build step.

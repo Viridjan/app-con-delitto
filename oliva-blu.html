@@ -849,22 +849,38 @@ function demo() {
    Niente file audio: qualche bip sintetizzato al volo, come nei giochi a
    fumetti. Ogni personaggio ha la sua altezza - Mauro cupo, Rosalia acuta -
    e la battuta piu' lunga fa piu' bip. Si zittisce con "m". */
-const VOCE = { Giuseppe: 200, Rosalia: 310, Roberto: 165, Augusto: 225, Mauro: 125, Narratore: 245 };
+const VOCE = {
+  //            altezza  onda        passo   nota  deriva  taglio  lettere/bip
+  Giuseppe:  { f: 190, onda: "triangle", passo: .072, nota: .085, deriva: -.10, taglio: 2200, den: 4 },
+  Rosalia:   { f: 340, onda: "sine",     passo: .046, nota: .048, deriva:  .20, taglio: 5000, den: 3.4 },
+  Roberto:   { f: 150, onda: "sawtooth", passo: .066, nota: .072, deriva:  .02, taglio: 1300, den: 4.5 },
+  Augusto:   { f: 255, onda: "square",   passo: .040, nota: .036, deriva:  .07, taglio: 2600, den: 3 },
+  Mauro:     { f: 104, onda: "square",   passo: .095, nota: .110, deriva: -.18, taglio:  800, den: 6 },
+  Narratore: { f: 220, onda: "sine",     passo: .105, nota: .125, deriva: -.04, taglio: 3000, den: 5.5 }
+};
 let audio = null, muto = false;
 
 function suona(c, testo) {
-  const base = VOCE[c] || 200;
-  const bip = Math.max(3, Math.min(14, Math.round(testo.length / 4)));
+  const v = VOCE[c] || VOCE.Giuseppe;
+  const bip = Math.max(3, Math.min(16, Math.round(testo.length / v.den)));
+  // un filtro solo per tutta la battuta: e' il taglio a dare il timbro,
+  // e tiene a bada le onde piu' aspre senza abbassare il volume
+  const filtro = audio.createBiquadFilter();
+  filtro.type = "lowpass";
+  filtro.frequency.value = v.taglio;
+  filtro.Q.value = .7;
+  filtro.connect(audio.destination);
   for (let i = 0; i < bip; i++) {
-    const t = audio.currentTime + .01 + i * .058;
+    const t = audio.currentTime + .01 + i * v.passo;
+    const avanzamento = bip > 1 ? i / (bip - 1) : 0;      // la voce sale o cala lungo la frase
     const o = audio.createOscillator(), g = audio.createGain();
-    o.type = c === "Mauro" ? "square" : "triangle";
-    o.frequency.setValueAtTime(base * (.92 + Math.random() * .16), t);
+    o.type = v.onda;
+    o.frequency.setValueAtTime(v.f * (1 + v.deriva * avanzamento) * (.95 + Math.random() * .1), t);
     g.gain.setValueAtTime(.0001, t);
     g.gain.exponentialRampToValueAtTime(.3, t + .008);
-    g.gain.exponentialRampToValueAtTime(.0001, t + .05);
-    o.connect(g).connect(audio.destination);
-    o.start(t); o.stop(t + .06);
+    g.gain.exponentialRampToValueAtTime(.0001, t + v.nota);
+    o.connect(g).connect(filtro);
+    o.start(t); o.stop(t + v.nota + .01);
   }
 }
 
