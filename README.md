@@ -46,6 +46,12 @@ Il contesto audio nasce sospeso finché non c'è un gesto dell'utente e `resume(
 i bip vanno programmati **dopo** che è partito, altrimenti finiscono a un istante già passato e
 non si sente nulla.
 
+Le voci si regolano a orecchio in **[`voci.html`](voci.html)** — il banco: una scheda per
+personaggio, sette manopole (altezza, ritmo, durata, andamento, timbro, lettere per bip,
+volume), un pulsante per ascoltare e, in fondo, il blocco `const VOCE = {…}` già formattato da
+incollare qui. Il motore audio è duplicato apposta: l'app deve restare un file unico, quindi
+cambiandolo va cambiato in tutti e due.
+
 ## Regia delle scene
 
 Le posizioni di personaggi e oggetti si decidono a occhio, non a numeri indovinati. Premendo `r`
