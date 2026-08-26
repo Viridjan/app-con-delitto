@@ -33,7 +33,7 @@
 body{
   margin:0; background:var(--bg); color:var(--ink);
   font-family:"Alegreya Sans","Segoe UI",system-ui,sans-serif;
-  font-size:clamp(16px,1.05vw + .6rem,21px); line-height:1.5;
+  font-size:clamp(18px,2.6vw + .55rem,22px); line-height:1.5;
   -webkit-font-smoothing:antialiased;
 }
 h1,h2,h3{font-family:"Bodoni Moda","Didot","Times New Roman",serif; font-weight:600; text-wrap:balance; margin:0}
@@ -62,7 +62,7 @@ kbd{font:inherit; font-size:.78em; border:1px solid var(--line); border-bottom-w
 #stage{padding:clamp(1rem,3vh,2.4rem) clamp(1rem,4vw,3rem); display:flex; justify-content:center;
   overflow-y:auto; min-height:0; scrollbar-width:thin}
 .sheet{width:100%; max-width:74rem; margin-block:auto; display:flex; flex-direction:column; gap:clamp(1rem,2.4vh,1.75rem)}
-.eyebrow{font-size:.76rem; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); font-weight:500}
+.eyebrow{font-size:.8rem; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); font-weight:500}
 .scene-head{display:flex; align-items:baseline; gap:1rem}
 .scene-no{font-family:"Bodoni Moda",serif; font-size:clamp(2.4rem,5vw,4rem); line-height:1; color:var(--gold)}
 .scene-title{font-size:clamp(1.5rem,2.6vw,2.4rem)}
@@ -76,7 +76,7 @@ kbd{font:inherit; font-size:.78em; border:1px solid var(--line); border-bottom-w
 .plate::before{content:""; position:absolute; inset:6px; border:1px solid var(--line); border-radius:1px; pointer-events:none; opacity:.6}
 .plate > img{display:block; width:100%; height:auto; border-radius:1px}
 .plate .brief{font-family:ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
-  font-size:.8em; line-height:1.65; color:var(--muted); margin:0; max-width:70ch}
+  font-size:.85em; line-height:1.65; color:var(--muted); margin:0; max-width:70ch}
 .plate .brief-label{display:flex; align-items:center; gap:.55rem; margin-bottom:.7rem}
 .plate .brief-label span{font-size:.7rem; letter-spacing:.16em; text-transform:uppercase; color:var(--olive)}
 .leaf{width:14px; height:14px; flex:none; color:var(--olive)}
@@ -189,11 +189,6 @@ kbd{font:inherit; font-size:.78em; border:1px solid var(--line); border-bottom-w
 #overlay[hidden]{display:none}
 .ov{max-width:60rem; margin:0 auto; display:flex; flex-direction:column; gap:1.1rem}
 .ov-head{display:flex; align-items:baseline; gap:1rem}
-.prompt{border:1px solid var(--line); border-radius:2px; background:var(--surface); padding:1rem}
-.prompt textarea{width:100%; min-height:9.5rem; resize:vertical; border:none; background:transparent; color:var(--ink);
-  font-family:ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace; font-size:.82rem; line-height:1.6}
-.prompt textarea:focus{outline:none}
-.prompt .top{display:flex; align-items:center; gap:.8rem; margin-bottom:.5rem}
 .keys{display:grid; gap:.5rem; grid-template-columns:repeat(auto-fit,minmax(min(16rem,100%),1fr))}
 .keys div{display:flex; gap:.6rem; align-items:baseline}
 
@@ -236,22 +231,23 @@ kbd{font:inherit; font-size:.78em; border:1px solid var(--line); border-bottom-w
 .detail figure img{display:block; width:100%; aspect-ratio:1; object-fit:cover}
 .cover figure{width:min(100%,52rem); margin:0}
 .cover figure img{width:100%; aspect-ratio:16/9; max-height:46vh; object-fit:cover; border:1px solid var(--line); border-radius:2px; box-shadow:var(--shadow)}
-.art-row{display:flex; align-items:baseline; gap:.8rem; border-bottom:1px solid var(--line); padding:.55rem 0}
-.art-row .file{font-family:ui-monospace,Menlo,Consolas,monospace; font-size:.8rem; min-width:15rem}
-.art-row .st{font-size:.72rem; letter-spacing:.12em; text-transform:uppercase; color:var(--muted)}
-.art-row .st.ok{color:var(--olive)}
-.art-row .brief{flex:1; font-size:.85rem; color:var(--muted)}
 @media (max-width:640px){
   .bubble .side{width:auto; justify-content:flex-start; align-items:center}
   .detail figure{float:none; width:100%; margin:0 0 .8rem}
-  .art-row{flex-wrap:wrap}
-}
+  }
 
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important}
 }
 @media (max-width:900px){
   .mark{overflow:hidden; text-overflow:ellipsis; flex:0 1 auto}
+}
+@media (max-width:700px){
+  /* col testo piu' grande la barra andava a capo: qui i tasti non servono,
+     si tocca lo schermo */
+  .bar{font-size:.85rem; gap:.5rem}
+  .btn{padding:.3rem .7rem; white-space:nowrap}
+  #hint{display:none}
 }
 @media (max-width:640px){
   .bubble{flex-direction:column; gap:.2rem}
@@ -265,7 +261,6 @@ kbd{font:inherit; font-size:.78em; border:1px solid var(--line); border-bottom-w
   <header class="bar">
     <span class="mark">Il mistero dell’<i>oliva blu</i></span>
     <span class="spacer"></span>
-    <button class="btn" id="k-prompts" title="Brief illustrazioni">Illustrazioni</button>
     <button class="btn" id="k-help" title="Comandi">?</button>
   </header>
   <main id="stage" tabindex="-1"></main>
@@ -837,37 +832,7 @@ document.getElementById("prev").addEventListener("click", indietro);
 
 /* ---------- soprastrutture: brief illustrazioni e comandi ---------- */
 
-const FILE_LIST = [
-  { f: "copertina.png", r: "16:9", b: "Copertina: il simbolo degli Oliviani, una grande oliva stilizzata, fra rami d’ulivo e candele. Titolo lasciato libero." },
-  ...STORY.scene.map((s, i) => ({ f: `scena${i + 1}.png`, r: "16:9", b: s.descrizione })),
-  ...STORY.oggetti.map((o, i) => ({ f: `indizio-${OGGETTO_ID[i]}.png`, r: "1:1", b: `${o.nome} — ${o.tag}. Oggetto isolato su fondo neutro, come una prova su un tavolo.` })),
-  ...STORY.personaggi.filter(p => p.c !== "Narratore").map(p => ({ f: `attore-${p.c.toLowerCase()}.png`, r: "PNG trasparente", b: `${p.n}, figura intera ritagliata su fondo trasparente, in piedi, di tre quarti. Va sovrapposta agli sfondi delle scene.` })),
-  ...STORY.personaggi.map(p => ({ f: `ritratto-${p.c.toLowerCase()}.png`, r: "1:1", b: `${p.n}. ${p.d}` }))
-];
 
-function ovArt() {
-  const rows = FILE_LIST.map((x, i) => `
-    <div class="art-row" id="art${i}">
-      <span class="file">${esc(IMG_DIR + x.f)}</span>
-      <span class="st" data-st>cerco…</span>
-      <span class="st">${x.r}</span>
-      <span class="brief">${esc(x.b)}</span>
-    </div>`).join("");
-  const html = `<div class="ov">
-    <div class="ov-head"><h2 class="scene-title">Illustrazioni</h2><span class="spacer"></span>
-      <button class="btn" data-close>Chiudi (esc)</button></div>
-    <p style="color:var(--muted);max-width:65ch">Le immagini le genera Codex e vanno in <code>assets/images/</code> con questi nomi esatti. Ogni casella vuota mostra il brief al posto dell’immagine, quindi l’app resta presentabile anche a metà consegna. Il brief completo è in <code>img/ART.md</code>.</p>
-    ${rows}
-  </div>`;
-  overlayEl.innerHTML = html;
-  FILE_LIST.forEach((x, i) => {
-    const im = new Image();
-    const cell = overlayEl.querySelector(`#art${i} [data-st]`);
-    im.onload = () => { cell.textContent = "consegnata"; cell.classList.add("ok"); };
-    im.onerror = () => { cell.textContent = "manca"; };
-    im.src = src(x.f);
-  });
-}
 
 function ovHelp() {
   const k = [
@@ -876,7 +841,6 @@ function ovHelp() {
     ["s", "mostra il box “Lo sapevi?”"],
     ["i", "mostra gli indizi di gioco"],
     ["1–4", "apre un indizio sul tavolo"],
-    ["p", "elenco delle illustrazioni"],
     ["d", "sagome di prova al posto delle illustrazioni mancanti"],
     ["f", "schermo intero"],
     ["esc", "chiude questa finestra"]
@@ -889,17 +853,15 @@ function ovHelp() {
   </div>`;
 }
 
-function apri(kind) {
-  state.overlay = kind;
-  (kind === "art" ? ovArt : ovHelp)();
-  slots(overlayEl);
+function apri() {
+  state.overlay = true;
+  ovHelp();
   overlayEl.hidden = false;
   overlayEl.querySelector("[data-close]").focus();
 }
-function chiudi() { state.overlay = null; overlayEl.hidden = true; stage.focus(); }
+function chiudi() { state.overlay = false; overlayEl.hidden = true; stage.focus(); }
 overlayEl.addEventListener("click", e => { if (e.target === overlayEl || e.target.closest("[data-close]")) chiudi(); });
-document.getElementById("k-prompts").addEventListener("click", () => apri("art"));
-document.getElementById("k-help").addEventListener("click", () => apri("help"));
+document.getElementById("k-help").addEventListener("click", apri);
 
 document.addEventListener("keydown", e => {
   if (e.metaKey || e.ctrlKey || e.altKey) return;
@@ -911,9 +873,8 @@ document.addEventListener("keydown", e => {
     case "ArrowLeft": case "PageUp": e.preventDefault(); indietro(); break;
     case "s": case "S": if (SLIDES[state.n].t === "scene") { state.box = !state.box; render(); } break;
     case "i": case "I": if (SLIDES[state.n].t === "scene") { state.indizi = !state.indizi; render(); } break;
-    case "p": case "P": apri("art"); break;
     case "d": case "D": demo(); break;
-    case "?": apri("help"); break;
+    case "?": apri(); break;
     case "f": case "F":
       if (document.fullscreenElement) document.exitFullscreen();
       else document.documentElement.requestFullscreen?.().catch(() => {});
