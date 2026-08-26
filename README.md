@@ -29,6 +29,16 @@ percentuali (`x` orizzontale, `b` altezza da terra, `h` altezza della figura —
 la distanza). Quando qualcuno parla, l'app lo porta avanti e lo riaccende, lasciando gli altri
 indietro e in penombra. Le posizioni stanno in `STORY.scene[i].cast`.
 
+## Regia delle scene
+
+Le posizioni di personaggi e oggetti si decidono a occhio, non a numeri indovinati. Premendo `r`
+su una scena si accende la **modalità regia**: si trascina per spostare, la rotella (o `+` / `-`)
+cambia la taglia, le frecce fanno lo scatto fine. Il pannello in basso mostra dal vivo le righe
+`cast:` e `primo:` da incollare in `STORY.scene[i]`, con un pulsante per copiarle.
+
+Le modifiche vivono solo nella pagina aperta: per renderle definitive si incollano le righe nel
+file.
+
 ## Immagini
 
 Le illustrazioni le genera Codex e vanno in `assets/images/`, con i nomi elencati in
@@ -56,6 +66,7 @@ per giudicare posizioni e ritmo prima che l'arte sia pronta.
 | `1`–`4` | apre un indizio sul tavolo |
 | `p` | elenco delle illustrazioni, con quali mancano |
 | `d` | sagome di prova |
+| `r` | regia: sposta e ridimensiona personaggi e oggetti sulla scena |
 | `f` | schermo intero |
 | `?` | tutti i comandi |
 

@@ -13,6 +13,7 @@ const node = () => ({
 const stage = node();
 const doc = {
   createElement: node, addEventListener() {},
+  querySelector: () => null, body: { appendChild: n => n },
   getElementById: id => (id === "stage" ? stage : node()),
   documentElement: { requestFullscreen: () => Promise.resolve() },
 };
