@@ -240,6 +240,22 @@ kbd{font:inherit; font-size:.78em; border:1px solid var(--line); border-bottom-w
   .detail figure{float:none; width:100%; margin:0 0 .8rem}
   }
 
+/* ---- modalita' regia: si trascina, si ridimensiona, si copia il risultato ---- */
+.palco.regia .attore,.palco.regia .primo{pointer-events:auto; cursor:grab; touch-action:none}
+.palco.regia .sel{outline:2px dashed var(--gold); outline-offset:3px}
+.palco.regia::after{content:"REGIA"; position:absolute; top:.4rem; left:.5rem; z-index:9;
+  font-size:.62rem; letter-spacing:.18em; color:var(--gold);
+  background:color-mix(in srgb,var(--bg) 75%,transparent); padding:.15rem .45rem; border-radius:2px}
+.regia-pan{position:fixed; left:.7rem; right:.7rem; bottom:4.2rem; z-index:8; display:flex;
+  flex-direction:column; gap:.5rem; background:var(--surface); border:1px solid var(--line);
+  border-radius:4px; padding:.7rem .8rem; box-shadow:var(--shadow); max-width:min(94vw,44rem);
+  margin-inline:auto; font-size:.8rem}
+.regia-pan .riga{display:flex; align-items:center; gap:.5rem; flex-wrap:wrap}
+.regia-pan b{color:var(--gold); font-weight:700}
+.regia-pan textarea{width:100%; min-height:4.5rem; resize:vertical; border:1px solid var(--line);
+  border-radius:2px; background:var(--bg); color:var(--ink); padding:.4rem .5rem;
+  font-family:ui-monospace,Menlo,Consolas,monospace; font-size:.72rem; line-height:1.5}
+
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important}
 }
@@ -295,8 +311,8 @@ const STORY = {
       titolo:"L’inaugurazione degli Oliviani",
       img:null,
       descrizione:"L’immagine mostra l’interno della nuova sede degli Oliviani. La sala è decorata con rami d’ulivo, stoffe verdi e bianche, candele e piccole ciotole piene di olive. Al centro c’è un piccolo palco o altare con il simbolo degli Oliviani: una grande oliva stilizzata. Roberto e Augusto accolgono gli ospiti con aria solenne ma sorridente. Giuseppe Maria De Robertis entra elegante e sicuro di sé. Accanto a lui c’è Rosalia, che sembra più preoccupata che felice. In fondo alla sala si vede Mauro, in disparte. Osserva Giuseppe con attenzione. L’atmosfera deve essere accogliente, curiosa e un po’ misteriosa.",
-      cast:[{c:"Mauro",x:17,b:20,h:42},{c:"Roberto",x:33,b:13,h:60},{c:"Augusto",x:46,b:15,h:56},{c:"Giuseppe",x:56,b:4,h:76},{c:"Rosalia",x:71,b:4,h:70}],
-      primo:[{lato:"sx",x:7,b:-16,h:78},{lato:"dx",x:98,b:-14,h:80}],
+      cast:[{c:"Mauro",x:82.2,b:30.6,h:42},{c:"Roberto",x:57.8,b:11.6,h:63},{c:"Augusto",x:41.8,b:17.6,h:59},{c:"Giuseppe",x:25.6,b:17.3,h:63},{c:"Rosalia",x:69,b:30.7,h:41}],
+      primo:[{lato:"sx",x:13.2,b:0.8,h:34},{lato:"dx",x:94.6,b:-24.4,h:76}],
       battute:[
         {c:"Roberto", t:"Benvenuti nella prima casa degli Oliviani!"},
         {c:"Augusto", t:"Questa sera celebriamo l’ulivo, simbolo di pace e rinascita."},
@@ -541,7 +557,7 @@ const SLIDES = [
   { t: "sol" }, { t: "fine" }
 ];
 
-const state = { n: 0, step: 0, demo: false, box: false, indizi: false, qa: new Set(), clue: null, risposte: [], overlay: null };
+const state = { n: 0, step: 0, demo: false, regia: false, box: false, indizi: false, qa: new Set(), clue: null, risposte: [], overlay: null };
 
 const stage = document.getElementById("stage");
 const vista = typeof IntersectionObserver === "function"
@@ -738,6 +754,8 @@ function render() {
     : s.t === "sol" ? vSol() : vFine();
   stage.innerHTML = html;
   slots(stage);
+  if (state.regia && SLIDES[state.n].t === "scene") attivaRegia(SLIDES[state.n].i);
+  else document.querySelector(".regia-pan")?.remove();
   vista?.disconnect();
   if (vista) { stage.classList.add("dissolve"); schede().forEach(c => vista.observe(c)); }
   /* la battuta appena scoperta si porta da sola sotto gli occhi del narratore */
@@ -817,6 +835,105 @@ function demo() {
   render();
 }
 
+/* ---------- modalita' regia ----------
+   Si accende con "r" su una scena: personaggi e oggetti diventano trascinabili,
+   la rotella (o i tasti + e -) li ridimensiona, e il pannello mostra le righe
+   da incollare in STORY. Serve a decidere la regia con l'occhio invece che a
+   forza di numeri indovinati. */
+let sel = null;
+
+const arrotonda = n => Math.round(n * 10) / 10;
+const rigaCast = sc => "cast:[" + (sc.cast || []).map(a =>
+  `{c:"${a.c}",x:${arrotonda(a.x)},b:${arrotonda(a.b)},h:${arrotonda(a.h)}}`).join(",") + "],";
+const rigaPrimo = sc => (sc.primo || []).length
+  ? "primo:[" + sc.primo.map(o => `{lato:"${o.lato}",x:${arrotonda(o.x)},b:${arrotonda(o.b)},h:${arrotonda(o.h)}}`).join(",") + "],"
+  : "";
+
+function pannello(i) {
+  const sc = STORY.scene[i];
+  const p = document.querySelector(".regia-pan") || document.body.appendChild(el(
+    `<div class="regia-pan">
+       <div class="riga"><b>Regia scena ${i + 1}</b>
+         <span>trascina per spostare · rotella o <kbd>+</kbd><kbd>-</kbd> per la taglia ·
+         frecce per lo scatto fine · <kbd>r</kbd> per uscire</span></div>
+       <div class="riga" id="regia-sel">niente selezionato</div>
+       <textarea readonly spellcheck="false"></textarea>
+       <div class="riga"><button class="btn" id="regia-copia">Copia</button>
+         <span id="regia-eco"></span></div>
+     </div>`, true));
+  p.querySelector("textarea").value = [rigaCast(sc), rigaPrimo(sc)].filter(Boolean).join("\n");
+  p.querySelector("#regia-sel").textContent = sel
+    ? `${sel.nome} — x ${arrotonda(sel.dato.x)} · b ${arrotonda(sel.dato.b)} · h ${arrotonda(sel.dato.h)}`
+    : "niente selezionato";
+  p.querySelector("#regia-copia").onclick = () => {
+    const t = p.querySelector("textarea");
+    navigator.clipboard?.writeText(t.value).then(
+      () => p.querySelector("#regia-eco").textContent = "copiato",
+      () => { t.select(); p.querySelector("#regia-eco").textContent = "selezionato: copia a mano"; });
+  };
+  return p;
+}
+
+function posiziona(el, d) {
+  el.style.left = d.x + "%"; el.style.bottom = d.b + "%"; el.style.height = d.h + "%";
+}
+
+function attivaRegia(i) {
+  const pal = stage.querySelector(".palco");
+  if (!pal) return;
+  pal.classList.add("regia");
+  const sc = STORY.scene[i];
+  const voci = [...(sc.cast || []), ...(sc.primo || [])];
+  const nodi = [...pal.querySelectorAll(".attore, .primo")];
+
+  nodi.forEach((n, k) => {
+    const dato = voci[k], nome = dato.c || `oggetto ${dato.lato.toUpperCase()}`;
+    n.addEventListener("pointerdown", e => {
+      e.preventDefault();
+      nodi.forEach(o => o.classList.remove("sel"));
+      n.classList.add("sel");
+      const r = pal.getBoundingClientRect();
+      sel = { nodo: n, dato, nome };
+      const x0 = dato.x, b0 = dato.b, px = e.clientX, py = e.clientY;
+      n.setPointerCapture(e.pointerId);
+      const muovi = ev => {
+        dato.x = x0 + (ev.clientX - px) / r.width * 100;
+        dato.b = b0 - (ev.clientY - py) / r.height * 100;
+        posiziona(n, dato); pannello(i);
+      };
+      const molla = () => { n.removeEventListener("pointermove", muovi); };
+      n.addEventListener("pointermove", muovi);
+      n.addEventListener("pointerup", molla, { once: true });
+      n.addEventListener("pointercancel", molla, { once: true });
+      pannello(i);
+    });
+  });
+
+  pal.addEventListener("wheel", e => {
+    if (!sel) return;
+    e.preventDefault();
+    sel.dato.h = Math.max(2, sel.dato.h + (e.deltaY < 0 ? 1 : -1));
+    posiziona(sel.nodo, sel.dato); pannello(i);
+  }, { passive: false });
+
+  pannello(i);
+}
+
+function sposta(dx, db, grosso) {
+  const p = grosso ? 2 : .5;
+  sel.dato.x += dx * p; sel.dato.b += db * p;
+  posiziona(sel.nodo, sel.dato); pannello(SLIDES[state.n].i);
+}
+
+function regia() {
+  const s = SLIDES[state.n];
+  if (s.t !== "scene") return;
+  state.regia = !state.regia;
+  sel = null;
+  document.querySelector(".regia-pan")?.remove();
+  render();
+}
+
 /* ---------- interazione ---------- */
 
 stage.addEventListener("click", e => {
@@ -842,6 +959,7 @@ function ovHelp() {
     ["i", "mostra gli indizi di gioco"],
     ["1–4", "apre un indizio sul tavolo"],
     ["d", "sagome di prova al posto delle illustrazioni mancanti"],
+    ["r", "regia: sposta e ridimensiona personaggi e oggetti"],
     ["f", "schermo intero"],
     ["esc", "chiude questa finestra"]
   ].map(([a, b]) => `<div><kbd>${esc(a)}</kbd><span>${esc(b)}</span></div>`).join("");
@@ -869,11 +987,25 @@ document.addEventListener("keydown", e => {
   if (e.key === "Escape") { if (state.overlay) chiudi(); return; }
   if (state.overlay) return;
   switch (e.key) {
-    case " ": case "ArrowRight": case "PageDown": e.preventDefault(); avanti(); break;
-    case "ArrowLeft": case "PageUp": e.preventDefault(); indietro(); break;
+    case "ArrowUp": case "ArrowDown":
+      if (state.regia && sel) { e.preventDefault(); sposta(0, e.key === "ArrowUp" ? 1 : -1, e.shiftKey); }
+      break;
+    case " ": case "ArrowRight": case "PageDown":
+      if (state.regia && sel && e.key === "ArrowRight") { e.preventDefault(); sposta(1, 0, e.shiftKey); break; }
+      e.preventDefault(); avanti(); break;
+    case "ArrowLeft": case "PageUp":
+      if (state.regia && sel && e.key === "ArrowLeft") { e.preventDefault(); sposta(-1, 0, e.shiftKey); break; }
+      e.preventDefault(); indietro(); break;
     case "s": case "S": if (SLIDES[state.n].t === "scene") { state.box = !state.box; render(); } break;
     case "i": case "I": if (SLIDES[state.n].t === "scene") { state.indizi = !state.indizi; render(); } break;
     case "d": case "D": demo(); break;
+    case "r": case "R": regia(); break;
+    case "+": case "=": case "-": case "_":
+      if (state.regia && sel) {
+        sel.dato.h = Math.max(2, sel.dato.h + (e.key === "+" || e.key === "=" ? 1 : -1));
+        posiziona(sel.nodo, sel.dato); pannello(SLIDES[state.n].i);
+      }
+      break;
     case "?": apri(); break;
     case "f": case "F":
       if (document.fullscreenElement) document.exitFullscreen();
