@@ -35,6 +35,11 @@ indietro e in penombra. Perciò servono due cose diverse:
    descritti **non vanno disegnati**: lascia lo spazio dove staranno.
 2. `attore-*.png` — un ritaglio a figura intera per personaggio, su fondo trasparente, riusato
    in tutte e cinque le scene.
+3. `scenaN-sx.png` e `scenaN-dx.png` — **oggetti in primo piano**, su fondo trasparente, uno per
+   angolo basso. Stanno davanti a tutti, anche ai personaggi, e servono a dare profondità: un
+   tavolo imbandito, una poltrona, un candelabro. Vanno disegnati **visti da vicino**, con la
+   stessa luce della scena; l'app li appoggia agli angoli e li lascia tagliare dal bordo.
+   Sono facoltativi: senza di loro la scena resta valida.
 
 Se preferite scene piatte già complete di personaggi, basta non consegnare i ritagli: l'app
 mostra l'illustrazione così com'è e salta i livelli.
@@ -44,7 +49,7 @@ mostra l'illustrazione così com'è e salta i livelli.
 | File | Brief |
 |---|---|
 | `copertina.png` | Il simbolo degli Oliviani fra rami d'ulivo, candele e ciotole di olive. Nessun testo: il titolo lo mette l'app. |
-| `scena1.png` | L'interno della nuova sede degli Oliviani. Sala decorata con rami d'ulivo, stoffe verdi e bianche, candele e ciotole di olive. Al centro un palco o altare con il simbolo. Roberto e Augusto accolgono gli ospiti, solenni ma sorridenti. Giuseppe entra elegante e sicuro di sé, accanto a lui Rosalia più preoccupata che felice. In fondo Mauro, in disparte, osserva Giuseppe. |
+| `scena1.png` | L'ambiente **sgombro in primo piano**: gli oggetti davanti arrivano da `scena1-sx/dx`. L'interno della nuova sede degli Oliviani. Sala decorata con rami d'ulivo, stoffe verdi e bianche, candele e ciotole di olive. Al centro un palco o altare con il simbolo. Roberto e Augusto accolgono gli ospiti, solenni ma sorridenti. Giuseppe entra elegante e sicuro di sé, accanto a lui Rosalia più preoccupata che felice. In fondo Mauro, in disparte, osserva Giuseppe. |
 | `scena2.png` | Giuseppe vicino a un tavolo con un grande foglio di donazione riempito soltanto da finte righe d'inchiostro illeggibili, sigillo e svolazzo astratto. Penna, olive, una piccola bottiglia d'olio, un cartellino illustrato senza parole con le fasi della produzione. Roberto e Augusto soddisfatti, Rosalia preoccupata, Mauro cupo e silenzioso. Si deve capire che la donazione crea tensione. |
 | `scena3.png` | Il rinfresco: olive, pane, taralli, bicchieri, bottiglie. **Mauro porge un bicchiere a Giuseppe** — gesto chiarissimo, la mano che offre e la mano che prende. Sullo sfondo Roberto parla con gli ospiti, Augusto mostra una bottiglia d'olio, Rosalia in disparte, turbata. Scena tranquilla, ma **il bicchiere è il fuoco visivo**: primo piano, illuminato. |
 | `scena4.png` | Giuseppe ha appena bevuto e si sente male: una mano alla gola o al petto, il bicchiere che scivola o è caduto vicino a lui. Tutti si girano spaventati, Rosalia corre verso lo zio, Roberto e Augusto agitati, Mauro più rigido degli altri, come se sapesse già. Dettaglio decisivo: **la bocca (o la lingua) di Giuseppe è diventata blu — evidente, ma non horror**. Malessere, non terrore. |

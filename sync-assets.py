@@ -15,12 +15,15 @@ LARGH = {"ritratto": 900, "attore": 700, "scena": 1600, "indizio": 512, "coperti
 ALIAS = {"investigatore": "narratore"}          # il meeple investigatore e' il Narratore
 # Codex consegna varianti con nomi suoi: qui si dice quale riempie quale casella.
 # La versione (-vN) la sceglie comunque lo script, tenendo la piu' alta.
-SCELTE = {"scena1.png": "scena3-sala2"}
+SCELTE = {"scena1.png": "scena3-sala2",
+          "scena1-sx.png": "scena3-sala2-oggettoSX",
+          "scena1-dx.png": "scena3-sala2-oggettoDX"}
 PERSONE = ["giuseppe", "rosalia", "roberto", "augusto", "mauro"]
 OGGETTI = ["bicchiere", "bottiglietta", "foglio", "biglietto"]
 # solo le caselle che l'app sa mostrare: le varianti e le prove restano fuori dal file
 ATTESI = ({"copertina.png"}
           | {f"scena{i}.png" for i in range(1, 6)}
+          | {f"scena{i}-{lato}.png" for i in range(1, 6) for lato in ("sx", "dx")}
           | {f"attore-{n}.png" for n in PERSONE}
           | {f"ritratto-{n}.png" for n in PERSONE + ["narratore"]}
           | {f"indizio-{n}.png" for n in OGGETTI})
@@ -51,7 +54,8 @@ def main():
     for key, (_, f) in sorted(migliori.items()):
         if key not in ATTESI: continue
         im = Image.open(f)
-        if key.startswith("attore-") and im.mode in ("RGBA", "LA"):
+        ritaglia = key.startswith("attore-") or key[:-4].endswith(("-sx", "-dx"))
+        if ritaglia and im.mode in ("RGBA", "LA"):
             # i ritagli arrivano dentro un quadrato con molto vuoto attorno:
             # senza togliere il vuoto la figura sul palco resta minuscola
             bbox = im.getchannel("A").getbbox()
@@ -79,7 +83,7 @@ def main():
     HTML.write_text(nuovo, encoding="utf-8")
     if scartati:
         print("\nfuori dalle caselle previste, non agganciate: " + ", ".join(scartati))
-    mancanti = sorted(ATTESI - set(mappa))
+    mancanti = sorted(k for k in ATTESI - set(mappa) if not k[:-4].endswith(("-sx", "-dx")))
     if mancanti:
         print("ancora da consegnare: " + ", ".join(mancanti))
     print(f"\n{len(mappa)} immagini agganciate · oliva-blu.html ora pesa "
