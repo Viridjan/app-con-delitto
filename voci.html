@@ -116,11 +116,10 @@ const PARTENZA = {
   Rosalia:   { f: 395, onda: "triangle", passo: .092, nota: .070, deriva:  .20, taglio: 4500, den: 3.4, vol: .48 },
   Roberto:   { f: 198, onda: "sawtooth", passo: .094, nota: .095, deriva:  .02, taglio: 1300, den: 4.5, vol: .28 },
   Augusto:   { f: 312, onda: "square",   passo: .076, nota: .075, deriva:  .07, taglio: 2600, den: 3, vol: .14 },
-  Mauro:     { f: 239, onda: "square",   passo: .108, nota: .130, deriva:  .14, taglio: 4500, den: 4.9, vol: .07 },
-  Narratore: { f: 220, onda: "sine",     passo: .105, nota: .125, deriva: -.04, taglio: 3000, den: 5.5, vol: .3 }
+  Mauro:     { f: 239, onda: "square",   passo: .108, nota: .130, deriva:  .14, taglio: 4500, den: 4.9, vol: .07 }
 };
 const COLORE = { Giuseppe: "--gold", Rosalia: "--plum", Roberto: "--olive",
-                 Augusto: "--teal", Mauro: "--blu", Narratore: "--gold" };
+                 Augusto: "--teal", Mauro: "--blu" };
 const MANOPOLE = [
   { k: "f",      eti: "altezza",  min: 60,  max: 520,  passo: 1,    suff: " Hz" },
   { k: "passo",  eti: "ritmo",    min: .05, max: .16,  passo: .002, suff: " s" },
@@ -131,9 +130,6 @@ const MANOPOLE = [
   { k: "vol",    eti: "volume",   min: .05, max: .6,   passo: .01,  suff: "" }
 ];
 const ONDE = { triangle: "triangolo", sine: "sinusoide", square: "quadra", sawtooth: "dente di sega" };
-// Fuori dal banco ma dentro il blocco esportato: senza la sua riga, incollando
-// nell'app il narratore resterebbe con la voce di ripiego.
-const NASCOSTI = ["Narratore"];
 
 let VOCE = structuredClone(PARTENZA);
 let audio = null;
@@ -147,6 +143,7 @@ function suona(c, testo) {
 
 function emetti(c, testo) {
   const v = VOCE[c];
+  if (!v) return;
   const bip = Math.max(3, Math.min(16, Math.round(testo.length / v.den)));
   const filtro = audio.createBiquadFilter();
   filtro.type = "lowpass"; filtro.frequency.value = v.taglio; filtro.Q.value = .7;
@@ -178,7 +175,7 @@ function testo() {
 }
 
 function schede() {
-  document.getElementById("voci").innerHTML = Object.keys(VOCE).filter(c => !NASCOSTI.includes(c)).map(c => `
+  document.getElementById("voci").innerHTML = Object.keys(VOCE).map(c => `
     <section class="voce" style="--c:var(${COLORE[c]})">
       <div class="capo"><h2>${c}</h2><span style="flex:1"></span>
         <button data-ascolta="${c}">Ascolta</button></div>

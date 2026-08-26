@@ -11,13 +11,14 @@ from pathlib import Path
 from PIL import Image
 
 SRC, WEB, HTML = Path("assets/images"), Path("assets/web"), Path("oliva-blu.html")
-LARGH = {"ritratto": 900, "attore": 700, "scena": 1600, "indizio": 512, "copertina": 1600}
+LARGH = {"ritratto": 900, "attore": 700, "scena": 1600, "indizio": 512, "copertina": 560}
 ALIAS = {"investigatore": "narratore"}          # il meeple investigatore e' il Narratore
 # Codex consegna varianti con nomi suoi: qui si dice quale riempie quale casella.
 # La versione (-vN) la sceglie comunque lo script, tenendo la piu' alta.
-SCELTE = {"scena1.png": "scena3-sala2",
-          "scena1-sx.png": "scena3-sala2-oggettoSX",
-          "scena1-dx.png": "scena3-sala2-oggettoDX"}
+SCELTE = {"copertina.png": "quadro-oliva-animato",
+          "scena1.png": "sala2",
+          "scena1-sx.png": "sala2-oggettoSX",
+          "scena1-dx.png": "sala2-oggettoDX"}
 PERSONE = ["giuseppe", "rosalia", "roberto", "augusto", "mauro"]
 OGGETTI = ["bicchiere", "bottiglietta", "foglio", "biglietto"]
 # solo le caselle che l'app sa mostrare: le varianti e le prove restano fuori dal file
@@ -27,6 +28,10 @@ ATTESI = ({"copertina.png"}
           | {f"attore-{n}.png" for n in PERSONE}
           | {f"ritratto-{n}.png" for n in PERSONE + ["narratore"]}
           | {f"indizio-{n}.png" for n in OGGETTI})
+
+def famiglia(key):
+    """copertina.png -> copertina · scena1-sx.png -> scena · attore-mauro.png -> attore"""
+    return re.match(r"[a-z]+", Path(key).stem).group(0)
 
 def logico(nome):
     """ritratto-roberto-v5.png -> ('ritratto-roberto.png', 5)"""
@@ -54,6 +59,24 @@ def main():
     for key, (_, f) in sorted(migliori.items()):
         if key not in ATTESI: continue
         im = Image.open(f)
+        if getattr(im, "n_frames", 1) > 1:
+            # animata: si ridimensiona fotogramma per fotogramma, se no ne resta uno solo
+            largh = LARGH.get(famiglia(key), 800)
+            fotogrammi, durate = [], []
+            for i in range(im.n_frames):
+                im.seek(i)
+                d = im.convert("RGBA")
+                if d.width > largh:
+                    d = d.resize((largh, round(d.height * largh / d.width)), Image.LANCZOS)
+                fotogrammi.append(d)
+                durate.append(im.info.get("duration") or 80)
+            out = WEB / (Path(key).stem + ".webp")
+            fotogrammi[0].save(out, "WEBP", save_all=True, append_images=fotogrammi[1:],
+                               duration=durate, loop=0, quality=68, method=6)
+            b64 = base64.b64encode(out.read_bytes()).decode()
+            mappa[key] = f"data:image/webp;base64,{b64}"
+            print(f"{f.name:32} -> {out.name:28} {out.stat().st_size // 1024:4}KB  {im.n_frames} fotogrammi")
+            continue
         ritaglia = key.startswith("attore-") or key[:-4].endswith(("-sx", "-dx"))
         if ritaglia and im.mode in ("RGBA", "LA"):
             # i ritagli arrivano dentro un quadrato con molto vuoto attorno:
@@ -64,7 +87,7 @@ def main():
             if im.height > alt:
                 im = im.resize((round(im.width * alt / im.height), alt), Image.LANCZOS)
         else:
-            largh = LARGH.get(key.split("-")[0], 800)
+            largh = LARGH.get(famiglia(key), 800)
             if im.width > largh:
                 im = im.resize((largh, round(im.height * largh / im.width)), Image.LANCZOS)
         out = WEB / (Path(key).stem + ".webp")
