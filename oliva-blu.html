@@ -67,22 +67,26 @@ kbd{font:inherit; font-size:.78em; border:1px solid var(--line); border-bottom-w
 .sheet{width:100%; max-width:74rem; margin-block:auto; display:flex; flex-direction:column; gap:clamp(1rem,2.4vh,1.75rem)}
 .eyebrow{font-size:.8rem; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); font-weight:500}
 .scene-head{display:flex; align-items:baseline; gap:1rem}
-.scene-no{font-family:"Bodoni Moda",serif; font-size:clamp(2.4rem,5vw,4rem); line-height:1; color:var(--gold)}
-.scene-title{font-size:clamp(1.5rem,2.6vw,2.4rem)}
+.scene-no{font-family:"Bodoni Moda",serif; font-size:clamp(1.8rem,3.4vw,2.6rem); line-height:1; color:var(--gold)}
+.scene-title{font-size:clamp(1.25rem,2vw,1.8rem)}
 
 /* art plate */
 .plate{border:1px dashed var(--line); border-radius:2px; background:var(--surface);
   padding:clamp(1rem,2.5vw,1.9rem); position:relative; box-shadow:var(--shadow)}
 .plate.scena:not(.empty){border:none; background:var(--bg); box-shadow:none; padding:0;
-  width:100%}
+  height:100%; display:flex; justify-content:center}
 
 /* La schermata di scena e' divisa in due: sopra il titolo con l'immagine, fermi;
    sotto i dialoghi, che scorrono per conto loro. */
-#stage:has(.scena-doppia){overflow:hidden; padding-bottom:0}
-.sheet.scena-doppia{height:100%; margin-block:0; display:grid; grid-template-rows:auto minmax(0,1fr);
-  gap:0}
-.scena-doppia .alto{display:flex; flex-direction:column; gap:clamp(.6rem,1.6vh,1.2rem);
-  padding-bottom:clamp(.7rem,2vh,1.2rem); border-bottom:1px solid var(--line)}
+#stage:has(.scena-doppia){overflow:hidden; padding:clamp(.6rem,1.6vh,1.2rem) clamp(1rem,4vw,3rem) 0}
+.sheet.scena-doppia{height:100%; margin-block:0; display:grid;
+  grid-template-rows:minmax(0,54%) minmax(0,46%); gap:0}
+.scena-doppia .alto{display:flex; flex-direction:column; gap:clamp(.4rem,1.4vh,1rem);
+  min-height:0; overflow:hidden;
+  padding-bottom:clamp(.6rem,1.8vh,1.1rem); border-bottom:1px solid var(--line)}
+/* Il palco prende l'altezza che avanza sotto il titolo: legarlo a vh lo faceva
+   uscire dalla sua meta' sui telefoni, dove finiva tagliato e sembrava ingrandito. */
+.palco-box{flex:1 1 auto; min-height:0; display:flex; justify-content:center}
 .scena-doppia .basso{display:grid; grid-template-columns:32% 1fr; min-height:0; overflow:hidden;
   padding-top:clamp(.9rem,2.4vh,1.6rem)}
 /* la figura intera, non il ritratto: si appoggia in basso come sul palco */
@@ -239,7 +243,7 @@ kbd{font:inherit; font-size:.78em; border:1px solid var(--line); border-bottom-w
 .slot.empty .ph.mono,.clue.slot.empty .ph,.detail figure.slot.empty .ph{display:grid}
 .plate figure{margin:0}
 /* palco: lo sfondo sta sotto, i personaggi ritagliati sopra, chi parla viene avanti */
-.palco{position:relative; width:min(100%,33vh); margin-inline:auto; aspect-ratio:1;
+.palco{position:relative; height:100%; width:auto; max-width:100%; aspect-ratio:1;
   overflow:hidden; border:1px solid var(--line); border-radius:2px; box-shadow:var(--shadow)}
 .palco .sfondo{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; border-radius:1px}
 .palco .attore{position:absolute; width:auto; transform:translateX(-50%); transform-origin:bottom center;
@@ -671,6 +675,7 @@ function vScene(i) {
       <span class="scene-no">${i + 1}</span>
       <div><p class="eyebrow">Scena ${i + 1} di ${STORY.scene.length}</p><h2 class="scene-title">${esc(s.titolo)}</h2></div>
     </header>
+    <div class="palco-box">
     <div class="slot plate scena">
       <div class="palco">
         ${opt(SCENE_IMG(i), "sfondo", `Scena ${i + 1}`)}
@@ -681,6 +686,7 @@ function vScene(i) {
         <p class="brief-label"><svg class="leaf" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M14 2C7 2 3 5 3 9c0 1.6.6 2.9 1.6 3.8L2 15h2l1.9-1.9C7 13.7 8 14 9 14c4 0 5-6 5-12zM6 11.5C6 8 9 5.5 12.3 4.6 11.6 9 10 12.5 8.4 12.5c-.9 0-1.7-.3-2.4-1z"/></svg><span>Brief illustrazione</span></p>
         <p class="brief">${esc(s.descrizione)}</p>
       </div>
+    </div>
     </div>
     </div>
     <div class="basso">

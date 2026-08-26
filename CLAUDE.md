@@ -59,6 +59,11 @@ opacity to 1 and would cancel the dimming of the rest.
 Highlighting the speaker must **not** change the stacking order: no `z-index` on `.attivo`. The
 depth is what the staging decided.
 
+**Never size the stage in `vh`.** The rows are declared (`54% / 46%`) and the stage takes the
+height left under the title, so it is the largest square that fits. Sized in `vh` it grew past
+its own half on phones, got clipped, and read as if the picture were zoomed in — that bug came
+back once already.
+
 A percentage `max-height` needs a definite height on the container, or it is ignored and the
 figure spills out of its half.
 
