@@ -44,6 +44,16 @@ never by darkening the others. That was tried and rejected.
 **Images must be optional.** Every slot falls back to a typographic placeholder via `slots()` on
 `error`. The app must look finished with `assets/images/` empty.
 
+## The scene screen
+
+Two declared regions: the top holds scene number, title and the stage, and never moves; the
+bottom scrolls on its own. The bottom is split `25% 1fr` — the speaker's **actor cutout**
+(`attore-*.png`, not the portrait), standing on the baseline, and the dialogue column. Use
+`1fr`, not `75%`: two fixed percentages plus a gap overflow and produce a horizontal scrollbar.
+
+A percentage `max-height` needs a definite height on the container, or it is ignored and the
+figure spills out of its half.
+
 ## How a scene is composed
 
 Three layers inside `.palco`, all positioned in percentages of the frame:

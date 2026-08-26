@@ -73,9 +73,31 @@ kbd{font:inherit; font-size:.78em; border:1px solid var(--line); border-bottom-w
 /* art plate */
 .plate{border:1px dashed var(--line); border-radius:2px; background:var(--surface);
   padding:clamp(1rem,2.5vw,1.9rem); position:relative; box-shadow:var(--shadow)}
-/* la fascia appiccicata copre tutta la larghezza, se no le battute le passano sotto ai lati */
-.plate.scena:not(.empty){border:none; background:var(--bg); box-shadow:none; padding:0 0 .6rem;
-  width:100%; position:sticky; top:0; z-index:4}
+.plate.scena:not(.empty){border:none; background:var(--bg); box-shadow:none; padding:0;
+  width:100%}
+
+/* La schermata di scena e' divisa in due: sopra il titolo con l'immagine, fermi;
+   sotto i dialoghi, che scorrono per conto loro. */
+#stage:has(.scena-doppia){overflow:hidden; padding-bottom:0}
+.sheet.scena-doppia{height:100%; margin-block:0; display:grid; grid-template-rows:auto minmax(0,1fr);
+  gap:0}
+.scena-doppia .alto{display:flex; flex-direction:column; gap:clamp(.6rem,1.6vh,1.2rem);
+  padding-bottom:clamp(.7rem,2vh,1.2rem); border-bottom:1px solid var(--line)}
+.scena-doppia .basso{display:grid; grid-template-columns:25% 1fr; min-height:0; overflow:hidden;
+  padding-top:clamp(.9rem,2.4vh,1.6rem)}
+/* la figura intera, non il ritratto: si appoggia in basso come sul palco */
+.parlante{padding-right:clamp(.6rem,1.6vw,1.2rem); min-width:0; height:100%; min-height:0;
+  overflow:hidden; display:flex; align-items:flex-end; justify-content:center}
+.parlante .figura-parlante{display:block; width:auto; height:auto;
+  max-width:100%; max-height:100%; animation:entra .35s ease-out both}
+.parlante .ph.sigla{display:none; width:100%; aspect-ratio:1; place-items:center; font-family:"Bodoni Moda",serif;
+  font-size:clamp(2rem,6vw,3.4rem); color:var(--speaker,var(--line)); opacity:.55;
+  border:1px solid var(--line); border-radius:2px; background:var(--surface)}
+.parlante.empty .ph.sigla{display:grid}
+@keyframes entra{from{opacity:0; transform:translateY(6px)}to{opacity:1; transform:none}}
+.dialoghi{overflow-y:auto; min-height:0; scrollbar-width:thin;
+  padding:0 0 clamp(1rem,3vh,2rem);
+  display:flex; flex-direction:column; gap:clamp(.8rem,2vh,1.4rem)}
 .plate.scena:not(.empty)::before{display:none}
 .plate::before{content:""; position:absolute; inset:6px; border:1px solid var(--line); border-radius:1px; pointer-events:none; opacity:.6}
 .plate > img{display:block; width:100%; height:auto; border-radius:1px}
@@ -210,7 +232,7 @@ kbd{font:inherit; font-size:.78em; border:1px solid var(--line); border-bottom-w
 .slot.empty .ph.mono,.clue.slot.empty .ph,.detail figure.slot.empty .ph{display:grid}
 .plate figure{margin:0}
 /* palco: lo sfondo sta sotto, i personaggi ritagliati sopra, chi parla viene avanti */
-.palco{position:relative; width:min(100%,calc(44vh * 16 / 9)); margin-inline:auto; aspect-ratio:16/9;
+.palco{position:relative; width:min(100%,calc(38vh * 16 / 9)); margin-inline:auto; aspect-ratio:16/9;
   overflow:hidden; border:1px solid var(--line); border-radius:2px; box-shadow:var(--shadow)}
 .palco .sfondo{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; border-radius:1px}
 .palco .attore{position:absolute; width:auto; transform:translateX(-50%); transform-origin:bottom center;
@@ -632,7 +654,8 @@ function vScene(i) {
       ${fatti ? `<ul class="facts">${fatti}</ul>` : ""}
     </aside>` : "";
 
-  return `<div class="sheet">
+  return `<div class="sheet scena-doppia">
+    <div class="alto">
     <header class="scene-head">
       <span class="scene-no">${i + 1}</span>
       <div><p class="eyebrow">Scena ${i + 1} di ${STORY.scene.length}</p><h2 class="scene-title">${esc(s.titolo)}</h2></div>
@@ -648,8 +671,17 @@ function vScene(i) {
         <p class="brief">${esc(s.descrizione)}</p>
       </div>
     </div>
-    <div class="bubbles" id="bubbles">${shown}</div>
-    ${box}${indizi}
+    </div>
+    <div class="basso">
+      <div class="parlante slot" data-c="${esc(attivo || "")}">
+        ${attivo ? opt(ATTORE(attivo), "figura-parlante", attivo) : ""}
+        ${attivo ? `<div class="ph sigla">${esc(attivo[0])}</div>` : ""}
+      </div>
+      <div class="dialoghi">
+        <div class="bubbles" id="bubbles">${shown}</div>
+        ${box}${indizi}
+      </div>
+    </div>
   </div>`;
 }
 
@@ -765,8 +797,12 @@ function render() {
   if (vista) { stage.classList.add("dissolve"); schede().forEach(c => vista.observe(c)); }
   /* la battuta appena scoperta si porta da sola sotto gli occhi del narratore */
   if (SLIDES[state.n].t === "scene" && state.step > 0) {
-    const ultima = stage.querySelector(".bubbles > .bubble:last-child");
-    ultima?.scrollIntoView({ block: "nearest", behavior: matchMedia("(prefers-reduced-motion:reduce)").matches ? "auto" : "smooth" });
+    // dopo l'impaginazione: partendo subito, le altezze non sono ancora quelle
+    // definitive e la battuta nuova restava sotto il bordo
+    requestAnimationFrame(() => {
+      const ultima = stage.querySelector(".bubbles > .bubble:last-child");
+      ultima?.scrollIntoView({ block: "end", behavior: matchMedia("(prefers-reduced-motion:reduce)").matches ? "auto" : "smooth" });
+    });
   }
   stage.classList.toggle("stage-blu", s.t === "scene" && !!STORY.scene[s.i].blu && state.step >= STORY.scene[s.i].battute.length);
 
