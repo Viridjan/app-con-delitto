@@ -20,6 +20,8 @@ A narrator drives it live in front of a table of players.
 - `sync-assets.py` — hooks Codex's deliveries into the app. Run after every delivery.
 - `smoke.js` — `node smoke.js`. Walks every screen with a hand-rolled DOM stub and checks the
   quiz maths. Run it after touching the script block.
+- `voci.html` — the voice bench: sliders per character, plays them, prints the `VOCE` block to
+  paste into the app. Its synth engine is a **deliberate copy** — change it in both files.
 - `img/ART.md` — the illustration brief Codex works from.
 - `assets/images/` — Codex's deliveries. `assets/web/` and `assets/images/bocciate/` are gitignored.
 
@@ -59,9 +61,13 @@ drag to move, wheel or `+`/`-` to resize, arrows for fine steps. The panel print
 
 ## Voices
 
-Each character is a synth profile in `VOCE` — waveform, pitch, blip rate, pitch drift across the
-line, lowpass cutoff — so they are told apart by timbre, not only pitch. Gain is `.3` for all;
-the filter is what tames square and sawtooth. Muted with `m` or the pill next to `?`.
+Each character is a synth profile in `VOCE` — waveform, pitch, blip rate, note length, pitch
+drift across the line, lowpass cutoff and its own `vol` — so they are told apart by timbre, not
+only pitch. Square and sawtooth carry far more energy than sine at the same number, which is
+what the per-voice volume is for. Muted with `m` or the pill next to `?`.
+
+The narrator has no bubbles: his two screens (recap and narrated solution) get their voice in
+`vai()`, not in `avanti()`.
 
 The audio context starts suspended and `resume()` is async: schedule the blips **after** it has
 started, or they land in the past and nothing plays.

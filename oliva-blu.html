@@ -782,6 +782,9 @@ function vai(n, indietro) {
   const s = SLIDES[n];
   state.step = (indietro && s.t === "scene") ? STORY.scene[s.i].battute.length : 0;
   render();
+  // Il narratore non sta dentro una scena: le sue due schermate hanno la voce qui
+  if (s.t === "narr") parla("Narratore", STORY.narratoreFinale.join(" "));
+  if (s.t === "sol") parla("Narratore", STORY.soluzione.join(" "));
 }
 
 const morbido = () => matchMedia("(prefers-reduced-motion:reduce)").matches ? "auto" : "smooth";
@@ -851,12 +854,12 @@ function demo() {
    e la battuta piu' lunga fa piu' bip. Si zittisce con "m". */
 const VOCE = {
   //            altezza  onda        passo   nota  deriva  taglio  lettere/bip
-  Giuseppe:  { f: 190, onda: "triangle", passo: .072, nota: .085, deriva: -.10, taglio: 2200, den: 4 },
-  Rosalia:   { f: 340, onda: "sine",     passo: .046, nota: .048, deriva:  .20, taglio: 5000, den: 3.4 },
-  Roberto:   { f: 150, onda: "sawtooth", passo: .066, nota: .072, deriva:  .02, taglio: 1300, den: 4.5 },
-  Augusto:   { f: 255, onda: "square",   passo: .040, nota: .036, deriva:  .07, taglio: 2600, den: 3 },
-  Mauro:     { f: 104, onda: "square",   passo: .095, nota: .110, deriva: -.18, taglio:  800, den: 6 },
-  Narratore: { f: 220, onda: "sine",     passo: .105, nota: .125, deriva: -.04, taglio: 3000, den: 5.5 }
+  Giuseppe:  { f: 242, onda: "triangle", passo: .094, nota: .105, deriva: -.10, taglio: 2200, den: 4, vol: .3 },
+  Rosalia:   { f: 395, onda: "triangle", passo: .092, nota: .070, deriva:  .20, taglio: 4500, den: 3.4, vol: .3 },
+  Roberto:   { f: 198, onda: "sawtooth", passo: .094, nota: .095, deriva:  .02, taglio: 1300, den: 4.5, vol: .3 },
+  Augusto:   { f: 312, onda: "square",   passo: .076, nota: .075, deriva:  .07, taglio: 2600, den: 3, vol: .3 },
+  Mauro:     { f: 159, onda: "square",   passo: .124, nota: .130, deriva: -.18, taglio:  800, den: 6, vol: .3 },
+  Narratore: { f: 220, onda: "sine",     passo: .105, nota: .125, deriva: -.04, taglio: 3000, den: 5.5, vol: .3 }
 };
 let audio = null, muto = false;
 
@@ -877,7 +880,7 @@ function suona(c, testo) {
     o.type = v.onda;
     o.frequency.setValueAtTime(v.f * (1 + v.deriva * avanzamento) * (.95 + Math.random() * .1), t);
     g.gain.setValueAtTime(.0001, t);
-    g.gain.exponentialRampToValueAtTime(.3, t + .008);
+    g.gain.exponentialRampToValueAtTime(v.vol, t + .008);
     g.gain.exponentialRampToValueAtTime(.0001, t + v.nota);
     o.connect(g).connect(filtro);
     o.start(t); o.stop(t + v.nota + .01);

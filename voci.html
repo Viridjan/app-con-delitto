@@ -1,0 +1,235 @@
+<title>Banco voci</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..800;1,6..96,400..600&family=Alegreya+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap">
+
+<style>
+:root{
+  --bg:#F3EEE1; --surface:#FBF8F0; --surface-2:#EDE6D4;
+  --ink:#23281A; --muted:#6B7359; --line:#DBD2BD;
+  --olive:#5E7233; --gold:#A9741A; --blu:#1F3FC4; --plum:#96496D; --teal:#3F7565;
+  --shadow:0 1px 2px rgba(35,40,26,.06),0 8px 28px rgba(35,40,26,.08);
+}
+:root:not([data-theme="light"]){ color-scheme:light dark; }
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#12160F; --surface:#1B2016; --surface-2:#232A1D;
+    --ink:#EDE7D6; --muted:#98A182; --line:#333C29;
+    --olive:#9CB65C; --gold:#DFA93C; --blu:#7B96FF; --plum:#DA8FB2; --teal:#78BFAA;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 34px rgba(0,0,0,.45);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#12160F; --surface:#1B2016; --surface-2:#232A1D;
+  --ink:#EDE7D6; --muted:#98A182; --line:#333C29;
+  --olive:#9CB65C; --gold:#DFA93C; --blu:#7B96FF; --plum:#DA8FB2; --teal:#78BFAA;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 34px rgba(0,0,0,.45);
+}
+*{box-sizing:border-box}
+body{margin:0; background:var(--bg); color:var(--ink);
+  font-family:"Alegreya Sans","Segoe UI",system-ui,sans-serif;
+  font-size:clamp(17px,1.4vw + .5rem,20px); line-height:1.5}
+h1,h2,h3{font-family:"Bodoni Moda","Didot",serif; font-weight:600; margin:0; text-wrap:balance}
+button{font:inherit; color:inherit; background:none; border:none; cursor:pointer}
+:focus-visible{outline:2px solid var(--gold); outline-offset:3px; border-radius:4px}
+
+.foglio{max-width:64rem; margin:0 auto; padding:clamp(1rem,4vw,2.5rem) clamp(1rem,4vw,2rem) 8rem;
+  display:flex; flex-direction:column; gap:clamp(1rem,3vh,1.8rem)}
+.testa h1{font-size:clamp(1.9rem,5vw,3rem)}
+.occhiello{font-size:.78rem; letter-spacing:.16em; text-transform:uppercase; color:var(--muted)}
+.testa p{color:var(--muted); max-width:60ch; margin:.4rem 0 0}
+
+.frase{display:flex; gap:.6rem; align-items:center; flex-wrap:wrap}
+.frase input{flex:1; min-width:14rem; font:inherit; color:var(--ink); background:var(--surface);
+  border:1px solid var(--line); border-radius:2px; padding:.45rem .7rem}
+
+.voci{display:grid; gap:1rem; grid-template-columns:repeat(auto-fit,minmax(min(20rem,100%),1fr))}
+.voce{border:1px solid var(--line); border-left:4px solid var(--c,var(--line)); border-radius:2px;
+  background:var(--surface); box-shadow:var(--shadow); padding:.9rem 1rem;
+  display:flex; flex-direction:column; gap:.55rem}
+.voce h2{font-size:1.3rem; color:var(--c,var(--ink))}
+.voce .capo{display:flex; align-items:center; gap:.6rem; flex-wrap:wrap}
+.voce .capo button{border:1px solid var(--c,var(--line)); border-radius:999px; padding:.2rem .8rem;
+  font-size:.85rem; color:var(--c,var(--ink))}
+.voce .capo button:hover{background:color-mix(in srgb,var(--c,var(--olive)) 15%,transparent)}
+.manopola{display:grid; grid-template-columns:6.2rem 1fr 3.6rem; gap:.5rem; align-items:center;
+  font-size:.82rem}
+.manopola label{color:var(--muted)}
+.manopola input[type=range]{width:100%; accent-color:var(--c,var(--olive))}
+.manopola output{text-align:right; font-variant-numeric:tabular-nums; color:var(--ink)}
+.manopola select{font:inherit; font-size:.85rem; grid-column:2 / span 2; color:var(--ink);
+  background:var(--bg); border:1px solid var(--line); border-radius:2px; padding:.15rem .3rem}
+
+.esito{position:fixed; left:0; right:0; bottom:0; background:var(--surface);
+  border-top:1px solid var(--line); padding:.7rem clamp(1rem,4vw,2rem);
+  display:flex; flex-direction:column; gap:.5rem; box-shadow:0 -6px 24px rgba(0,0,0,.18)}
+.esito .riga{display:flex; gap:.6rem; align-items:center; flex-wrap:wrap;
+  max-width:64rem; margin:0 auto; width:100%}
+.esito textarea{max-width:64rem; margin:0 auto; width:100%; min-height:5.5rem; resize:vertical;
+  border:1px solid var(--line); border-radius:2px; background:var(--bg); color:var(--ink);
+  padding:.45rem .6rem; font-family:ui-monospace,Menlo,Consolas,monospace; font-size:.72rem;
+  line-height:1.55}
+.bottone{border:1px solid var(--line); border-radius:999px; padding:.32rem .95rem; font-size:.9rem;
+  background:var(--surface-2)}
+.bottone:hover{border-color:var(--olive); color:var(--olive)}
+.bottone.forte{background:var(--olive); border-color:var(--olive); color:var(--surface); font-weight:500}
+.eco{color:var(--olive); font-size:.85rem}
+@media (prefers-reduced-motion:reduce){*{transition:none !important}}
+</style>
+
+<div class="foglio">
+  <header class="testa">
+    <p class="occhiello">Il mistero dell’oliva blu · banco di regolazione</p>
+    <h1>Banco voci</h1>
+    <p>Ogni personaggio parla con qualche bip sintetizzato al volo. Qui si regolano a mano:
+       muovi le manopole, premi <b>Ascolta</b>, e quando ti piace copia il blocco in fondo e
+       passamelo — lo metto nell’app.</p>
+  </header>
+
+  <div class="frase">
+    <label class="occhiello" for="frase">Battuta di prova</label>
+    <input id="frase" value="Questa sera celebriamo l’ulivo, simbolo di pace e rinascita.">
+    <button class="bottone" id="tutti">Ascolta tutti</button>
+  </div>
+
+  <div class="voci" id="voci"></div>
+</div>
+
+<div class="esito">
+  <div class="riga">
+    <b>Da incollare in <code>oliva-blu.html</code></b>
+    <span style="flex:1"></span>
+    <button class="bottone" id="ripristina">Ripristina</button>
+    <button class="bottone forte" id="copia">Copia</button>
+    <span class="eco" id="eco"></span>
+  </div>
+  <textarea id="uscita" readonly spellcheck="false"></textarea>
+</div>
+
+<script>
+/* Il motore delle voci e' lo stesso di oliva-blu.html, copiato apposta: l'app
+   deve restare un file unico e autosufficiente, quindi qui c'e' un gemello.
+   Cambiando il motore, cambiarlo in tutti e due. */
+const PARTENZA = {
+  //            altezza  onda        passo   nota  deriva  taglio  lettere/bip  volume
+  Giuseppe:  { f: 242, onda: "triangle", passo: .094, nota: .105, deriva: -.10, taglio: 2200, den: 4, vol: .3 },
+  Rosalia:   { f: 395, onda: "triangle", passo: .092, nota: .070, deriva:  .20, taglio: 4500, den: 3.4, vol: .3 },
+  Roberto:   { f: 198, onda: "sawtooth", passo: .094, nota: .095, deriva:  .02, taglio: 1300, den: 4.5, vol: .3 },
+  Augusto:   { f: 312, onda: "square",   passo: .076, nota: .075, deriva:  .07, taglio: 2600, den: 3, vol: .3 },
+  Mauro:     { f: 159, onda: "square",   passo: .124, nota: .130, deriva: -.18, taglio:  800, den: 6, vol: .3 },
+  Narratore: { f: 220, onda: "sine",     passo: .105, nota: .125, deriva: -.04, taglio: 3000, den: 5.5, vol: .3 }
+};
+const COLORE = { Giuseppe: "--gold", Rosalia: "--plum", Roberto: "--olive",
+                 Augusto: "--teal", Mauro: "--blu", Narratore: "--gold" };
+const MANOPOLE = [
+  { k: "f",      eti: "altezza",  min: 60,  max: 520,  passo: 1,    suff: " Hz" },
+  { k: "passo",  eti: "ritmo",    min: .05, max: .16,  passo: .002, suff: " s" },
+  { k: "nota",   eti: "durata",   min: .05, max: .22,  passo: .005, suff: " s" },
+  { k: "deriva", eti: "andamento",min: -.5, max: .5,   passo: .01,  suff: "" },
+  { k: "taglio", eti: "timbro",   min: 300, max: 8000, passo: 50,   suff: " Hz" },
+  { k: "den",    eti: "lettere",  min: 2,   max: 9,    passo: .1,   suff: "" },
+  { k: "vol",    eti: "volume",   min: .05, max: .6,   passo: .01,  suff: "" }
+];
+const ONDE = { triangle: "triangolo", sine: "sinusoide", square: "quadra", sawtooth: "dente di sega" };
+
+let VOCE = structuredClone(PARTENZA);
+let audio = null;
+
+function suona(c, testo) {
+  if (typeof AudioContext !== "function") return;
+  audio = audio || new AudioContext();
+  if (audio.state === "suspended") { audio.resume().then(() => emetti(c, testo), () => {}); return; }
+  emetti(c, testo);
+}
+
+function emetti(c, testo) {
+  const v = VOCE[c];
+  const bip = Math.max(3, Math.min(16, Math.round(testo.length / v.den)));
+  const filtro = audio.createBiquadFilter();
+  filtro.type = "lowpass"; filtro.frequency.value = v.taglio; filtro.Q.value = .7;
+  filtro.connect(audio.destination);
+  for (let i = 0; i < bip; i++) {
+    const t = audio.currentTime + .01 + i * v.passo;
+    const avanzamento = bip > 1 ? i / (bip - 1) : 0;
+    const o = audio.createOscillator(), g = audio.createGain();
+    o.type = v.onda;
+    o.frequency.setValueAtTime(v.f * (1 + v.deriva * avanzamento) * (.95 + Math.random() * .1), t);
+    g.gain.setValueAtTime(.0001, t);
+    g.gain.exponentialRampToValueAtTime(v.vol, t + .008);
+    g.gain.exponentialRampToValueAtTime(.0001, t + v.nota);
+    o.connect(g).connect(filtro);
+    o.start(t); o.stop(t + v.nota + .01);
+  }
+  return bip;
+}
+
+const frase = () => document.getElementById("frase").value || "prova prova prova";
+const num = n => Number.isInteger(n) ? n : Math.round(n * 1000) / 1000;
+
+function testo() {
+  const righe = Object.entries(VOCE).map(([c, v]) =>
+    `  ${(c + ":").padEnd(11)}{ f: ${v.f}, onda: "${v.onda}", passo: ${num(v.passo)}, ` +
+    `nota: ${num(v.nota)}, deriva: ${num(v.deriva)}, taglio: ${v.taglio}, ` +
+    `den: ${num(v.den)}, vol: ${num(v.vol)} }`);
+  document.getElementById("uscita").value = "const VOCE = {\n" + righe.join(",\n") + "\n};";
+}
+
+function schede() {
+  document.getElementById("voci").innerHTML = Object.keys(VOCE).map(c => `
+    <section class="voce" style="--c:var(${COLORE[c]})">
+      <div class="capo"><h2>${c}</h2><span style="flex:1"></span>
+        <button data-ascolta="${c}">Ascolta</button></div>
+      <div class="manopola">
+        <label for="${c}-onda">onda</label>
+        <select id="${c}-onda" data-onda="${c}">${Object.entries(ONDE).map(([v, n]) =>
+          `<option value="${v}" ${VOCE[c].onda === v ? "selected" : ""}>${n}</option>`).join("")}</select>
+      </div>
+      ${MANOPOLE.map(m => `
+        <div class="manopola">
+          <label for="${c}-${m.k}">${m.eti}</label>
+          <input type="range" id="${c}-${m.k}" data-c="${c}" data-k="${m.k}"
+                 min="${m.min}" max="${m.max}" step="${m.passo}" value="${VOCE[c][m.k]}">
+          <output id="out-${c}-${m.k}">${num(VOCE[c][m.k])}${m.suff}</output>
+        </div>`).join("")}
+    </section>`).join("");
+  testo();
+}
+
+document.addEventListener("input", e => {
+  const t = e.target;
+  if (t.dataset.k) {
+    VOCE[t.dataset.c][t.dataset.k] = parseFloat(t.value);
+    const m = MANOPOLE.find(x => x.k === t.dataset.k);
+    document.getElementById(`out-${t.dataset.c}-${t.dataset.k}`).textContent =
+      num(parseFloat(t.value)) + m.suff;
+    testo();
+    suona(t.dataset.c, frase());          // si sente subito l'effetto della manopola
+  } else if (t.dataset.onda) {
+    VOCE[t.dataset.onda].onda = t.value;
+    testo(); suona(t.dataset.onda, frase());
+  }
+});
+
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-ascolta]");
+  if (b) suona(b.dataset.ascolta, frase());
+});
+
+document.getElementById("tutti").addEventListener("click", () => {
+  Object.keys(VOCE).forEach((c, i) => setTimeout(() => suona(c, frase()), i * 1600));
+});
+
+document.getElementById("ripristina").addEventListener("click", () => {
+  VOCE = structuredClone(PARTENZA); schede();
+  document.getElementById("eco").textContent = "riportate all’originale";
+});
+
+document.getElementById("copia").addEventListener("click", () => {
+  const t = document.getElementById("uscita"), eco = document.getElementById("eco");
+  navigator.clipboard?.writeText(t.value).then(
+    () => eco.textContent = "copiato",
+    () => { t.select(); eco.textContent = "selezionato: copia a mano"; });
+});
+
+schede();
+</script>
