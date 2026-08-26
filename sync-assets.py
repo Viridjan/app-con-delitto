@@ -19,7 +19,7 @@ SCELTE = {"copertina.png": "quadro-oliva-animato",
           "scena1.png": "sala2",
           "scena1-sx.png": "sala2-oggettoSX",
           "scena1-dx.png": "sala2-oggettoDX",
-          "scena2.png": "donazione",
+          "scena2.png": "sala1",
           "scena3.png": "brindisi",
           "scena4.png": "malore",
           "scena5.png": "indagine"}
