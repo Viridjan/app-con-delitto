@@ -337,7 +337,7 @@ const STORY = {
       titolo:"L’inaugurazione degli Oliviani",
       img:null,
       descrizione:"L’immagine mostra l’interno della nuova sede degli Oliviani. La sala è decorata con rami d’ulivo, stoffe verdi e bianche, candele e piccole ciotole piene di olive. Al centro c’è un piccolo palco o altare con il simbolo degli Oliviani: una grande oliva stilizzata. Roberto e Augusto accolgono gli ospiti con aria solenne ma sorridente. Giuseppe Maria De Robertis entra elegante e sicuro di sé. Accanto a lui c’è Rosalia, che sembra più preoccupata che felice. In fondo alla sala si vede Mauro, in disparte. Osserva Giuseppe con attenzione. L’atmosfera deve essere accogliente, curiosa e un po’ misteriosa.",
-      cast:[{c:"Mauro",x:82.2,b:30.6,h:42},{c:"Roberto",x:57.8,b:11.6,h:63},{c:"Augusto",x:41.8,b:17.6,h:59},{c:"Giuseppe",x:25.6,b:17.3,h:63},{c:"Rosalia",x:69,b:30.7,h:41}],
+      cast:[{c:"Mauro",x:82.2,b:30.6,h:42},{c:"Roberto",x:57.8,b:11.6,h:63},{c:"Augusto",x:41.8,b:17.6,h:55},{c:"Giuseppe",x:25.6,b:17.3,h:63},{c:"Rosalia",x:69,b:30.7,h:41}],
       primo:[{lato:"sx",x:13.2,b:0.8,h:34},{lato:"dx",x:94.6,b:-24.4,h:76}],
       battute:[
         {c:"Roberto", t:"Benvenuti nella prima casa degli Oliviani!"},
@@ -889,12 +889,12 @@ function demo() {
    fumetti. Ogni personaggio ha la sua altezza - Mauro cupo, Rosalia acuta -
    e la battuta piu' lunga fa piu' bip. Si zittisce con "m". */
 const VOCE = {
-  //            altezza  onda        passo   nota  deriva  taglio  lettere/bip
-  Giuseppe:  { f: 242, onda: "triangle", passo: .094, nota: .105, deriva: -.10, taglio: 2200, den: 4, vol: .3 },
-  Rosalia:   { f: 395, onda: "triangle", passo: .092, nota: .070, deriva:  .20, taglio: 4500, den: 3.4, vol: .3 },
-  Roberto:   { f: 198, onda: "sawtooth", passo: .094, nota: .095, deriva:  .02, taglio: 1300, den: 4.5, vol: .3 },
-  Augusto:   { f: 312, onda: "square",   passo: .076, nota: .075, deriva:  .07, taglio: 2600, den: 3, vol: .3 },
-  Mauro:     { f: 159, onda: "square",   passo: .124, nota: .130, deriva: -.18, taglio:  800, den: 6, vol: .3 },
+  //            altezza  onda        passo   nota  deriva  taglio  lettere/bip  volume
+  Giuseppe:  { f: 242, onda: "triangle", passo: .094, nota: .105, deriva: -.10, taglio: 2200, den: 4, vol: .53 },
+  Rosalia:   { f: 395, onda: "triangle", passo: .092, nota: .070, deriva:  .20, taglio: 4500, den: 3.4, vol: .48 },
+  Roberto:   { f: 198, onda: "sawtooth", passo: .094, nota: .095, deriva:  .02, taglio: 1300, den: 4.5, vol: .28 },
+  Augusto:   { f: 312, onda: "square",   passo: .076, nota: .075, deriva:  .07, taglio: 2600, den: 3, vol: .14 },
+  Mauro:     { f: 239, onda: "square",   passo: .108, nota: .130, deriva:  .14, taglio: 4500, den: 4.9, vol: .07 },
   Narratore: { f: 220, onda: "sine",     passo: .105, nota: .125, deriva: -.04, taglio: 3000, den: 5.5, vol: .3 }
 };
 let audio = null, muto = false;
