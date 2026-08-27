@@ -19,7 +19,8 @@ SCELTE = {"copertina.png": "quadro-oliva-animato",
           "scena1.png": "sala2",
           "scena1-sx.png": "sala2-oggettoSX",
           "scena1-dx.png": "sala2-oggettoDX",
-          "scena2.png": "sala1",
+          "scena2.png": "sala1-scena2",
+          "scena2c.png": "sala2",
           "scena3.png": "brindisi",
           "scena4.png": "malore",
           "scena5.png": "indagine"}
@@ -29,7 +30,7 @@ POSE = ["giuseppe-malore", "rosalia-allarmata", "rosalia-pensierosa",
         "mauro-guardingo"]
 OGGETTI = ["bicchiere", "bottiglietta", "foglio", "biglietto"]
 # solo le caselle che l'app sa mostrare: le varianti e le prove restano fuori dal file
-ATTESI = ({"copertina.png"}
+ATTESI = ({"copertina.png", "scena2c.png"}
           | {f"scena{i}.png" for i in range(1, 6)}
           | {f"scena{i}-{lato}.png" for i in range(1, 6) for lato in ("sx", "dx")}
           | {f"attore-{n}.png" for n in PERSONE}
@@ -52,14 +53,17 @@ def logico(nome):
 
 def main():
     if not SRC.is_dir(): sys.exit(f"manca {SRC}/")
-    scelto = {v + ".png": k for k, v in SCELTE.items()}
+    scelto = {}
+    for casella, sorgente in SCELTE.items():          # un file puo' servire piu' caselle
+        scelto.setdefault(sorgente + ".png", []).append(casella)
     migliori = {}                                # nome logico -> (versione, file)
     for f in sorted(SRC.iterdir()):
         if not f.is_file(): continue             # salta bocciate/
         key, ver = logico(f.name)
-        key = scelto.get(key, key)               # variante promossa a casella
-        if key and ver >= migliori.get(key, (-1, None))[0]:
-            migliori[key] = (ver, f)
+        if not key: continue
+        for casella in scelto.get(key, [key]):   # variante promossa a una o piu' caselle
+            if ver >= migliori.get(casella, (-1, None))[0]:
+                migliori[casella] = (ver, f)
 
     WEB.mkdir(parents=True, exist_ok=True)
     scartati = sorted(k for k in migliori if k not in ATTESI)
