@@ -22,7 +22,9 @@ A narrator drives it live in front of a table of players.
   quiz maths. Run it after touching the script block.
 - `voci.html` — the voice bench: sliders per character, plays them, prints the `VOCE` block to
   paste into the app. Its synth engine is a **deliberate copy** — change it in both files.
-- `copione.txt` — the approved script. The verbatim reference; `smoke.js` checks the app against it.
+- `copione.txt` — the approved script. The verbatim reference; `smoke.js` checks the app against
+  it. Regenerate with `node estrai-copione.js` after any agreed change to the text.
+- `estrai-copione.js` — writes `copione.txt` out of `STORY`, so the two can never drift.
 - `img/ART.md` — the illustration brief Codex works from.
 - `assets/images/` — Codex's deliveries, named by subject (`donazione`, `brindisi`, `malore`,
   `indagine`, `sala2`), mapped to slots in `SCELTE`. `assets/web/` and `assets/images/bocciate/`
@@ -77,6 +79,20 @@ back once already.
 
 A percentage `max-height` needs a definite height on the container, or it is ignored and the
 figure spills out of its half.
+
+## Screens vs scenes
+
+A scene in the script can be split across two screens: `slot` says which image slot it draws
+from, `n` the number shown to the audience, `parte` the sub-label. So *La donazione* and *Il
+racconto dell'olio* are two screens both labelled "Scena 2 di 5" and both drawing `scena2.png`.
+Never derive the image or the pose from the array index — splitting a scene would silently shift
+every later scene's artwork.
+
+`sfondo:{scala, fuoco}` zooms that screen's background (scene 2's first half is at 200% on the
+left) without touching the actor coordinates.
+
+Two lines in *La donazione* are **not Gervasio's** — added on the user's instruction, flagged
+`nuova:true` in `STORY` and marked in `copione.txt`.
 
 ## Poses
 

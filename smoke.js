@@ -47,8 +47,11 @@ for (const [scelta, atteso] of [[0, "4 "], [1, "0 "]]) {
   assert.ok(stage.innerHTML.includes(`class="score">${atteso}`), `punteggio errato per la risposta ${"AB"[scelta]}`);
 }
 
-// la scena 4 accende il blu solo a battute finite
-assert.ok(app.STORY.scene[3].blu, "scena 4 senza flag blu");
+// il blu si accende sulla scena del malore, ovunque stia nell'elenco:
+// dividere una scena non deve far fallire il controllo
+const scenaBlu = app.STORY.scene.find(s => s.blu);
+assert.ok(scenaBlu, "nessuna scena col flag blu");
+assert.strictEqual(scenaBlu.slot || "", "scena4", "il blu non e' sulla scena del malore");
 assert.ok(quizN > 0 && app.SLIDES[quizN - 1].t === "narr", "la frase del narratore deve precedere il quiz");
 
 // il copione approvato e' copione.txt: ogni battuta fra virgolette basse deve

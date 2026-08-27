@@ -39,28 +39,51 @@ Osserva bene i personaggi.
   Chi sembra preoccupata? → Rosalia.
   Chi osserva Giuseppe da lontano? → Mauro.
 
-— SCENA 2: La donazione e il racconto dell’olio —
+— SCENA 2, prima parte: La donazione —
 
 Descrizione scena
-Giuseppe è vicino a un tavolo. Sul tavolo c’è un foglio grande e ben visibile con scritto: DONAZIONE AGLI OLIVIANI. Vicino al documento ci sono una penna, alcune olive, una piccola bottiglia d’olio e un cartellino illustrato con le fasi della produzione dell’olio. Roberto e Augusto sembrano soddisfatti. Rosalia guarda il foglio con preoccupazione. Mauro ascolta in silenzio, con espressione cupa. La scena deve far capire chiaramente che Giuseppe vuole aiutare economicamente gli Oliviani, ma che questa decisione crea tensione.
+Giuseppe è vicino a un tavolo. Sul tavolo c’è un foglio grande e ben visibile con scritto: DONAZIONE AGLI OLIVIANI. Vicino al documento ci sono una penna, alcune olive, una piccola bottiglia d’olio e un cartellino illustrato con le fasi della produzione dell’olio. Roberto ascolta soddisfatto. La scena deve far capire chiaramente che Giuseppe vuole aiutare economicamente gli Oliviani.
 
 Battute
 Giuseppe: «Ho deciso. Farò una grande donazione agli Oliviani.»
 Roberto: «È un gesto generoso. Con il suo aiuto potremo crescere.»
-Rosalia: «Ma zio… e la tua famiglia?»
-Giuseppe: «Rosalia, questa è la mia scelta.»
+Giuseppe: «Gli ulivi durano secoli. Vorrei che anche questa casa durasse così a lungo.»   [aggiunta, non di Gervasio]
+Roberto: «Allora il suo nome resterà fra queste mura, signor De Robertis.»   [aggiunta, non di Gervasio]
+
+Indizi di gioco
+Il documento dice che Giuseppe vuole donare i suoi beni agli Oliviani.
+  Chi è felice della donazione? → Roberto e Augusto.
+
+— SCENA 2, seconda parte: Il racconto dell’olio —
+
+Descrizione scena
+Nella stessa sala, Augusto raggiunge Giuseppe e Roberto. Sul tavolo restano il foglio della donazione, alcune olive e una piccola bottiglia d’olio, accanto a un cartellino illustrato con le fasi della produzione. I due fondatori raccontano, Giuseppe ascolta e domanda.
+
+Battute
 Giuseppe, guardando la bottiglia d’olio: «Adoro l’Olo. Ditemi una cosa: come nasce davvero?»
 Augusto: «Prima si raccolgono le olive.»
 Roberto: «Poi si puliscono e si schiacciano. Questa fase si chiama frangitura.»
 Augusto: «Dopo, la pasta di olive viene mescolata lentamente. Si chiama gramolatura.»
 Giuseppe: «Quindi l’olio buono nasce da tanti passaggi.»
 Augusto: «Esatto. E nasce meglio da olive sane.»
+
+Indizi di gioco
+Ascolta chi conosce il mestiere.
+  Chi racconta come nasce l’olio? → Augusto e Roberto.
+
+— SCENA 2, terza parte: La tensione —
+
+Descrizione scena
+La sala intera, con tutti presenti. Roberto e Augusto sembrano soddisfatti. Rosalia guarda il foglio della donazione con preoccupazione. Mauro ascolta in disparte, con espressione cupa. La scena deve far capire che la decisione crea tensione.
+
+Battute
+Rosalia: «Ma zio Giuseppe… e la tua famiglia?»
+Giuseppe: «Rosalia, questa è la mia scelta.»
 Mauro, piano: «E per avere olive sane… qualcuno usa sostanze pericolose.»
 Roberto: «Prodotti controllati, Mauro. Solo se usati nel modo giusto.»
 
 Indizi di gioco
-Il documento dice che Giuseppe vuole donare i suoi beni agli Oliviani.
-  Chi è felice della donazione? → Roberto e Augusto.
+Non tutti festeggiano allo stesso modo.
   Chi è preoccupata? → Rosalia.
   Chi parla di sostanze pericolose? → Mauro.
 
@@ -85,11 +108,11 @@ Guarda bene il bicchiere.
 — SCENA 4: Il malore dell’oliva blu —
 
 Descrizione scena
-Giuseppe ha appena bevuto. All’improvviso si sente male. Porta una mano alla gola o al petto. Il bicchiere gli scivola dalla mano o cade vicino a lui. Tutti si girano spaventati. Rosalia corre verso lo zio, agitata. Roberto e Augusto sembrano sorpresi e agitati. Mauro resta più rigido degli altri, teso, quasi come se sapesse già cosa sta succedendo. Il dettaglio più importante è il volto di Giuseppe: la sua bocca, o la lingua, è diventata blu. Il blu deve essere evidente, ma non horror.
+Giuseppe ha appena bevuto. All’improvviso si sente male. Porta una mano alla gola o al petto. Il bicchiere gli scivola dalla mano o cade vicino a lui. Tutti si girano spaventati. Rosalia corre verso zio Giuseppe, agitata. Roberto e Augusto sembrano sorpresi e agitati. Mauro resta più rigido degli altri, teso, quasi come se sapesse già cosa sta succedendo. Il dettaglio più importante è il volto di Giuseppe: la sua bocca, o la lingua, è diventata blu. Il blu deve essere evidente, ma non horror.
 
 Battute
 Giuseppe: «Mi… mi sento strano…»
-Rosalia: «Zio! Che succede?»
+Rosalia: «Zio Giuseppe! Che succede?»
 Roberto: «Presto, chiamate aiuto!»
 Augusto: «La sua bocca… è diventata blu!»
 Mauro, molto piano: «Il giudizio è arrivato…»
@@ -111,7 +134,7 @@ La scena mostra un tavolo ordinato come in una piccola indagine. Sul tavolo ci s
 Battute
 Roberto: «Questa non è una bevanda. È un prodotto per le piante.»
 Augusto: «Serve a proteggere gli ulivi, ma se usato male può essere pericoloso.»
-Rosalia: «Io volevo solo che mio zio si fermasse…»
+Rosalia: «Io volevo solo che mio zio Giuseppe si fermasse…»
 Roberto: «Chi ha toccato il bicchiere?»
 Augusto: «E chi sapeva che quella sostanza era rischiosa?»
 Mauro, agitato: «Lui stava sbagliando! Andava fermato!»

@@ -5,3 +5,6 @@ assets/images/bocciate/
 assets/web/
 
 .DS_Store
+
+# file di lock degli editor
+.~lock.*#
