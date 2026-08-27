@@ -80,6 +80,24 @@ back once already.
 A percentage `max-height` needs a definite height on the container, or it is ignored and the
 figure spills out of its half.
 
+## Where the app departs from the PDF
+
+Audited against `pdftotext` on 27 August 2026 — 43 spoken lines in the original:
+
+- **31 identical.**
+- **4 reworded**, all the same way: Rosalia says "zio Giuseppe" where the PDF has bare "zio"
+  (scenes 1, 2-third-part, 4, 5), and scene 4's art brief follows. She names the victim, and in
+  the crowded third part it disambiguates who she is addressing.
+- **2 added**, flagged `nuova:true`: Giuseppe's "Gli ulivi durano secoli…" and Roberto's reply,
+  in *La donazione*.
+- **4 "Lo sapevi?" boxes removed** (see the rule above); "Osserva bene!" stays.
+- Nothing else is missing. Labels, the clue captions, the narrator's recap, the solution and the
+  closing message are all still there — they live outside `battute`, so a dialogue-only check
+  will not see them.
+
+Re-run that audit before claiming the text is faithful: comparing whole lines, never fragments.
+Splitting on sentence ends lets a short line like "Zio…" pass by accident.
+
 ## Screens vs scenes
 
 A scene in the script can be split across two screens: `slot` says which image slot it draws
