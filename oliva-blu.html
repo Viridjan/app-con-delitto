@@ -292,13 +292,17 @@ kbd{font:inherit; font-size:.78em; border:1px solid var(--line); border-bottom-w
   margin-inline:auto; font-size:.8rem}
 .regia-pan .riga{display:flex; align-items:center; gap:.5rem; flex-wrap:wrap}
 .regia-pan b{color:var(--gold); font-weight:700}
-.dev-pan{top:.7rem; bottom:auto; left:auto; right:6.4rem; width:min(44rem,80vw);
+.dev-pan{top:.7rem; bottom:auto; left:auto; right:6.4rem; width:min(28rem,70vw);
   margin-inline:0; font-size:.72rem; gap:.35rem}
-.dev-pan .salti{display:flex; flex-wrap:wrap; gap:.2rem}
-.dev-pan .salti button{font:inherit; cursor:pointer; padding:.12rem .4rem; border-radius:2px;
-  border:1px solid var(--line); background:var(--bg); color:var(--muted)}
-.dev-pan .salti button:hover{color:var(--ink); border-color:var(--gold)}
+/* l'elenco: una schermata per riga, si legge in colonna */
+.dev-pan .salti{display:flex; flex-direction:column; gap:1px; max-height:62vh; overflow:auto}
+.dev-pan .salti button{font:inherit; cursor:pointer; text-align:left; width:100%;
+  display:flex; gap:.5rem; padding:.16rem .4rem; border-radius:2px;
+  border:1px solid transparent; background:none; color:var(--muted)}
+.dev-pan .salti button i{font-style:normal; min-width:1.3rem; text-align:right; opacity:.6}
+.dev-pan .salti button:hover{color:var(--ink); border-color:var(--line)}
 .dev-pan .salti button.qui{background:var(--gold); border-color:var(--gold); color:var(--bg)}
+.dev-pan .salti button.qui i{opacity:.8}
 .dev-pan #dev-img{font-family:ui-monospace,Menlo,Consolas,monospace; color:var(--muted);
   line-height:1.6; word-break:break-all}
 .dev-pan select{background:var(--bg); color:var(--ink); border:1px solid var(--line);
@@ -1037,13 +1041,13 @@ function muta() {
    Solo sul file locale, con "v": dice a che punto siamo, quali immagini non
    sono incorporate e permette di saltare a una schermata senza percorrerle
    tutte. Serve a provare una scena in mezzo senza rifare la strada. */
-const NOME_SCHERMATA = { cover: "copertina", cast: "personaggi", tavolo: "indizi",
-  narr: "narratore", sol: "soluzione", fine: "finale" };
+const NOME_SCHERMATA = { cover: "Copertina", cast: "I personaggi", tavolo: "Tavolo degli indizi",
+  narr: "Il narratore", sol: "Soluzione", fine: "Messaggio finale" };
 const etichetta = x => {
-  if (x.t === "quiz") return `quiz ${x.i + 1}`;
+  if (x.t === "quiz") return `Quiz ${x.i + 1} — ${STORY.quiz[x.i].q}`;
   if (x.t !== "scene") return NOME_SCHERMATA[x.t] || x.t;
   const sc = STORY.scene[x.i];
-  return `sc.${sc.n || x.i + 1}${sc.parte ? " " + sc.parte.split(" ")[0] : ""}`;
+  return `Scena ${sc.n || x.i + 1}${sc.parte ? ` · ${sc.parte}` : ""} — ${sc.titolo}`;
 };
 
 /* i nomi dei file che l'app si aspetta, costruiti come li costruisce lei */
@@ -1071,24 +1075,24 @@ function pannelloDev() {
          <div class="riga"><b>Sviluppo</b><span id="dev-dove"></span>
            <span class="spacer"></span><span><kbd>v</kbd> per uscire</span></div>
          <div class="salti" id="dev-salti"></div>
+         <div class="riga"><button class="btn" id="dev-tutte">Tutte le battute</button></div>
          <div class="riga" id="dev-img"></div>
        </div>`, true));
     const salti = p.querySelector("#dev-salti");
-    salti.innerHTML = SLIDES.map((x, k) => `<button data-va="${k}">${esc(etichetta(x))}</button>`).join("")
-      + `<button data-tutte="1" title="mostra tutte le battute della scena">tutte le battute</button>`;
+    salti.innerHTML = SLIDES.map((x, k) =>
+      `<button data-va="${k}"><i>${k + 1}</i>${esc(etichetta(x))}</button>`).join("");
+    p.querySelector("#dev-tutte").addEventListener("click", battuteTutte);
     /* i tasti restano al loro posto: cambia solo quale e' acceso */
     salti.addEventListener("click", e => {
       const b = e.target.closest("button");
       if (!b) return;
-      if (b.dataset.tutte) return battuteTutte();
       vai(+b.dataset.va);
       stage.focus();                       // le frecce tornano a guidare la storia
     });
   }
   p.querySelectorAll("#dev-salti [data-va]").forEach(b =>
     b.classList.toggle("qui", +b.dataset.va === state.n));
-  const suScena = SLIDES[state.n].t === "scene";
-  p.querySelector("#dev-salti [data-tutte]").disabled = !suScena;
+  p.querySelector("#dev-tutte").disabled = SLIDES[state.n].t !== "scene";
   p.querySelector("#dev-dove").textContent =
     `${state.n + 1}/${SLIDES.length} · ${s.t}`
     + (sc ? ` · ${CASELLA(s.i)} · scena ${sc.n || s.i + 1}${sc.parte ? " " + sc.parte : ""}`
