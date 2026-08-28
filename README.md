@@ -72,7 +72,9 @@ file.
 La regia **non esiste sul sito pubblico**: `r` risponde solo aprendo il file da disco o
 nell'artefatto privato. La **modalità sviluppo** (`v`) è ancora più ristretta — solo il file
 locale: mostra a che schermata e a che battuta siamo, quali immagini attese non sono
-incorporate, e permette di saltare a una schermata senza percorrerle tutte.
+incorporate, e ha una fila di tasti — uno per schermata, dalla copertina al messaggio finale —
+per andare dove serve in un clic invece che un passo alla volta. `tutte le battute` scopre in
+un colpo la scena aperta.
 
 ## Immagini
 

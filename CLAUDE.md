@@ -57,7 +57,8 @@ never by darkening the others. That was tried and rejected.
 **Author tools stay off the public site.** Two gates near `const state`: `REGIA_OK` is false on
 `*.github.io`, so `r` does nothing on Pages but works from the local file and from the artifact;
 `DEV_OK` is true only for `file:` / localhost, so the developer panel (`v` — current screen and
-line, expected images that are not embedded, jump to any screen) exists only in the local copy.
+line, expected images that are not embedded, one button per screen to jump anywhere in one click,
+and `tutte le battute` to reveal the open scene at once) exists only in the local copy.
 The help overlay lists only the keys that actually work where it is running. `smoke.js` runs the
 app twice, once with `location.hostname` empty and once with `viridjan.github.io`, and fails if a
 gate leaks.
