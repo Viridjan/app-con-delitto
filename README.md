@@ -69,6 +69,11 @@ cambia la taglia, le frecce fanno lo scatto fine. Il pannello in basso mostra da
 Le modifiche vivono solo nella pagina aperta: per renderle definitive si incollano le righe nel
 file.
 
+La regia **non esiste sul sito pubblico**: `r` risponde solo aprendo il file da disco o
+nell'artefatto privato. La **modalità sviluppo** (`v`) è ancora più ristretta — solo il file
+locale: mostra a che schermata e a che battuta siamo, quali immagini attese non sono
+incorporate, e permette di saltare a una schermata senza percorrerle tutte.
+
 ## Immagini
 
 Le illustrazioni le genera Codex e vanno in `assets/images/`, con i nomi elencati in
@@ -97,8 +102,9 @@ per giudicare posizioni e ritmo prima che l'arte sia pronta.
 | `i` | mostra gli indizi di gioco |
 | `1`–`4` | apre un indizio sul tavolo |
 | `d` | sagome di prova al posto delle illustrazioni mancanti |
-| `r` | regia: sposta e ridimensiona personaggi e oggetti sulla scena |
+| `r` | regia: sposta e ridimensiona personaggi e oggetti sulla scena (non sul sito pubblico) |
 | `[` `]` | in regia: porta il selezionato in secondo o in primo piano |
+| `v` | sviluppo: stato, immagini mancanti, salto a una schermata (solo file locale) |
 | `m` | zittisce la voce dei personaggi |
 
 Il sito pubblico sta su **https://viridjan.github.io/app-con-delitto/** e si aggiorna a ogni

@@ -5,9 +5,11 @@ const fs = require("fs"), vm = require("vm"), assert = require("assert");
 // ponytail: stub DOM minimo, non jsdom — servono solo i metodi che l'app usa davvero
 const node = () => ({
   _html: "", set innerHTML(v) { this._html = v; }, get innerHTML() { return this._html; },
-  textContent: "", disabled: false, hidden: false, dataset: {},
-  classList: { toggle() {}, add() {}, remove() {} },
-  addEventListener() {}, focus() {}, scrollIntoView() {}, scrollTo() {},
+  textContent: "", disabled: false, hidden: false, dataset: {}, style: {}, value: "",
+  classList: { toggle() {}, add() {}, remove() {}, contains: () => false },
+  addEventListener() {}, focus() {}, scrollIntoView() {}, scrollTo() {}, remove() {},
+  getBoundingClientRect: () => ({ left: 0, top: 0, width: 100, height: 100 }),
+  get firstElementChild() { return node(); },
   querySelector: () => node(), querySelectorAll: () => [],
 });
 const stage = node();
@@ -17,10 +19,11 @@ const doc = {
   getElementById: id => (id === "stage" ? stage : node()),
   documentElement: { requestFullscreen: () => Promise.resolve() },
 };
-const ctx = { document: doc, Image: class { set src(_) {} }, matchMedia: () => ({ matches: false }),
-  addEventListener() {}, requestAnimationFrame: fn => fn(), console };
+const contesto = loc => ({ document: doc, Image: class { set src(_) {} }, matchMedia: () => ({ matches: false }),
+  addEventListener() {}, requestAnimationFrame: fn => fn(), console, location: loc });
 const js = [...fs.readFileSync("oliva-blu.html", "utf8").matchAll(/<script>([\s\S]*?)<\/script>/g)].map(m => m[1]).join("\n");
-const app = vm.runInNewContext(js + ";({state,SLIDES,STORY,vai,avanti,indietro,render})", ctx);
+const coda = ";({state,SLIDES,STORY,vai,avanti,indietro,render,regia,sviluppo,REGIA_OK,DEV_OK,attesi})";
+const app = vm.runInNewContext(js + coda, contesto({ protocol: "file:", hostname: "" }));
 
 // ogni schermata si disegna e produce contenuto
 for (let i = 0; i < app.SLIDES.length; i++) {
@@ -63,6 +66,20 @@ const dette = [...copione.matchAll(/«([^»]+)»/g)].map(m => m[1]);
 assert.ok(dette.length >= 35, `copione.txt: solo ${dette.length} battute trovate`);
 const perse = dette.filter(t => !html.includes(t.replace(/\s+/g, " ")));
 assert.deepStrictEqual(perse, [], `battute del copione assenti dall'app: ${perse.join(" | ")}`);
+
+// gli strumenti d'autore: aperti da disco ci sono, sul sito pubblico no
+assert.ok(app.REGIA_OK && app.DEV_OK, "da file locale regia e sviluppo devono esserci");
+const scenaN = app.SLIDES.findIndex(s => s.t === "scene");
+app.vai(scenaN); app.regia();
+assert.strictEqual(app.state.regia, true, "la regia non si accende in locale");
+app.regia(); app.sviluppo();
+assert.strictEqual(app.state.sviluppo, true, "lo sviluppo non si accende in locale");
+
+const pub = vm.runInNewContext(js + coda, contesto({ protocol: "https:", hostname: "viridjan.github.io" }));
+assert.ok(!pub.REGIA_OK && !pub.DEV_OK, "sul sito pubblico non devono esserci regia ne' sviluppo");
+pub.vai(scenaN); pub.regia(); pub.sviluppo();
+assert.strictEqual(pub.state.regia, false, "la regia si accende sul sito pubblico");
+assert.strictEqual(pub.state.sviluppo, false, "lo sviluppo si accende sul sito pubblico");
 
 console.log(`copione: ${dette.length} battute verificate`);
 console.log(`ok — ${app.SLIDES.length} schermate, ${battute} battute, quiz verificato`);

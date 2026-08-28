@@ -292,6 +292,12 @@ kbd{font:inherit; font-size:.78em; border:1px solid var(--line); border-bottom-w
   margin-inline:auto; font-size:.8rem}
 .regia-pan .riga{display:flex; align-items:center; gap:.5rem; flex-wrap:wrap}
 .regia-pan b{color:var(--gold); font-weight:700}
+.dev-pan{top:.7rem; bottom:auto; left:auto; right:6.4rem; width:min(36rem,72vw);
+  margin-inline:0; font-size:.72rem; gap:.35rem}
+.dev-pan #dev-img{font-family:ui-monospace,Menlo,Consolas,monospace; color:var(--muted);
+  line-height:1.6; word-break:break-all}
+.dev-pan select{background:var(--bg); color:var(--ink); border:1px solid var(--line);
+  border-radius:2px; padding:.15rem .3rem; font:inherit; max-width:16rem}
 .regia-pan textarea{width:100%; min-height:4.5rem; resize:vertical; border:1px solid var(--line);
   border-radius:2px; background:var(--bg); color:var(--ink); padding:.4rem .5rem;
   font-family:ui-monospace,Menlo,Consolas,monospace; font-size:.72rem; line-height:1.5}
@@ -650,7 +656,15 @@ const SLIDES = [
   { t: "sol" }, { t: "fine" }
 ];
 
-const state = { n: 0, step: 0, demo: false, regia: false, box: false, indizi: false, qa: new Set(), clue: null, risposte: [], overlay: null };
+/* Gli strumenti d'autore non vanno in scena davanti al pubblico.
+   Sul sito su Pages non esistono; nell'artefatto privato c'e' la regia;
+   solo nel file aperto da disco c'e' anche la modalita' sviluppo. */
+const PUBBLICO = /(^|\.)github\.io$/i.test(location.hostname);
+const LOCALE = location.protocol === "file:" || /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname);
+const REGIA_OK = !PUBBLICO;
+const DEV_OK = LOCALE;
+
+const state = { n: 0, step: 0, demo: false, regia: false, sviluppo: false, box: false, indizi: false, qa: new Set(), clue: null, risposte: [], overlay: null };
 
 const stage = document.getElementById("stage");
 const vista = typeof IntersectionObserver === "function"
@@ -862,6 +876,7 @@ function render() {
   slots(stage);
   if (state.regia && SLIDES[state.n].t === "scene") attivaRegia(SLIDES[state.n].i);
   else document.querySelector(".regia-pan")?.remove();
+  if (state.sviluppo) pannelloDev();
   vista?.disconnect();
   if (vista) { stage.classList.add("dissolve"); schede().forEach(c => vista.observe(c)); }
   /* la battuta appena scoperta si porta da sola sotto gli occhi del narratore */
@@ -1012,6 +1027,66 @@ function muta() {
   const b = document.getElementById("k-muto");
   if (b) { b.textContent = muto ? "🔇" : "🔈"; b.setAttribute("aria-pressed", muto); }
   if (!muto) parla("Giuseppe", "prova prova");   // riaccendendo si sente subito se funziona
+}
+
+/* ---------- modalita' sviluppo ----------
+   Solo sul file locale, con "v": dice a che punto siamo, quali immagini non
+   sono incorporate e permette di saltare a una schermata senza percorrerle
+   tutte. Serve a provare una scena in mezzo senza rifare la strada. */
+const NOME_SCHERMATA = { cover: "copertina", cast: "personaggi", tavolo: "tavolo degli indizi",
+  narr: "narratore", sol: "soluzione", fine: "messaggio finale" };
+const etichetta = x => x.t === "scene" ? STORY.scene[x.i].titolo
+  : x.t === "quiz" ? `quiz ${x.i + 1}` : NOME_SCHERMATA[x.t] || x.t;
+
+/* i nomi dei file che l'app si aspetta, costruiti come li costruisce lei */
+function attesi() {
+  const a = ["copertina.png",
+    ...STORY.personaggi.filter(p => p.c !== "Narratore").map(p => `ritratto-${p.c.toLowerCase()}.png`),
+    ...OGGETTO_ID.map(o => `indizio-${o}.png`)];
+  STORY.scene.forEach((s, i) => {
+    a.push(`${CASELLA(i)}.png`);
+    (s.primo || []).forEach(o => a.push(`${CASELLA(i)}-${o.lato}.png`));
+    (s.cast || []).forEach(x => {
+      const posa = POSE_SCENA[CASELLA(i)]?.[x.c];
+      a.push(`attore-${x.c.toLowerCase()}${posa ? `-${posa}` : ""}.png`);
+    });
+  });
+  return [...new Set(a)];
+}
+
+function pannelloDev() {
+  const s = SLIDES[state.n], sc = s.t === "scene" ? STORY.scene[s.i] : null;
+  let p = document.querySelector(".dev-pan");
+  if (!p) {
+    p = document.body.appendChild(el(
+      `<div class="regia-pan dev-pan">
+         <div class="riga"><b>Sviluppo</b><span id="dev-dove"></span></div>
+         <div class="riga"><span class="occhiello">salta a</span>
+           <select id="dev-salta"></select><span><kbd>v</kbd> per uscire</span></div>
+         <div class="riga" id="dev-img"></div>
+       </div>`, true));
+    const sel = p.querySelector("#dev-salta");
+    sel.innerHTML = SLIDES.map((x, k) => `<option value="${k}">${k + 1}. ${esc(etichetta(x))}</option>`).join("");
+    sel.onchange = e => vai(+e.target.value);
+  }
+  p.querySelector("#dev-salta").value = state.n;
+  p.querySelector("#dev-dove").textContent =
+    `${state.n + 1}/${SLIDES.length} · ${s.t}`
+    + (sc ? ` · ${CASELLA(s.i)} · scena ${sc.n || s.i + 1}${sc.parte ? " " + sc.parte : ""}`
+          + ` · battuta ${state.step}/${sc.battute.length}` : "")
+    + ` · voce ${muto ? "muta" : "accesa"}${state.demo ? " · sagome di prova" : ""}`;
+  const tutti = attesi(), persi = tutti.filter(k => !ASSETS[k]);
+  p.querySelector("#dev-img").textContent = persi.length
+    ? `${persi.length} di ${tutti.length} immagini non incorporate: ${persi.join("  ")}`
+    : `${tutti.length} immagini, tutte incorporate`;
+  return p;
+}
+
+function sviluppo() {
+  if (!DEV_OK) return;
+  state.sviluppo = !state.sviluppo;
+  if (state.sviluppo) pannelloDev();
+  else document.querySelector(".dev-pan")?.remove();
 }
 
 /* ---------- modalita' regia ----------
@@ -1182,7 +1257,7 @@ function sposta(dx, db, grosso) {
 
 function regia() {
   const s = SLIDES[state.n];
-  if (s.t !== "scene") return;
+  if (!REGIA_OK || s.t !== "scene") return;
   state.regia = !state.regia;
   sel = null;
   document.querySelector(".regia-pan")?.remove();
@@ -1214,8 +1289,10 @@ function ovHelp() {
     ["i", "mostra gli indizi di gioco"],
     ["1–4", "apre un indizio sul tavolo"],
     ["d", "sagome di prova al posto delle illustrazioni mancanti"],
-    ["r", "regia: sposta e ridimensiona personaggi e oggetti"],
-    ["[  ]", "in regia: porta chi è selezionato in secondo o in primo piano"],
+    ...(REGIA_OK ? [
+      ["r", "regia: sposta e ridimensiona personaggi e oggetti"],
+      ["[  ]", "in regia: porta chi è selezionato in secondo o in primo piano"]] : []),
+    ...(DEV_OK ? [["v", "sviluppo: stato, immagini mancanti, salto a una schermata"]] : []),
     ["m", "zittisce la voce dei personaggi"],
     ["f", "schermo intero"],
     ["esc", "chiude questa finestra"]
@@ -1262,6 +1339,7 @@ document.addEventListener("keydown", e => {
     case "i": case "I": if (SLIDES[state.n].t === "scene") { state.indizi = !state.indizi; render(); } break;
     case "d": case "D": demo(); break;
     case "r": case "R": regia(); break;
+    case "v": case "V": sviluppo(); break;
     case "m": case "M": muta(); break;
     case "[": case "]":
       if (state.regia && sel) { e.preventDefault(); profondita(e.key === "]" ? 1 : -1); }
