@@ -7,7 +7,8 @@ const node = () => ({ _html:"", set innerHTML(v){this._html=v}, get innerHTML(){
 const doc = { createElement:node, addEventListener(){}, querySelector:()=>null, body:{appendChild:n=>n},
   getElementById:()=>node(), documentElement:{requestFullscreen:()=>Promise.resolve()} };
 const S = vm.runInNewContext(js + ";STORY", { document:doc, Image:class{set src(_){}},
-  matchMedia:()=>({matches:false}), addEventListener(){}, requestAnimationFrame:f=>f(), console });
+  matchMedia:()=>({matches:false}), addEventListener(){}, requestAnimationFrame:f=>f(), console,
+  location:{protocol:"file:", hostname:""} });
 
 const R = [];
 const riga = t => R.push(t);
