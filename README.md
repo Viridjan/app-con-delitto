@@ -71,9 +71,9 @@ file.
 
 Regia e sviluppo **non esistono sul sito pubblico**: `r` e `v` rispondono solo aprendo il file
 da disco o nell'artefatto privato. La **modalità sviluppo** (`v`) mostra a che schermata e a che battuta siamo, quali immagini attese non sono
-incorporate, e ha una fila di tasti — uno per schermata, dalla copertina al messaggio finale —
-per andare dove serve in un clic invece che un passo alla volta. `tutte le battute` scopre in
-un colpo la scena aperta.
+incorporate, ed elenca le schermate — una per riga, dalla copertina al messaggio finale, con
+accesa quella in cui ci si trova — per andare dove serve in un clic invece che un passo alla
+volta. `Tutte le battute` scopre in un colpo la scena aperta.
 
 ## Immagini
 
