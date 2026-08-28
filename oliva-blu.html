@@ -661,13 +661,12 @@ const SLIDES = [
   { t: "sol" }, { t: "fine" }
 ];
 
-/* Gli strumenti d'autore non vanno in scena davanti al pubblico.
-   Sul sito su Pages non esistono; nell'artefatto privato c'e' la regia;
-   solo nel file aperto da disco c'e' anche la modalita' sviluppo. */
+/* Gli strumenti d'autore non vanno in scena davanti al pubblico: sul sito su
+   Pages regia e sviluppo non esistono. Ovunque si lavori - il file aperto da
+   disco, l'artefatto privato - ci sono entrambi. */
 const PUBBLICO = /(^|\.)github\.io$/i.test(location.hostname);
-const LOCALE = location.protocol === "file:" || /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname);
 const REGIA_OK = !PUBBLICO;
-const DEV_OK = LOCALE;
+const DEV_OK = !PUBBLICO;
 
 const state = { n: 0, step: 0, demo: false, regia: false, sviluppo: false, box: false, indizi: false, qa: new Set(), clue: null, risposte: [], overlay: null };
 

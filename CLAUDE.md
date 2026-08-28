@@ -54,11 +54,12 @@ aside — so `s` does nothing on the other four scenes, by design.
 **Nobody gets dimmed on stage.** The speaker stands out by coming forward (lift, scale, shadow),
 never by darkening the others. That was tried and rejected.
 
-**Author tools stay off the public site.** Two gates near `const state`: `REGIA_OK` is false on
-`*.github.io`, so `r` does nothing on Pages but works from the local file and from the artifact;
-`DEV_OK` is true only for `file:` / localhost, so the developer panel (`v` — current screen and
-line, expected images that are not embedded, one button per screen to jump anywhere in one click,
-and `tutte le battute` to reveal the open scene at once) exists only in the local copy.
+**Author tools stay off the public site.** `PUBBLICO` near `const state` is true on
+`*.github.io`, and both `REGIA_OK` and `DEV_OK` are its negation: `r` (staging) and `v` (the
+developer panel — current screen and line, expected images that are not embedded, one button per
+screen to jump anywhere in one click, and `tutte le battute` to reveal the open scene at once)
+work from the local file and from the artifact, and do nothing on Pages. Gating the developer
+panel to `file:` alone was wrong — the artifact is where the user actually works.
 The help overlay lists only the keys that actually work where it is running. `smoke.js` runs the
 app twice, once with `location.hostname` empty and once with `viridjan.github.io`, and fails if a
 gate leaks.
