@@ -292,8 +292,13 @@ kbd{font:inherit; font-size:.78em; border:1px solid var(--line); border-bottom-w
   margin-inline:auto; font-size:.8rem}
 .regia-pan .riga{display:flex; align-items:center; gap:.5rem; flex-wrap:wrap}
 .regia-pan b{color:var(--gold); font-weight:700}
-.dev-pan{top:.7rem; bottom:auto; left:auto; right:6.4rem; width:min(36rem,72vw);
+.dev-pan{top:.7rem; bottom:auto; left:auto; right:6.4rem; width:min(44rem,80vw);
   margin-inline:0; font-size:.72rem; gap:.35rem}
+.dev-pan .salti{display:flex; flex-wrap:wrap; gap:.2rem}
+.dev-pan .salti button{font:inherit; cursor:pointer; padding:.12rem .4rem; border-radius:2px;
+  border:1px solid var(--line); background:var(--bg); color:var(--muted)}
+.dev-pan .salti button:hover{color:var(--ink); border-color:var(--gold)}
+.dev-pan .salti button.qui{background:var(--gold); border-color:var(--gold); color:var(--bg)}
 .dev-pan #dev-img{font-family:ui-monospace,Menlo,Consolas,monospace; color:var(--muted);
   line-height:1.6; word-break:break-all}
 .dev-pan select{background:var(--bg); color:var(--ink); border:1px solid var(--line);
@@ -1033,10 +1038,14 @@ function muta() {
    Solo sul file locale, con "v": dice a che punto siamo, quali immagini non
    sono incorporate e permette di saltare a una schermata senza percorrerle
    tutte. Serve a provare una scena in mezzo senza rifare la strada. */
-const NOME_SCHERMATA = { cover: "copertina", cast: "personaggi", tavolo: "tavolo degli indizi",
-  narr: "narratore", sol: "soluzione", fine: "messaggio finale" };
-const etichetta = x => x.t === "scene" ? STORY.scene[x.i].titolo
-  : x.t === "quiz" ? `quiz ${x.i + 1}` : NOME_SCHERMATA[x.t] || x.t;
+const NOME_SCHERMATA = { cover: "copertina", cast: "personaggi", tavolo: "indizi",
+  narr: "narratore", sol: "soluzione", fine: "finale" };
+const etichetta = x => {
+  if (x.t === "quiz") return `quiz ${x.i + 1}`;
+  if (x.t !== "scene") return NOME_SCHERMATA[x.t] || x.t;
+  const sc = STORY.scene[x.i];
+  return `sc.${sc.n || x.i + 1}${sc.parte ? " " + sc.parte.split(" ")[0] : ""}`;
+};
 
 /* i nomi dei file che l'app si aspetta, costruiti come li costruisce lei */
 function attesi() {
@@ -1060,16 +1069,27 @@ function pannelloDev() {
   if (!p) {
     p = document.body.appendChild(el(
       `<div class="regia-pan dev-pan">
-         <div class="riga"><b>Sviluppo</b><span id="dev-dove"></span></div>
-         <div class="riga"><span class="occhiello">salta a</span>
-           <select id="dev-salta"></select><span><kbd>v</kbd> per uscire</span></div>
+         <div class="riga"><b>Sviluppo</b><span id="dev-dove"></span>
+           <span class="spacer"></span><span><kbd>v</kbd> per uscire</span></div>
+         <div class="salti" id="dev-salti"></div>
          <div class="riga" id="dev-img"></div>
        </div>`, true));
-    const sel = p.querySelector("#dev-salta");
-    sel.innerHTML = SLIDES.map((x, k) => `<option value="${k}">${k + 1}. ${esc(etichetta(x))}</option>`).join("");
-    sel.onchange = e => vai(+e.target.value);
+    const salti = p.querySelector("#dev-salti");
+    salti.innerHTML = SLIDES.map((x, k) => `<button data-va="${k}">${esc(etichetta(x))}</button>`).join("")
+      + `<button data-tutte="1" title="mostra tutte le battute della scena">tutte le battute</button>`;
+    /* i tasti restano al loro posto: cambia solo quale e' acceso */
+    salti.addEventListener("click", e => {
+      const b = e.target.closest("button");
+      if (!b) return;
+      if (b.dataset.tutte) return battuteTutte();
+      vai(+b.dataset.va);
+      stage.focus();                       // le frecce tornano a guidare la storia
+    });
   }
-  p.querySelector("#dev-salta").value = state.n;
+  p.querySelectorAll("#dev-salti [data-va]").forEach(b =>
+    b.classList.toggle("qui", +b.dataset.va === state.n));
+  const suScena = SLIDES[state.n].t === "scene";
+  p.querySelector("#dev-salti [data-tutte]").disabled = !suScena;
   p.querySelector("#dev-dove").textContent =
     `${state.n + 1}/${SLIDES.length} · ${s.t}`
     + (sc ? ` · ${CASELLA(s.i)} · scena ${sc.n || s.i + 1}${sc.parte ? " " + sc.parte : ""}`
@@ -1080,6 +1100,15 @@ function pannelloDev() {
     ? `${persi.length} di ${tutti.length} immagini non incorporate: ${persi.join("  ")}`
     : `${tutti.length} immagini, tutte incorporate`;
   return p;
+}
+
+/* Scoprire una scena battuta per battuta serve al tavolo, non a chi prova:
+   questo la mostra tutta in un colpo. */
+function battuteTutte() {
+  const s = SLIDES[state.n];
+  if (s.t !== "scene") return;
+  state.step = STORY.scene[s.i].battute.length;
+  render();
 }
 
 function sviluppo() {
