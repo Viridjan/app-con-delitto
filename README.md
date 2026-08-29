@@ -1,6 +1,7 @@
 # Il mistero dell'oliva blu
 
-App per il narratore di una "cena con delitto": cinque scene illustrate, un tavolo di indizi da
+App per il narratore di una "cena con delitto": quattro scene illustrate divise in undici
+schermate, un tavolo di indizi da
 esaminare in ordine libero, la scheda finale e la soluzione. Il narratore la guida davanti al
 tavolo dei giocatori — da proiettore, da tablet o da telefono.
 
@@ -15,12 +16,13 @@ doppio clic e funziona anche senza rete. Dentro ci sono tre blocchi:
 
 - `<style>` — palette oliva e lume di candela, Bodoni Moda per i titoli, Alegreya Sans per le
   battute (leggibile a distanza di proiezione). Chiaro e scuro entrambi previsti.
-- `const STORY` — **tutto il copione**: scene, battute con i loro incisi, indizi, oggetti sul
-  tavolo con le battute collegate, quiz e soluzione.
+- `const STORY` — **tutto il copione**: scene, battute con i loro incisi, oggetti sul tavolo
+  con le battute collegate, quiz e soluzione.
 - `<script>` — uno stato, una `render()`, una lista di schermate. Nessun framework.
 
-I precedenti box educativi “Lo sapevi?” sono stati rimossi insieme ai loro contenuti. Rimane
-soltanto “Osserva bene!” nella scena 4, perché contiene un indizio necessario alla storia.
+Sulla schermata di una scena non c'è altro che il dialogo: i box educativi “Lo sapevi?”, il box
+“Osserva bene!” della scena 4, gli indizi di gioco, i brief delle illustrazioni e il messaggio
+educativo finale sono stati tolti dal copione. I brief restano in `img/ART.md`, per Codex.
 
 Le immagini viaggiano dentro l'HTML come data URI: l'app resta un file unico, condivisibile
 com'è.
@@ -97,14 +99,14 @@ per giudicare posizioni e ritmo prima che l'arte sia pronta.
 
 | Tasto | Cosa fa |
 |---|---|
+| clic sullo schermo | battuta successiva, poi schermata successiva |
+| clic sul bordo sinistro | indietro di una battuta |
 | `spazio` / `→` | battuta successiva, poi schermata successiva |
 | `←` | indietro di una battuta |
-| `s` | mostra “Osserva bene!” nella scena 4 |
-| `i` | mostra gli indizi di gioco |
 | `1`–`4` | apre un indizio sul tavolo |
 | `d` | sagome di prova al posto delle illustrazioni mancanti |
 | `r` | regia: sposta e ridimensiona personaggi e oggetti sulla scena (non sul sito pubblico) |
-| `[` `]` | in regia: porta il selezionato in secondo o in primo piano |
+| `[` `]` | in regia: porta il selezionato in secondo o in primo piano, oggetti compresi |
 | `v` | sviluppo: stato, immagini mancanti, salto a una schermata (non sul sito pubblico) |
 | `m` | zittisce la voce dei personaggi |
 
