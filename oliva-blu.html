@@ -347,9 +347,8 @@ const STORY = {
     {n:"Giuseppe Maria De Robertis", c:"Giuseppe", d:"Ricco benefattore. Vuole donare molti dei suoi beni agli Oliviani."},
     {n:"Rosalia De Robertis", c:"Rosalia", d:"Nipote di Giuseppe. Gli vuole bene, ma è preoccupata per la sua scelta."},
     {n:"Roberto Vispero", c:"Roberto", d:"Fondatore degli Oliviani. Conosce bene gli ulivi e i prodotti agricoli."},
-    {n:"Augusto De Virgilis", c:"Augusto", d:"Fondatore degli Oliviani. Parla spesso della produzione dell’olio."},
-    {n:"Mauro Damiani", c:"Mauro", d:"Nuovo adepto. È molto serio, rigido e sospettoso."},
-    {n:"Narratore", c:"Narratore", d:"Personaggio estraneo ai fatti e non presente nelle scene come protagonista. Serve come guida e voce fuori campo per accompagnare i lettori con commenti e indizi. Può avere l’aspetto di una mascotte, per esempio un meeple investigatore."}
+    {n:"Augusto De Virgilis", c:"Augusto", d:"Membro degli Oliviani. Parla spesso della produzione dell’olio."},
+    {n:"Mauro Damiani", c:"Mauro", d:"Nuovo adepto degli Oliviani. Marito di Rosalia. È molto serio, rigido e sospettoso."}
   ],
 
   scene: [
@@ -362,7 +361,10 @@ const STORY = {
         {c:"Roberto", t:"Benvenuti nella prima casa degli Oliviani!"},
         {c:"Augusto", t:"Questa sera celebriamo l’ulivo, simbolo di pace e rinascita."},
         {c:"Giuseppe", t:"Sono felice di essere qui. Questa comunità merita fiducia."},
-        {c:"Rosalia", m:"a bassa voce", t:"Zio Giuseppe… spero che tu sia davvero sicuro."}
+        {c:"Rosalia", m:"a bassa voce", t:"Zio Giuseppe… spero che tu sia davvero sicuro."},
+        {c:"Mauro", m:"alla moglie", nuova:true, t:"Tuo zio ascolta soltanto se stesso."},
+        {c:"Rosalia", m:"piano", nuova:true, t:"Parla piano, Mauro. Qui siamo ospiti."},
+        {c:"Mauro", m:"osservando Giuseppe", nuova:true, t:"Certe ricchezze non diventano pulite solo perché vengono donate."}
       ],
     },
     {
@@ -371,7 +373,23 @@ const STORY = {
       /* il biglietto e il pensiero di Mauro: nessuno in scena, l'oggetto parla da solo */
       cast:[],
       battute:[
-        {c:"Mauro", m:"tra sé", t:"La pace non basta, se dietro si nasconde il peccato…"}
+        {c:"Mauro", m:"raccogliendo un foglietto da terra", nuova:true, t:"Qualcuno ha perso questo."},
+        {c:"Rosalia", nuova:true, t:"È mio. L’avevo scritto per mio zio."},
+        {c:"Mauro", m:"leggendo", nuova:true, t:"“Zio, ti prego: non fare la donazione. Quei beni fanno parte della nostra eredità.”"},
+        {c:"Rosalia", nuova:true, t:"È una questione di famiglia. Ridammelo, per favore."},
+        {c:"Mauro", m:"restituendole il foglio", nuova:true, t:"Tienilo. Ma quello che c’è scritto non lo dimentico."}
+      ],
+    },
+    {
+      titolo:"L’inaugurazione degli Oliviani",
+      img:null, slot:"scena1", n:1, parte:"terza parte",
+      cast:[{c:"Mauro",x:82.2,b:30.6,h:42},{c:"Augusto",x:32.4,b:20.8,h:55},{c:"Giuseppe",x:13.7,b:18.5,h:59},{c:"Rosalia",x:69,b:30.7,h:41},{c:"Roberto",x:48.9,b:-5.5,h:74,z:6}],
+      primo:[{lato:"sx",x:19.4,b:8.4,h:44},{lato:"dx",x:96.5,b:-32.7,h:76,z:7}],
+      battute:[
+        {c:"Roberto", nuova:true, t:"La serata volge al termine, signor Giuseppe. Le è piaciuta la nostra casa?"},
+        {c:"Giuseppe", nuova:true, t:"Molto. Più di quanto immaginassi."},
+        {c:"Rosalia", m:"a Mauro, piano", nuova:true, t:"Di quel foglio non dire niente a nessuno."},
+        {c:"Mauro", nuova:true, t:"Non serve che lo dica io."}
       ],
     },
     {
@@ -398,7 +416,7 @@ const STORY = {
       img:null, slot:"scena2", n:2, parte:"terza parte",
       cast:[{c:"Roberto",x:65.2,b:17.1,h:55},{c:"Augusto",x:90.3,b:-5.6,h:83},{c:"Giuseppe",x:38.2,b:-10.1,h:87}],
       battute:[
-        {c:"Giuseppe", m:"guardando la bottiglia d’olio", t:"Adoro l’Olio. Ditemi una cosa Augusto, come nasce davvero l’olio?"},
+        {c:"Giuseppe", m:"guardando la bottiglia d’olio", t:"Adoro l’Olio. Ditemi una cosa Augusto, come nasce davvero?"},
         {c:"Augusto", t:"Prima si raccolgono le olive."},
         {c:"Augusto", t:"Poi c’è la frangitura."},
         {c:"Roberto", t:"Ovvero quando vengono pulite e schiacciate. Questa fase si chiama frangitura."},
@@ -416,7 +434,9 @@ const STORY = {
       cast:[{c:"Mauro",x:8.5,b:21.2,h:45},{c:"Roberto",x:65.2,b:17.1,h:55},{c:"Augusto",x:90.3,b:-5.6,h:83},{c:"Giuseppe",x:38.2,b:-10.1,h:87}],
       battute:[
         {c:"Mauro", m:"piano", t:"E per avere olive sane… qualcuno usa sostanze pericolose."},
-        {c:"Roberto", t:"Prodotti controllati, Mauro. Solo se usati nel modo giusto."}
+        {c:"Roberto", t:"Prodotti controllati, Mauro. Solo se usati nel modo giusto."},
+        {c:"Augusto", nuova:true, t:"Rimetti quella bottiglietta nell’armadietto, Mauro. Non deve stare vicino al rinfresco."},
+        {c:"Mauro", nuova:true, t:"Certo. Ci penso io."}
       ],
     },
     {
@@ -430,6 +450,7 @@ const STORY = {
         {c:"Giuseppe", t:"Volentieri. Alla vostra comunità."},
         {c:"Roberto", m:"sullo sfondo", t:"Un buon olio racconta il territorio da cui nasce."},
         {c:"Augusto", t:"E racconta anche il lavoro di chi cura gli ulivi."},
+        {c:"Giuseppe", nuova:true, t:"Ho già firmato tutto, Rosalia. Non cambierò idea."},
         {c:"Rosalia", m:"tra sé", t:"Vorrei fermare tutto… ma ormai è tardi."},
         {c:"Mauro", m:"tra sé", t:"Il male va fermato prima che cresca."}
       ],

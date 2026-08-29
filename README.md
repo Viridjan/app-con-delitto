@@ -1,6 +1,6 @@
 # Il mistero dell'oliva blu
 
-App per il narratore di una "cena con delitto": quattro scene illustrate divise in undici
+App per il narratore di una "cena con delitto": quattro scene illustrate divise in dodici
 schermate, un tavolo di indizi da
 esaminare in ordine libero, la scheda finale e la soluzione. Il narratore la guida davanti al
 tavolo dei giocatori — da proiettore, da tablet o da telefono.

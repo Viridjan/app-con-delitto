@@ -142,14 +142,23 @@ that edit:
   malore's art brief follows. She names the victim.
 - **"signor De Robertis" became "signor Giuseppe"**, 29 August 2026, in Mauro's toast and in
   Roberto's added line. The surname survives only in the cast list.
-- **2 added**, flagged `nuova:true`: Giuseppe's "Gli ulivi durano secoli…" and Roberto's reply,
-  in *La donazione*.
+- **17 lines added**, every one flagged `nuova:true` and marked `[aggiunta, non di Gervasio]` in
+  the txt. Two in *La donazione* (28 August); then on 29 August a whole revision the user drafted
+  as `copione-v2.txt`: Mauro's judgement of Giuseppe, the note found and read aloud and handed
+  back, Augusto telling Mauro to put the bottle away — which is how the culprit gets the poison
+  on stage — Giuseppe closing the door on Rosalia at the toast, and a third part for scene 1 that
+  ends the evening. Of 53 spoken lines, 17 are not Gervasio's.
 - ***Il racconto dell'olio* is the user's rewrite**, 28 August 2026: nine lines instead of six,
   Augusto and Roberto hand the explanation back and forth, and "Adoro l'Olo" became "Adoro
   l'Olio". Its "Indizi di gioco" block was dropped with it — that scene now has `indizi:{}` and
   `i` does nothing there.
+- **1 more PDF line cut**, 29 August 2026: Mauro's «La pace non basta, se dietro si nasconde il
+  peccato…» — scene 1's second part now opens on him picking the note off the floor.
 - **2 PDF lines cut** from *La tensione*, 28 August 2026: Rosalia's "Ma zio Giuseppe… e la tua
   famiglia?" and Giuseppe's "Rosalia, questa è la mia scelta." Only Mauro and Roberto speak now.
+- **Mauro married Rosalia**, 29 August 2026, and Augusto became a *membro* rather than a founder
+  — both in `personaggi`, neither in the PDF. Note that Mauro's surname is still Damiani while
+  hers is De Robertis; the user has been told and has not changed it.
 - **2 art briefs dropped**, scene 1 and *La tensione*: no `descrizione`, so their typographic
   fallback shows the label alone.
 - ***La tensione* now plays on the same stage as *Il racconto dell'olio***, 28 August 2026: same
@@ -178,16 +187,20 @@ that line.
 
 ## The running order, 29 August 2026
 
-Four scenes, eleven scene screens, twenty-one screens in all:
+Four scenes, twelve scene screens, twenty-two in all:
 
 ```
 copertina · personaggi
-1  L'inaugurazione degli Oliviani   sala + il biglietto
+1  L'inaugurazione degli Oliviani   sala + il biglietto + sala
 2  La donazione                     il foglio + sala + Il racconto dell'olio + La tensione
 3  Il brindisi                      sala + Il malore dell'oliva blu
 4  Gli indizi sul tavolo            la bottiglietta + il bicchiere + sala
 tavolo degli indizi · narratore · quiz 1-4 · soluzione · fine
 ```
+
+Twenty-two screens, twelve of them scenes. Scene 1's third part exists for one reason: without it
+the biglietto plate and the foglio plate sat back to back, and two clue plates in a row read as
+one screen that changed picture.
 
 Four screens show a clue plate instead of a room: `sfondoDa` takes any file stem, so
 `sfondoDa:"indizio-foglio"` puts the 1:1 plate on the square stage with `cast:[]`. That is also
