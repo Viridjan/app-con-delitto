@@ -8,18 +8,11 @@ parola per parola. Il PDF resta l’originale da cui è tratto.
 I fatti, i personaggi e gli eventi raccontati in questa storia sono interamente inventati. Ogni riferimento a persone, gruppi o situazioni reali è puramente casuale. Le brevi nozioni sull’ulivo, sulla produzione dell’olio e sui prodotti per le piante hanno invece finalità educativa e si basano su informazioni reali, semplificate per rendere l’esperienza più accessibile.
 
 — PERSONAGGI —
-Giuseppe Maria De Robertis
-    Ricco benefattore. Vuole donare molti dei suoi beni agli Oliviani.
-Rosalia De Robertis
-    Nipote di Giuseppe. Gli vuole bene, ma è preoccupata per la sua scelta.
-Roberto Vispero
-    Fondatore degli Oliviani. Conosce bene gli ulivi e i prodotti agricoli.
-Augusto De Virgilis
-    Fondatore degli Oliviani. Parla spesso della produzione dell’olio.
-Mauro Damiani
-    Nuovo adepto. È molto serio, rigido e sospettoso.
-Narratore
-    Personaggio estraneo ai fatti e non presente nelle scene come protagonista. Serve come guida e voce fuori campo per accompagnare i lettori con commenti e indizi. Può avere l’aspetto di una mascotte, per esempio un meeple investigatore.
+Giuseppe Maria De Robertis - Ricco benefattore. Vuole donare molti dei suoi beni agli Oliviani.
+Rosalia De Robertis - Nipote di Giuseppe. Gli vuole bene, ma è preoccupata per la sua scelta.
+Roberto Vispero - Fondatore degli Oliviani. Conosce bene gli ulivi e i prodotti agricoli.
+Augusto De Virgilis - Membro degli Oliviani. Parla spesso della produzione dell’olio.
+Mauro Damiani - Nuovo adepto degli Oliviani. Marito di Rosalia. È molto serio, rigido e sospettoso.
 
 — SCENA 1, prima parte: L’inaugurazione degli Oliviani —
 
@@ -27,10 +20,24 @@ Roberto: «Benvenuti nella prima casa degli Oliviani!»
 Augusto: «Questa sera celebriamo l’ulivo, simbolo di pace e rinascita.»
 Giuseppe: «Sono felice di essere qui. Questa comunità merita fiducia.»
 Rosalia, a bassa voce: «Zio Giuseppe… spero che tu sia davvero sicuro.»
+Mauro, alla moglie: «Tuo zio ascolta soltanto se stesso.»   [aggiunta, non di Gervasio]
+Rosalia, piano: «Parla piano, Mauro. Qui siamo ospiti.»   [aggiunta, non di Gervasio]
+Mauro, osservando Giuseppe: «Certe ricchezze non diventano pulite solo perché vengono donate.»   [aggiunta, non di Gervasio]
 
 — SCENA 1, seconda parte: L’inaugurazione degli Oliviani —
 
-Mauro, tra sé: «La pace non basta, se dietro si nasconde il peccato…»
+Mauro, raccogliendo un foglietto da terra: «Qualcuno ha perso questo.»   [aggiunta, non di Gervasio]
+Rosalia: «È mio. L’avevo scritto per mio zio.»   [aggiunta, non di Gervasio]
+Mauro, leggendo: «“Zio, ti prego: non fare la donazione. Quei beni fanno parte della nostra eredità.”»   [aggiunta, non di Gervasio]
+Rosalia: «È una questione di famiglia. Ridammelo, per favore.»   [aggiunta, non di Gervasio]
+Mauro, restituendole il foglio: «Tienilo. Ma quello che c’è scritto non lo dimentico.»   [aggiunta, non di Gervasio]
+
+— SCENA 1, terza parte: L’inaugurazione degli Oliviani —
+
+Roberto: «La serata volge al termine, signor Giuseppe. Le è piaciuta la nostra casa?»   [aggiunta, non di Gervasio]
+Giuseppe: «Molto. Più di quanto immaginassi.»   [aggiunta, non di Gervasio]
+Rosalia, a Mauro, piano: «Di quel foglio non dire niente a nessuno.»   [aggiunta, non di Gervasio]
+Mauro: «Non serve che lo dica io.»   [aggiunta, non di Gervasio]
 
 — SCENA 2, prima parte: La donazione —
 
@@ -44,7 +51,7 @@ Roberto: «Allora il suo nome resterà fra queste mura, signor Giuseppe.»   [ag
 
 — SCENA 2, terza parte: Il racconto dell’olio —
 
-Giuseppe, guardando la bottiglia d’olio: «Adoro l’Olio. Ditemi una cosa Augusto, come nasce davvero l’olio?»
+Giuseppe, guardando la bottiglia d’olio: «Adoro l’Olio. Ditemi una cosa Augusto, come nasce davvero?»
 Augusto: «Prima si raccolgono le olive.»
 Augusto: «Poi c’è la frangitura.»
 Roberto: «Ovvero quando vengono pulite e schiacciate. Questa fase si chiama frangitura.»
@@ -58,6 +65,8 @@ Augusto: «Esatto. E nasce meglio da olive sane.»
 
 Mauro, piano: «E per avere olive sane… qualcuno usa sostanze pericolose.»
 Roberto: «Prodotti controllati, Mauro. Solo se usati nel modo giusto.»
+Augusto: «Rimetti quella bottiglietta nell’armadietto, Mauro. Non deve stare vicino al rinfresco.»   [aggiunta, non di Gervasio]
+Mauro: «Certo. Ci penso io.»   [aggiunta, non di Gervasio]
 
 — SCENA 3, prima parte: Il brindisi —
 
@@ -65,6 +74,7 @@ Mauro: «Signor Giuseppe, un brindisi per questo nuovo inizio.»
 Giuseppe: «Volentieri. Alla vostra comunità.»
 Roberto, sullo sfondo: «Un buon olio racconta il territorio da cui nasce.»
 Augusto: «E racconta anche il lavoro di chi cura gli ulivi.»
+Giuseppe: «Ho già firmato tutto, Rosalia. Non cambierò idea.»   [aggiunta, non di Gervasio]
 Rosalia, tra sé: «Vorrei fermare tutto… ma ormai è tardi.»
 Mauro, tra sé: «Il male va fermato prima che cresca.»
 

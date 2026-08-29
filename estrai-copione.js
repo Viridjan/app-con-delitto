@@ -22,7 +22,7 @@ riga("— DISCLAIMER —");
 riga(S.disclaimer);
 riga("");
 riga("— PERSONAGGI —");
-S.personaggi.forEach(p => riga(`${p.n}\n    ${p.d}`));
+S.personaggi.forEach(p => riga(`${p.n} - ${p.d}`));
 S.scene.forEach((s, i) => {
   riga("");
   riga(`— SCENA ${s.n || i + 1}${s.parte ? `, ${s.parte}` : ""}: ${s.titolo} —`);
