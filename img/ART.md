@@ -10,6 +10,15 @@ Tutte le caselle narrative obbligatorie sono complete: copertina animata, cinque
 cinque attori canonici con pose narrative, sei ritratti e quattro indizi trasparenti. Sono
 presenti anche i due oggetti in primo piano della scena 1.
 
+Due inciampi da evitare, capitati davvero: uno sfondo consegnato **con i personaggi già
+dipinti dentro** (li mostra due volte, perché i ritagli si sovrappongono), e un ritaglio con una
+**riga di guida sul bordo della tela** — anche sottile, fa sballare il ritaglio automatico e si
+vede in pagina. La tela attorno alla figura dev'essere trasparente e basta.
+
+I nomi `scenaN.png` sono **caselle**, non i numeri che il pubblico legge: `scena4.png` è il
+malore, che sullo schermo è la seconda parte della scena 3, e `scena5.png` è il tavolo, che è la
+scena 4. Le caselle non cambiano quando le scene vengono rinumerate.
+
 Non risultano immagini obbligatorie mancanti. Gli eventuali oggetti `scena2-sx/dx` fino a
 `scena5-sx/dx` sono espansioni facoltative: il codice non li mostra finché non vengono inseriti
 in `STORY.scene[i].primo`.
@@ -137,7 +146,8 @@ Narratore salvia con dettagli dorati.
 | `ritratto-mauro.png` | Mauro Damiani — nuovo adepto, molto serio, rigido, sospettoso. |
 | `ritratto-narratore.png` | Il Narratore — mascotte guida, un meeple investigatore. |
 
-Consegna: PNG dentro `assets/images/`. **Non sovrascrivere mai un'immagine esistente**. Per una
+Consegna: PNG dentro `assets/images/`. **È obbligatorio versionare ogni revisione: non
+sovrascrivere mai un'immagine esistente, anche se non è ancora stata committata**. Per una
 revisione dello stesso disegno usare il suffisso progressivo (`-v2`, `-v3`, ecc.); per una posa
 o funzione realmente diversa usare un nome semantico (`-malore`, `-nervoso`, `-accoglienza`).
 Aprire l'app e premere `p` per controllare le caselle collegate.

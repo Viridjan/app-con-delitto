@@ -20,23 +20,52 @@ SCELTE = {"copertina.png": "quadro-oliva-animato",
           "scena1-sx.png": "sala2-oggettoSX",
           "scena1-dx.png": "sala2-oggettoDX",
           "scena2.png": "sala1-scena2",
-          "scena2c.png": "sala2",
           "scena3.png": "brindisi",
           "scena4.png": "malore",
           "scena5.png": "indagine"}
 PERSONE = ["giuseppe", "rosalia", "roberto", "augusto", "mauro"]
-POSE = ["giuseppe-malore", "rosalia-allarmata", "rosalia-pensierosa",
-        "roberto-preoccupato", "augusto-sorpreso", "mauro-nervoso",
-        "mauro-guardingo"]
+POSE = ["giuseppe-malore", "giuseppe-presentazione", "giuseppe-brindisi",
+        "rosalia-allarmata", "rosalia-pensierosa", "rosalia-brindisi",
+        "roberto-preoccupato", "roberto-accoglienza", "roberto-brindisi",
+        "augusto-sorpreso", "augusto-brindisi", "mauro-nervoso", "mauro-guardingo",
+        "mauro-brindisi"]
 OGGETTI = ["bicchiere", "bottiglietta", "foglio", "biglietto"]
 # solo le caselle che l'app sa mostrare: le varianti e le prove restano fuori dal file
-ATTESI = ({"copertina.png", "scena2c.png"}
+ATTESI = ({"copertina.png"}
           | {f"scena{i}.png" for i in range(1, 6)}
           | {f"scena{i}-{lato}.png" for i in range(1, 6) for lato in ("sx", "dx")}
           | {f"attore-{n}.png" for n in PERSONE}
           | {f"attore-{n}.png" for n in POSE}
           | {f"ritratto-{n}.png" for n in PERSONE + ["narratore"]}
           | {f"indizio-{n}.png" for n in OGGETTI})
+
+def _blocco(medie, minimo=2):
+    """Estremi del gruppo di righe (o colonne) piu' pieno, saltando il resto."""
+    blocchi, dentro = [], None
+    for i, v in enumerate(medie + b"\x00"):
+        if v >= minimo and dentro is None: dentro = i
+        elif v < minimo and dentro is not None:
+            blocchi.append((sum(medie[dentro:i]), dentro, i)); dentro = None
+    if not blocchi: return None
+    _, a, b = max(blocchi)
+    return a, b
+
+def bbox_pulito(im):
+    """Bordo della figura, ignorando quello che le sta staccato attorno.
+
+    getbbox() si ferma al primo pixel non trasparente: basta una riga di guida
+    lasciata sul bordo della tela - i ritagli "brindisi" ne avevano una, spessa
+    due pixel e ben opaca - perche' il ritaglio prenda tutta la tela e la figura
+    resti piccola e storta. Qui si tiene solo la fascia di colonne (e di righe)
+    piu' piena, quella dove sta il disegno. Un elemento davvero staccato dalla
+    figura andrebbe perso: finora non ne esistono.
+    """
+    a = im.getchannel("A")
+    w, h = a.size
+    x = _blocco(a.resize((w, 1), Image.BOX).tobytes())
+    y = _blocco(a.resize((1, h), Image.BOX).tobytes())
+    if not x or not y: return a.getbbox()
+    return (x[0], y[0], x[1], y[1])
 
 def famiglia(key):
     """copertina.png -> copertina · scena1-sx.png -> scena · attore-mauro.png -> attore"""
@@ -100,7 +129,7 @@ def main():
         if ritaglia and im.mode in ("RGBA", "LA"):
             # i ritagli arrivano dentro un quadrato con molto vuoto attorno:
             # senza togliere il vuoto la figura sul palco resta minuscola
-            bbox = im.getchannel("A").getbbox()
+            bbox = bbox_pulito(im)
             if bbox: im = im.crop(bbox)
             alt = 900
             if im.height > alt:

@@ -1,7 +1,6 @@
 IL MISTERO DELL’OLIVA BLU
-Storia illustrata in 5 scene in stile “Cena con delitto”
 
-Testo di Carlo Maria Gervasio, usato con la sua autorizzazione.
+Testo originale di Carlo Maria Gervasio, usato con la sua autorizzazione.
 Questo file è il copione approvato: è la versione che l’app deve mostrare,
 parola per parola. Il PDF resta l’originale da cui è tratto.
 
@@ -22,130 +21,77 @@ Mauro Damiani
 Narratore
     Personaggio estraneo ai fatti e non presente nelle scene come protagonista. Serve come guida e voce fuori campo per accompagnare i lettori con commenti e indizi. Può avere l’aspetto di una mascotte, per esempio un meeple investigatore.
 
-— SCENA 1: L’inaugurazione degli Oliviani —
+— SCENA 1, prima parte: L’inaugurazione degli Oliviani —
 
-Descrizione scena
-L’immagine mostra l’interno della nuova sede degli Oliviani. La sala è decorata con rami d’ulivo, stoffe verdi e bianche, candele e piccole ciotole piene di olive. Al centro c’è un piccolo palco o altare con il simbolo degli Oliviani: una grande oliva stilizzata. Roberto e Augusto accolgono gli ospiti con aria solenne ma sorridente. Giuseppe Maria De Robertis entra elegante e sicuro di sé. Accanto a lui c’è Rosalia, che sembra più preoccupata che felice. In fondo alla sala si vede Mauro, in disparte. Osserva Giuseppe con attenzione. L’atmosfera deve essere accogliente, curiosa e un po’ misteriosa.
-
-Battute
 Roberto: «Benvenuti nella prima casa degli Oliviani!»
 Augusto: «Questa sera celebriamo l’ulivo, simbolo di pace e rinascita.»
 Giuseppe: «Sono felice di essere qui. Questa comunità merita fiducia.»
 Rosalia, a bassa voce: «Zio Giuseppe… spero che tu sia davvero sicuro.»
-Mauro, tra sé: «La pace non basta, se dietro si nasconde il peccato…»
 
-Indizi di gioco
-Osserva bene i personaggi.
-  Chi sembra preoccupata? → Rosalia.
-  Chi osserva Giuseppe da lontano? → Mauro.
+— SCENA 1, seconda parte: L’inaugurazione degli Oliviani —
+
+Mauro, tra sé: «La pace non basta, se dietro si nasconde il peccato…»
 
 — SCENA 2, prima parte: La donazione —
 
-Descrizione scena
-Giuseppe è vicino a un tavolo. Sul tavolo c’è un foglio grande e ben visibile con scritto: DONAZIONE AGLI OLIVIANI. Vicino al documento ci sono una penna, alcune olive, una piccola bottiglia d’olio e un cartellino illustrato con le fasi della produzione dell’olio. Roberto ascolta soddisfatto. La scena deve far capire chiaramente che Giuseppe vuole aiutare economicamente gli Oliviani.
-
-Battute
 Giuseppe: «Ho deciso. Farò una grande donazione agli Oliviani.»
 Roberto: «È un gesto generoso. Con il suo aiuto potremo crescere.»
+
+— SCENA 2, seconda parte: La donazione —
+
 Giuseppe: «Gli ulivi durano secoli. Vorrei che anche questa casa durasse così a lungo.»   [aggiunta, non di Gervasio]
-Roberto: «Allora il suo nome resterà fra queste mura, signor De Robertis.»   [aggiunta, non di Gervasio]
+Roberto: «Allora il suo nome resterà fra queste mura, signor Giuseppe.»   [aggiunta, non di Gervasio]
 
-Indizi di gioco
-Il documento dice che Giuseppe vuole donare i suoi beni agli Oliviani.
-  Chi è felice della donazione? → Roberto e Augusto.
+— SCENA 2, terza parte: Il racconto dell’olio —
 
-— SCENA 2, seconda parte: Il racconto dell’olio —
-
-Descrizione scena
-Nella stessa sala, Augusto raggiunge Giuseppe e Roberto. Sul tavolo restano il foglio della donazione, alcune olive e una piccola bottiglia d’olio, accanto a un cartellino illustrato con le fasi della produzione. I due fondatori raccontano, Giuseppe ascolta e domanda.
-
-Battute
-Giuseppe, guardando la bottiglia d’olio: «Adoro l’Olo. Ditemi una cosa: come nasce davvero?»
+Giuseppe, guardando la bottiglia d’olio: «Adoro l’Olio. Ditemi una cosa Augusto, come nasce davvero l’olio?»
 Augusto: «Prima si raccolgono le olive.»
-Roberto: «Poi si puliscono e si schiacciano. Questa fase si chiama frangitura.»
-Augusto: «Dopo, la pasta di olive viene mescolata lentamente. Si chiama gramolatura.»
+Augusto: «Poi c’è la frangitura.»
+Roberto: «Ovvero quando vengono pulite e schiacciate. Questa fase si chiama frangitura.»
+Augusto: «Grazie Roberto, vuoi spiegare anche la gramolatura?»
+Roberto: «Certo, la pasta di olive viene quindi mescolata lentamente.»
+Augusto: «Infine l’olio viene filtrato.»
 Giuseppe: «Quindi l’olio buono nasce da tanti passaggi.»
 Augusto: «Esatto. E nasce meglio da olive sane.»
 
-Indizi di gioco
-Ascolta chi conosce il mestiere.
-  Chi racconta come nasce l’olio? → Augusto e Roberto.
+— SCENA 2, quarta parte: La tensione —
 
-— SCENA 2, terza parte: La tensione —
-
-Descrizione scena
-La sala intera, con tutti presenti. Roberto e Augusto sembrano soddisfatti. Rosalia guarda il foglio della donazione con preoccupazione. Mauro ascolta in disparte, con espressione cupa. La scena deve far capire che la decisione crea tensione.
-
-Battute
-Rosalia: «Ma zio Giuseppe… e la tua famiglia?»
-Giuseppe: «Rosalia, questa è la mia scelta.»
 Mauro, piano: «E per avere olive sane… qualcuno usa sostanze pericolose.»
 Roberto: «Prodotti controllati, Mauro. Solo se usati nel modo giusto.»
 
-Indizi di gioco
-Non tutti festeggiano allo stesso modo.
-  Chi è preoccupata? → Rosalia.
-  Chi parla di sostanze pericolose? → Mauro.
+— SCENA 3, prima parte: Il brindisi —
 
-— SCENA 3: Il brindisi —
-
-Descrizione scena
-La scena mostra il momento del rinfresco. Su un tavolo ci sono olive, pane, taralli, bicchieri, bottiglie e piccoli assaggi. Mauro porge un bicchiere a Giuseppe. Il gesto deve essere molto chiaro: la mano di Mauro offre il bicchiere, Giuseppe lo prende. Sullo sfondo, Roberto parla con alcuni ospiti. Augusto mostra una bottiglia d’olio o spiega qualcosa vicino al tavolo. Rosalia è poco distante, in disparte, con aria turbata. La scena deve sembrare tranquilla, ma il bicchiere deve essere il punto più importante dell’immagine.
-
-Battute
-Mauro: «Signor De Robertis, un brindisi per questo nuovo inizio.»
+Mauro: «Signor Giuseppe, un brindisi per questo nuovo inizio.»
 Giuseppe: «Volentieri. Alla vostra comunità.»
 Roberto, sullo sfondo: «Un buon olio racconta il territorio da cui nasce.»
 Augusto: «E racconta anche il lavoro di chi cura gli ulivi.»
 Rosalia, tra sé: «Vorrei fermare tutto… ma ormai è tardi.»
 Mauro, tra sé: «Il male va fermato prima che cresca.»
 
-Indizi di gioco
-Guarda bene il bicchiere.
-  Chi lo tiene prima di Giuseppe? → Mauro.
-  Rosalia è vicina al bicchiere? → No, è più lontana.
+— SCENA 3, seconda parte: Il malore dell’oliva blu —
 
-— SCENA 4: Il malore dell’oliva blu —
-
-Descrizione scena
-Giuseppe ha appena bevuto. All’improvviso si sente male. Porta una mano alla gola o al petto. Il bicchiere gli scivola dalla mano o cade vicino a lui. Tutti si girano spaventati. Rosalia corre verso zio Giuseppe, agitata. Roberto e Augusto sembrano sorpresi e agitati. Mauro resta più rigido degli altri, teso, quasi come se sapesse già cosa sta succedendo. Il dettaglio più importante è il volto di Giuseppe: la sua bocca, o la lingua, è diventata blu. Il blu deve essere evidente, ma non horror.
-
-Battute
 Giuseppe: «Mi… mi sento strano…»
 Rosalia: «Zio Giuseppe! Che succede?»
 Roberto: «Presto, chiamate aiuto!»
 Augusto: «La sua bocca… è diventata blu!»
 Mauro, molto piano: «Il giudizio è arrivato…»
 
-Box "Osserva bene!"
-Il colore blu è un indizio importante.
-Qualcosa non va.
+— SCENA 4, prima parte: Gli indizi sul tavolo —
 
-Indizi di gioco
-Giuseppe si sente male dopo aver bevuto.
-  Che oggetto è vicino a lui? → Il bicchiere.
-  Che colore strano appare sulla sua bocca? → Blu.
-
-— SCENA 5: Gli indizi sul tavolo —
-
-Descrizione scena
-La scena mostra un tavolo ordinato come in una piccola indagine. Sul tavolo ci sono quattro indizi ben visibili: 1. Il bicchiere di Giuseppe. 2. Una bottiglietta con etichetta: “Prodotto fitosanitario – Pericoloso – Non bere”. 3. Il foglio con scritto: “Donazione agli Oliviani”. 4. Un biglietto con scritto: “Fermate Giuseppe prima che doni tutto”. Attorno al tavolo ci sono i personaggi. Roberto e Augusto sono preoccupati. Rosalia appare triste e colpevole, ma anche sorpresa. Mauro è nervoso, agitato, con le mani strette. La scena deve sembrare chiara e “da gioco investigativo”: gli oggetti sono più importanti dello sfondo.
-
-Battute
 Roberto: «Questa non è una bevanda. È un prodotto per le piante.»
 Augusto: «Serve a proteggere gli ulivi, ma se usato male può essere pericoloso.»
+
+— SCENA 4, seconda parte: Gli indizi sul tavolo —
+
+Augusto: «Quella sostanza è rischiosa, non andrebbe tenuta vicino agli alimenti!»
+Roberto: «Qualcuno ha visto il bicchiere da cui ha bevuto?»
+
+— SCENA 4, terza parte: Gli indizi sul tavolo —
+
+Rosalia: «…»
 Rosalia: «Io volevo solo che mio zio Giuseppe si fermasse…»
-Roberto: «Chi ha toccato il bicchiere?»
-Augusto: «E chi sapeva che quella sostanza era rischiosa?»
 Mauro, agitato: «Lui stava sbagliando! Andava fermato!»
 Rosalia: «Mauro… non era quello che intendevo…»
-
-Indizi di gioco
-Gli indizi aiutano a capire la soluzione.
-  · Il veleno era nel bicchiere.
-  · Mauro ha portato il bicchiere a Giuseppe.
-  · Rosalia voleva fermare Giuseppe, ma non voleva ucciderlo.
-  · Mauro ha deciso di agire da solo.
 
 — FRASE FINALE DEL NARRATORE —
 Gli indizi sono tutti davanti a voi.
@@ -176,6 +122,3 @@ Ora tocca a voi risolvere il caso!
 — SOLUZIONE NARRATA —
 Avete risolto il mistero!
 Giuseppe voleva donare i suoi beni agli Oliviani. Rosalia era preoccupata e voleva fermarlo, ma non voleva fargli del male. Mauro, invece, ha deciso di agire da solo. Ha portato a Giuseppe un bicchiere con un prodotto pericoloso. Per questo Giuseppe si è sentito male e la sua bocca è diventata blu. Il colpevole è Mauro.
-
-— MESSAGGIO EDUCATIVO FINALE —
-Oggi abbiamo imparato anche qualcosa sull’olio: nasce dalle olive, che vengono raccolte, pulite e schiacciate. Abbiamo imparato anche che alcuni prodotti servono a proteggere le piante, ma non sono cibo e non si devono mai bere.

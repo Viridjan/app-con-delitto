@@ -67,6 +67,16 @@ assert.ok(dette.length >= 35, `copione.txt: solo ${dette.length} battute trovate
 const perse = dette.filter(t => !html.includes(t.replace(/\s+/g, " ")));
 assert.deepStrictEqual(perse, [], `battute del copione assenti dall'app: ${perse.join(" | ")}`);
 
+// il tavolo degli indizi cita battute a mano: devono esistere davvero, e il numero
+// di scena dev'essere quello giusto - rinumerare una scena le lasciava indietro
+const scenaDi = new Map();
+app.STORY.scene.forEach((s, i) => s.battute.forEach(b => scenaDi.set(b.t, s.n || i + 1)));
+// Array.from: gli array del contesto vm hanno un altro prototipo, deepStrictEqual li rifiuta
+const storte = Array.from(app.STORY.oggetti.flatMap(o => o.refs))
+  .filter(r => scenaDi.get(r.t) !== r.s)
+  .map(r => `${r.t} → dice scena ${r.s}, è la ${scenaDi.get(r.t) ?? "nessuna"}`);
+assert.deepStrictEqual(storte, [], `citazioni del tavolo sbagliate: ${storte.join(" | ")}`);
+
 // gli strumenti d'autore: aperti da disco ci sono, sul sito pubblico no
 assert.ok(app.REGIA_OK && app.DEV_OK, "da file locale regia e sviluppo devono esserci");
 const scenaN = app.SLIDES.findIndex(s => s.t === "scene");

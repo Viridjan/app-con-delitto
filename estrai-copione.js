@@ -13,9 +13,8 @@ const S = vm.runInNewContext(js + ";STORY", { document:doc, Image:class{set src(
 const R = [];
 const riga = t => R.push(t);
 riga("IL MISTERO DELL’OLIVA BLU");
-riga(S.sottotitolo);
 riga("");
-riga("Testo di Carlo Maria Gervasio, usato con la sua autorizzazione.");
+riga("Testo originale di Carlo Maria Gervasio, usato con la sua autorizzazione.");
 riga("Questo file è il copione approvato: è la versione che l’app deve mostrare,");
 riga("parola per parola. Il PDF resta l’originale da cui è tratto.");
 riga("");
@@ -28,17 +27,7 @@ S.scene.forEach((s, i) => {
   riga("");
   riga(`— SCENA ${s.n || i + 1}${s.parte ? `, ${s.parte}` : ""}: ${s.titolo} —`);
   riga("");
-  riga("Descrizione scena");
-  riga(s.descrizione);
-  riga("");
-  riga("Battute");
   s.battute.forEach(b => riga(`${b.c}${b.m ? `, ${b.m}` : ""}: «${b.t}»${b.nuova ? "   [aggiunta, non di Gervasio]" : ""}`));
-  if (s.box) { riga(""); riga(`Box "${s.box.titolo}"`); s.box.righe.forEach(r => riga(r)); }
-  riga("");
-  riga("Indizi di gioco");
-  riga(s.indizi.intro);
-  (s.indizi.qa || []).forEach(p => riga(`  ${p.q} → ${p.a}`));
-  (s.indizi.fatti || []).forEach(f => riga(`  · ${f}`));
 });
 riga("");
 riga("— FRASE FINALE DEL NARRATORE —");
@@ -52,9 +41,6 @@ S.quiz.forEach((q, i) => {
 riga("");
 riga("— SOLUZIONE NARRATA —");
 S.soluzione.forEach(r => riga(r));
-riga("");
-riga("— MESSAGGIO EDUCATIVO FINALE —");
-riga(S.messaggioFinale);
 riga("");
 fs.writeFileSync("copione.txt", R.join("\n"), "utf8");
 console.log("copione.txt scritto:", R.join("\n").split("\n").length, "righe");
