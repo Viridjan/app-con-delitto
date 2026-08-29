@@ -92,6 +92,32 @@ numbers already used anywhere, including `assets/images/bocciate/`, must not be 
 semantic pose may start with a new descriptive filename, but later changes to that pose must
 still use numeric version suffixes.
 
+## House style in `oliva-blu.html`
+
+Normalised on 29 August 2026; keep it this way rather than adding a fourth way to do each thing.
+
+- **Type is tokenised** like colour: `--serif`, `--sans`, `--mono` on `:root`. Nine literal font
+  stacks in three different spellings were collapsed into these. Never write a family list again.
+- **Four reusable classes** carry the shapes that repeat, declared under `/* ---- ricette ---- */`
+  right after the chrome: `.carta` (surface, hairline, radius, shadow), `.sollevabile` (the
+  hover lift, `:not([disabled])`), `.centrata` (full-height centred column), `.ph-cifra` (the
+  typographic stand-in shown when an image fails, revealed by `.slot.empty`). A new panel or card
+  takes the classes; it does not restate the declarations. `.plate`, `.detail` and `.regia-pan`
+  keep only their differences — a dashed border, a blue border, fixed positioning.
+- **Section banners are `/* ---- nome ---- */`**, in Italian, in both the stylesheet and the
+  script. The stylesheet opens with its own table of contents.
+- **Views are a table, not a ternary chain**: `VISTE` maps a slide's `t` to its function. A new
+  kind of screen is a function plus one line there.
+- **Nothing is derived from the array index.** `NUM(sc, k)` gives the number the audience reads,
+  `CASELLA(i)` the artwork slot, `SFONDO(i)` the room. Index-derived names had leaked into the
+  background's `alt` (it announced "Scena 12" on the screen titled *Scena 4 · terza parte*) and
+  into `demo()`, which filled slots named `scena7.png` that nothing draws.
+
+**Refactor with a snapshot, not by eye.** `dom.js` (`node dom.js prima.txt`) walks all 22 screens with the smoke
+stub, reveals every line, and dumps `stage.innerHTML`. Run it before and after: strip `class` and
+`style` attributes from both and the diff must be empty. That is how this pass was proved to
+change styling hooks only.
+
 ## The scene screen
 
 Two declared regions: the top holds scene number, title and the stage, and never moves; the
