@@ -109,17 +109,21 @@ per giudicare posizioni e ritmo prima che l'arte sia pronta.
 | `[` `]` | in regia: porta il selezionato in secondo o in primo piano, oggetti compresi |
 | `v` | sviluppo: stato, immagini mancanti, salto a una schermata (non sul sito pubblico) |
 | `m` | zittisce la voce dei personaggi |
+| `f` | schermo intero |
+| `?` | tutti i comandi |
 
 Il sito pubblico sta su **https://viridjan.github.io/app-con-delitto/** e si aggiorna a ogni
 push su `main`.
-| `f` | schermo intero |
-| `?` | tutti i comandi |
 
 ## Verifica
 
 ```sh
-node smoke.js    # percorre ogni schermata e controlla i conti del quiz
+node smoke.js         # percorre ogni schermata e controlla i conti del quiz
+node dom.js prima.txt # scrive il markup di tutte le schermate, battute scoperte
 ```
+
+`dom.js` serve prima e dopo un riordino del codice: tolti gli attributi `class` e `style`, il
+`diff` fra i due file dev'essere vuoto. Se non lo è, il riordino ha cambiato anche la sostanza.
 
 Il copione approvato è **[`copione.txt`](copione.txt)**: è quello che l'app deve mostrare, parola
 per parola, refusi dell'originale compresi. Il controllo verifica che ogni battuta fra «virgolette

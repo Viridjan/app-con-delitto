@@ -4,12 +4,26 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..800;1,6..96,400..600&family=Alegreya+Sans:ital,wght@0,400;0,500;0,700;1,400;1,500&display=swap">
 
 <style>
+/* ==================================================================
+   Foglio di stile, in quest'ordine:
+   gettoni · fondamenta · chrome · ricette · palcoscenico · schermate
+   (scena, copertina, personaggi, indizi, quiz, soluzione, congedo) ·
+   immagini e palco · strumenti d'autore · adattamenti
+   Le "ricette" sono le classi da riusare: .carta, .sollevabile,
+   .centrata, .ph-cifra. Prima di scrivere un riquadro nuovo, guarda li'.
+   ================================================================== */
+
+/* ---- gettoni ---- */
 :root{
   --bg:#F3EEE1; --surface:#FBF8F0; --surface-2:#EDE6D4;
   --ink:#23281A; --muted:#6B7359; --line:#DBD2BD;
   --olive:#5E7233; --gold:#A9741A; --blu:#1F3FC4;
   --plum:#96496D; --teal:#3F7565;
   --shadow:0 1px 2px rgba(35,40,26,.06),0 8px 28px rgba(35,40,26,.08);
+  /* i tre caratteri, scritti una volta sola: titoli, testo, dati */
+  --serif:"Bodoni Moda","Didot","Times New Roman",serif;
+  --sans:"Alegreya Sans","Segoe UI",system-ui,sans-serif;
+  --mono:ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
 }
 :root:not([data-theme="light"]){ color-scheme:light dark; }
 @media (prefers-color-scheme:dark){
@@ -29,14 +43,15 @@
   --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 34px rgba(0,0,0,.45);
 }
 
+/* ---- fondamenta ---- */
 *{box-sizing:border-box}
 body{
   margin:0; background:var(--bg); color:var(--ink);
-  font-family:"Alegreya Sans","Segoe UI",system-ui,sans-serif;
+  font-family:var(--sans);
   font-size:clamp(18px,2.6vw + .55rem,22px); line-height:1.5;
   -webkit-font-smoothing:antialiased;
 }
-h1,h2,h3{font-family:"Bodoni Moda","Didot","Times New Roman",serif; font-weight:600; text-wrap:balance; margin:0}
+h1,h2,h3{font-family:var(--serif); font-weight:600; text-wrap:balance; margin:0}
 button{font:inherit; color:inherit; background:none; border:none; cursor:pointer}
 :focus-visible{outline:2px solid var(--gold); outline-offset:3px; border-radius:4px}
 
@@ -53,24 +68,34 @@ button{font:inherit; color:inherit; background:none; border:none; cursor:pointer
 .btn{border:1px solid var(--line); border-radius:999px; padding:.34rem .9rem; font-size:.9rem;
   background:var(--surface-2); transition:border-color .15s, color .15s}
 .btn:hover{border-color:var(--olive); color:var(--olive)}
-.btn.primary{background:var(--olive); border-color:var(--olive); color:var(--surface); font-weight:500}
-.btn.primary:hover{color:var(--surface); filter:brightness(1.08)}
 .btn[disabled]{opacity:.35; cursor:not-allowed}
 kbd{font:inherit; font-size:.78em; border:1px solid var(--line); border-bottom-width:2px; border-radius:4px;
   padding:.05em .38em; color:var(--muted); background:var(--bg)}
 
-/* ---- stage ---- */
+/* ---- ricette ----
+   Tre forme che tornano in mezza applicazione. Chi ne ha bisogno se le prende
+   come classi, invece di riscriverne le dichiarazioni: un riquadro di carta,
+   qualcosa che si solleva al passaggio, una schermata centrata a tutta altezza. */
+.carta{background:var(--surface); border:1px solid var(--line); border-radius:2px; box-shadow:var(--shadow)}
+.sollevabile{transition:transform .18s, border-color .18s}
+.sollevabile:hover:not([disabled]){border-color:var(--gold); transform:translateY(-3px)}
+.centrata{height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center}
+/* il ripiego tipografico di un'immagine che manca: una lettera o una cifra sola */
+.ph-cifra{display:none; place-items:center; aspect-ratio:1; font-family:var(--serif);
+  color:var(--speaker,var(--line)); border:1px solid var(--line); border-radius:2px; background:var(--surface)}
+.slot.empty .ph-cifra{display:grid}
+
+/* ---- palcoscenico: la cornice comune a ogni schermata ---- */
 #stage{padding:clamp(1rem,3vh,2.4rem) clamp(1rem,4vw,3rem); display:flex; justify-content:center;
   overflow-y:auto; min-height:0; scrollbar-width:thin}
 .sheet{width:100%; max-width:74rem; margin-block:auto; display:flex; flex-direction:column; gap:clamp(1rem,2.4vh,1.75rem)}
 .eyebrow{font-size:.8rem; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); font-weight:500}
 .scene-head{display:flex; align-items:baseline; gap:1rem}
-.scene-no{font-family:"Bodoni Moda",serif; font-size:clamp(1.8rem,3.4vw,2.6rem); line-height:1; color:var(--gold)}
+.scene-no{font-family:var(--serif); font-size:clamp(1.8rem,3.4vw,2.6rem); line-height:1; color:var(--gold)}
 .scene-title{font-size:clamp(1.25rem,2vw,1.8rem)}
 
-/* art plate */
-.plate{border:1px dashed var(--line); border-radius:2px; background:var(--surface);
-  padding:clamp(1rem,2.5vw,1.9rem); position:relative; box-shadow:var(--shadow)}
+/* ---- la tavola illustrata, e il suo ripiego ---- */
+.plate{border-style:dashed; padding:clamp(1rem,2.5vw,1.9rem); position:relative}
 .plate.scena:not(.empty){border:none; background:var(--bg); box-shadow:none; padding:0;
   height:100%; display:flex; justify-content:center}
 
@@ -98,10 +123,7 @@ kbd{font:inherit; font-size:.78em; border:1px solid var(--line); border-bottom-w
   animation:entra .35s ease-out both;
   -webkit-mask-image:linear-gradient(to bottom,#000 76%,transparent 99%);
   mask-image:linear-gradient(to bottom,#000 76%,transparent 99%)}
-.parlante .ph.sigla{display:none; width:100%; aspect-ratio:1; place-items:center; font-family:"Bodoni Moda",serif;
-  font-size:clamp(2rem,6vw,3.4rem); color:var(--speaker,var(--line)); opacity:.55;
-  border:1px solid var(--line); border-radius:2px; background:var(--surface)}
-.parlante.empty .ph.sigla{display:grid}
+.parlante .ph.sigla{width:100%; font-size:clamp(2rem,6vw,3.4rem); opacity:.55}
 @keyframes entra{from{opacity:0; transform:translateY(6px)}to{opacity:1; transform:none}}
 .dialoghi{overflow-y:auto; min-height:0; scrollbar-width:thin;
   padding:0 0 clamp(1rem,3vh,2rem);
@@ -109,13 +131,12 @@ kbd{font:inherit; font-size:.78em; border:1px solid var(--line); border-bottom-w
 .plate.scena:not(.empty)::before{display:none}
 .plate::before{content:""; position:absolute; inset:6px; border:1px solid var(--line); border-radius:1px; pointer-events:none; opacity:.6}
 .plate > img{display:block; width:100%; height:auto; border-radius:1px}
-.plate .brief{font-family:ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
-  font-size:.85em; line-height:1.65; color:var(--muted); margin:0; max-width:70ch}
+.plate .brief{font-family:var(--mono); font-size:.85em; line-height:1.65; color:var(--muted); margin:0; max-width:70ch; text-align:left}
 .plate .brief-label{display:flex; align-items:center; gap:.55rem; margin-bottom:.7rem}
 .plate .brief-label span{font-size:.7rem; letter-spacing:.16em; text-transform:uppercase; color:var(--olive)}
 .leaf{width:14px; height:14px; flex:none; color:var(--olive)}
 
-/* bubbles */
+/* ---- schermata di scena: i dialoghi ---- */
 .bubbles{display:flex; flex-direction:column; gap:.85rem}
 .bubble{display:flex; gap:.9rem; align-items:flex-start; opacity:.4; transition:opacity .4s ease}
 .bubbles .bubble:first-child{opacity:1; animation:rise .32s ease-out both}
@@ -137,26 +158,26 @@ kbd{font:inherit; font-size:.78em; border:1px solid var(--line); border-bottom-w
 [data-c="Mauro"]{--speaker:var(--blu)}
 [data-c="Narratore"]{--speaker:var(--gold)}
 
-
-/* la voce del narratore, sola in mezzo allo schermo */
-.narr-fine{height:100%; display:flex; flex-direction:column; align-items:center;
-  justify-content:center; gap:.9rem; text-align:center}
+/* ---- schermata del narratore: la voce, sola in mezzo allo schermo ---- */
+.narr-fine{gap:.9rem; text-align:center}
 .narr-fine p{margin:0; max-width:34ch; font-size:clamp(1.3rem,3.2vw,2.2rem); line-height:1.35}
-.narr-fine p:last-child{color:var(--gold); font-family:"Bodoni Moda",serif; margin-top:.6rem}
+.narr-fine p:last-child{color:var(--gold); font-family:var(--serif); margin-top:.6rem}
 
-/* congedo */
-.fine{height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1.4rem}
-.fine .parola{font-family:"Bodoni Moda",serif; font-size:clamp(3rem,11vw,7rem); line-height:1; color:var(--gold)}
+/* ---- schermata di congedo ---- */
+.fine{gap:1.4rem}
+.fine .parola{font-family:var(--serif); font-size:clamp(3rem,11vw,7rem); line-height:1; color:var(--gold)}
 
-/* cover */
+/* ---- copertina ---- */
 .cover{text-align:center; display:flex; flex-direction:column; gap:1.1rem; align-items:center; padding:clamp(1rem,5vh,3rem) 0}
 .cover h1{font-size:clamp(2.6rem,8vw,6rem); line-height:.95; font-weight:700}
 .cover h1 em{font-style:italic; color:var(--blu)}
 .cover .sub{color:var(--muted); max-width:46ch}
 .rule{width:min(18rem,60%); height:1px; background:var(--line)}
 .disclaimer{font-size:.8em; color:var(--muted); max-width:60ch; margin:0}
+/* testo di servizio del narratore: una riga di istruzioni, non copione */
+.nota{max-width:60ch; color:var(--muted)}
 
-/* cast */
+/* ---- personaggi ---- */
 /* un personaggio sotto l'altro, ritratto grande: sul telefono prende tutta la larghezza,
    su schermo largo lo limita l'altezza, cosi' il quadrato non diventa smisurato */
 /* un personaggio per schermata: scorrendo si passa di netto al successivo */
@@ -164,8 +185,7 @@ kbd{font:inherit; font-size:.78em; border:1px solid var(--line); border-bottom-w
 #stage:has(.cast){scroll-snap-type:y mandatory; padding:0}
 .sheet:has(.cast){height:100%; margin-block:0; gap:0}
 .cast{display:flex; flex-direction:column; gap:0; height:100%; width:100%}
-.card{height:100%; flex:none; display:flex; flex-direction:column; align-items:center;
-  justify-content:center; gap:clamp(.4rem,1.6vh,1rem); width:100%;
+.card{flex:none; gap:clamp(.4rem,1.6vh,1rem); width:100%;
   padding:clamp(.75rem,2.5vh,1.6rem) 0; scroll-snap-align:start; scroll-snap-stop:always}
 .dissolve .card{opacity:.25; transform:translateY(2.5vh) scale(.97);
   transition:opacity .55s ease, transform .55s cubic-bezier(.2,.7,.3,1)}
@@ -178,34 +198,28 @@ kbd{font:inherit; font-size:.78em; border:1px solid var(--line); border-bottom-w
    Sul telefono la limita la larghezza, sul proiettore l'altezza. */
 .card .ritratto{display:block; flex:0 1 auto; min-height:0;
   width:auto; height:auto; max-width:100%; max-height:100%}
-.card .ph.ritratto{display:none; width:min(100%,60vh); aspect-ratio:1; place-items:center; font-family:"Bodoni Moda",serif;
-  font-size:clamp(5rem,22vh,12rem); color:var(--speaker,var(--line)); opacity:.5;
-  border:1px solid var(--line); border-radius:2px; background:var(--surface)}
-.card.empty .ph.ritratto{display:grid}
+.card .ph.ritratto{width:min(100%,60vh); font-size:clamp(5rem,22vh,12rem); opacity:.5}
 .card .testo{display:contents}
 
-/* clue table */
+/* ---- tavolo degli indizi ---- */
 .clues{display:grid; gap:1rem; grid-template-columns:repeat(auto-fit,minmax(min(13rem,100%),1fr))}
-.clue{border:1px solid var(--line); border-radius:2px; background:var(--surface); padding:1.1rem 1rem;
-  text-align:left; box-shadow:var(--shadow); transition:transform .18s, border-color .18s; display:flex; flex-direction:column; gap:.4rem}
-.clue:hover,.clue[aria-expanded="true"]{border-color:var(--gold); transform:translateY(-3px)}
-.clue[aria-expanded="true"]{border-color:var(--blu)}
-.clue .n{font-family:"Bodoni Moda",serif; font-size:1.6rem; color:var(--gold); line-height:1}
+.clue{padding:1.1rem 1rem; text-align:left; display:flex; flex-direction:column; gap:.4rem}
+.clue[aria-expanded="true"]{border-color:var(--blu); transform:translateY(-3px)}
+.clue .n{font-family:var(--serif); font-size:1.6rem; color:var(--gold); line-height:1}
 .clue h3{font-size:1.1rem}
 .clue .tag{font-size:.78em; color:var(--muted)}
-.detail{border:1px solid var(--blu); border-radius:2px; background:var(--surface); padding:1.1rem 1.2rem; animation:rise .3s ease-out both}
+.detail{border-color:var(--blu); padding:1.1rem 1.2rem; animation:rise .3s ease-out both}
 .detail h3{color:var(--blu); font-size:1.25rem; margin-bottom:.3rem}
 .detail .refs{display:flex; flex-direction:column; gap:.55rem; margin-top:.9rem}
+.detail figure .ph{font-size:5rem; color:var(--line)}
 .ref{border-left:3px solid var(--speaker,var(--line)); padding-left:.75rem}
 .ref .src{font-size:.76rem; letter-spacing:.1em; text-transform:uppercase; color:var(--muted)}
 
-/* quiz */
+/* ---- scheda finale ---- */
 .quiz h2{font-size:clamp(1.5rem,3.4vw,2.6rem); margin-bottom:1.2rem}
 .opts{display:grid; gap:.9rem; grid-template-columns:repeat(auto-fit,minmax(min(14rem,100%),1fr))}
-.opt{border:1px solid var(--line); border-radius:2px; background:var(--surface); padding:1.4rem 1.1rem;
-  display:flex; gap:.9rem; align-items:center; box-shadow:var(--shadow); transition:transform .18s, border-color .18s}
-.opt:hover:not([disabled]){border-color:var(--gold); transform:translateY(-3px)}
-.opt .k{font-family:"Bodoni Moda",serif; font-size:1.7rem; color:var(--gold); line-height:1}
+.opt{padding:1.4rem 1.1rem; display:flex; gap:.9rem; align-items:center}
+.opt .k{font-family:var(--serif); font-size:1.7rem; color:var(--gold); line-height:1}
 .opt .v{font-size:1.15rem}
 .opt.right{border-color:var(--olive); background:color-mix(in srgb,var(--olive) 14%,var(--surface))}
 .opt.right .k{color:var(--olive)}
@@ -214,12 +228,13 @@ kbd{font:inherit; font-size:.78em; border:1px solid var(--line); border-bottom-w
 .verdict{margin-top:1rem; font-weight:700; color:var(--olive)}
 .verdict.no{color:var(--plum)}
 
-/* solution */
+/* ---- soluzione ---- */
 .solution{border-left:3px solid var(--gold); padding-left:1.2rem; max-width:62ch}
 .solution p{margin:.6rem 0}
-.score{font-family:"Bodoni Moda",serif; font-size:clamp(2rem,5vw,3.4rem); color:var(--gold); line-height:1}
+.score{font-family:var(--serif); font-size:clamp(2rem,5vw,3.4rem); color:var(--gold); line-height:1}
+.score small{font-size:.4em; color:var(--muted)}
 
-/* overlays */
+/* ---- finestra dei comandi ---- */
 #overlay{position:fixed; inset:0; background:color-mix(in srgb,var(--bg) 88%,#000); z-index:20;
   overflow-y:auto; padding:clamp(1rem,4vw,3rem); animation:fade .2s ease-out both}
 @keyframes fade{from{opacity:0}to{opacity:1}}
@@ -229,19 +244,17 @@ kbd{font:inherit; font-size:.78em; border:1px solid var(--line); border-bottom-w
 .keys{display:grid; gap:.5rem; grid-template-columns:repeat(auto-fit,minmax(min(16rem,100%),1fr))}
 .keys div{display:flex; gap:.6rem; align-items:baseline}
 
-/* scene 4 tint */
+/* ---- il velo blu del malore ---- */
 .stage-blu{position:relative}
 .stage-blu::after{content:""; position:fixed; inset:0; pointer-events:none; z-index:5;
   background:radial-gradient(115% 75% at 50% 55%,transparent 35%,color-mix(in srgb,var(--blu) 45%,transparent) 100%);
   animation:pulse 5s ease-in-out infinite}
 @keyframes pulse{0%,100%{opacity:.5}50%{opacity:.95}}
 
-
-/* ---- immagini (riempite da Codex; assenti = ripiego tipografico) ---- */
+/* ---- immagini e palco (le riempie Codex; se mancano, ripiego tipografico) ---- */
 .slot .ph{display:none}
 .slot.empty .ph{display:block}
-.slot.empty .ph.mono,.clue.slot.empty .ph,.detail figure.slot.empty .ph{display:grid}
-.plate figure{margin:0}
+.clue.slot.empty .ph,.detail figure.slot.empty .ph{display:grid}
 /* palco: lo sfondo sta sotto, i personaggi ritagliati sopra, chi parla viene avanti */
 /* Il palco e' sempre quadrato: nessuna scena ha un formato suo. */
 .palco{position:relative; height:100%; width:auto; max-width:100%; aspect-ratio:1;
@@ -257,27 +270,17 @@ kbd{font:inherit; font-size:.78em; border:1px solid var(--line); border-bottom-w
   transform:translateX(-50%) translateY(-1%) scale(1.03);
   filter:brightness(1.06) drop-shadow(0 .6vh 1.1vh rgba(0,0,0,.45))}
 .slot.empty .palco{display:none}
-.avatar{width:clamp(30px,3.2vw,42px); height:clamp(30px,3.2vw,42px); border-radius:50%; flex:none;
-  object-fit:cover; border:1px solid var(--speaker,var(--line)); background:var(--surface-2)}
-.mono{display:grid; place-items:center; font-family:"Bodoni Moda",serif; font-size:.95rem;
-  color:var(--speaker,var(--muted)); line-height:1}
-.bubble .side{display:flex; align-items:flex-start; gap:.6rem; width:clamp(6rem,13vw,12rem); justify-content:flex-end}
-.card .head{display:flex; align-items:center; gap:.7rem}
-.card .avatar{width:46px; height:46px}
 .clue figure{margin:0 0 .2rem; border:1px solid var(--line); border-radius:2px; overflow:hidden; background:var(--surface-2)}
 .clue figure img{display:block; width:100%; aspect-ratio:1; object-fit:cover}
 .clue .ph{aspect-ratio:1; display:grid; place-items:center; color:var(--line)}
 .clue .ph .leaf{width:38%; height:auto}
 .detail figure{float:right; width:min(38%,14rem); margin:0 0 .8rem 1.2rem; border:1px solid var(--line); border-radius:2px; overflow:hidden}
 .detail figure img{display:block; width:100%; aspect-ratio:1; object-fit:cover}
-.cover figure{width:min(100%,52rem); margin:0}
 .cover .plate{border:none; background:none; box-shadow:none; padding:0; width:auto;
   margin-inline:auto}
 .cover .plate::before{display:none}
 .cover .plate > img{width:auto; max-width:100%; max-height:34vh; object-fit:contain}
-.cover figure img{width:100%; aspect-ratio:16/9; max-height:46vh; object-fit:cover; border:1px solid var(--line); border-radius:2px; box-shadow:var(--shadow)}
 @media (max-width:640px){
-  .bubble .side{width:auto; justify-content:flex-start; align-items:center}
   .detail figure{float:none; width:100%; margin:0 0 .8rem}
   }
 
@@ -288,9 +291,8 @@ kbd{font:inherit; font-size:.78em; border:1px solid var(--line); border-bottom-w
   font-size:.62rem; letter-spacing:.18em; color:var(--gold);
   background:color-mix(in srgb,var(--bg) 75%,transparent); padding:.15rem .45rem; border-radius:2px}
 .regia-pan{position:fixed; left:.7rem; right:.7rem; bottom:4.2rem; z-index:8; display:flex;
-  flex-direction:column; gap:.5rem; background:var(--surface); border:1px solid var(--line);
-  border-radius:4px; padding:.7rem .8rem; box-shadow:var(--shadow); max-width:min(94vw,44rem);
-  margin-inline:auto; font-size:.8rem}
+  flex-direction:column; gap:.5rem; border-radius:4px; padding:.7rem .8rem;
+  max-width:min(94vw,44rem); margin-inline:auto; font-size:.8rem}
 .regia-pan .riga{display:flex; align-items:center; gap:.5rem; flex-wrap:wrap}
 .regia-pan b{color:var(--gold); font-weight:700}
 .dev-pan{top:.7rem; bottom:auto; left:auto; right:6.4rem; width:min(34rem,80vw);
@@ -304,14 +306,15 @@ kbd{font:inherit; font-size:.78em; border:1px solid var(--line); border-bottom-w
 .dev-pan .salti button:hover{color:var(--ink); border-color:var(--line)}
 .dev-pan .salti button.qui{background:var(--gold); border-color:var(--gold); color:var(--bg)}
 .dev-pan .salti button.qui i{opacity:.8}
-.dev-pan #dev-img{font-family:ui-monospace,Menlo,Consolas,monospace; color:var(--muted);
+.dev-pan #dev-img{font-family:var(--mono); color:var(--muted);
   line-height:1.6; word-break:break-all}
 .dev-pan select{background:var(--bg); color:var(--ink); border:1px solid var(--line);
   border-radius:2px; padding:.15rem .3rem; font:inherit; max-width:16rem}
 .regia-pan textarea{width:100%; min-height:4.5rem; resize:vertical; border:1px solid var(--line);
   border-radius:2px; background:var(--bg); color:var(--ink); padding:.4rem .5rem;
-  font-family:ui-monospace,Menlo,Consolas,monospace; font-size:.72rem; line-height:1.5}
+  font-family:var(--mono); font-size:.72rem; line-height:1.5}
 
+/* ---- adattamenti ---- */
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important}
 }
@@ -570,7 +573,6 @@ const STORY = {
     "Giuseppe voleva donare i suoi beni agli Oliviani. Rosalia era preoccupata e voleva fermarlo, ma non voleva fargli del male. Mauro, invece, ha deciso di agire da solo. Ha portato a Giuseppe un bicchiere con un prodotto pericoloso. Per questo Giuseppe si è sentito male e la sua bocca è diventata blu. Il colpevole è Mauro."
   ],
 
-
   promptStile: "Illustrazione piatta, stile libro illustrato per ragazzi, palette verde oliva, crema e oro, luce calda da candele. Nessun elemento horror, nessun sangue, tono accogliente e un po’ misterioso. Formato orizzontale 16:9.",
   promptNote: [
     "Il simbolo degli Oliviani (una grande oliva stilizzata) deve essere riconoscibile: tornerà in tutte le scene.",
@@ -654,7 +656,9 @@ const ATTORE = (c, scena = null) => {
 };
 const OGGETTO_ID = ["bicchiere", "bottiglietta", "foglio", "biglietto"];
 const OGGETTO_IMG = i => src(`indizio-${OGGETTO_ID[i]}.png`);
-const SIGLA = ["1", "2", "3", "4"];
+
+/* la foglia d'ulivo: la stessa in ogni ripiego, disegnata una volta sola */
+const FOGLIA = `<svg class="leaf" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M14 2C7 2 3 5 3 9c0 1.6.6 2.9 1.6 3.8L2 15h2l1.9-1.9C7 13.7 8 14 9 14c4 0 5-6 5-12zM6 11.5C6 8 9 5.5 12.3 4.6 11.6 9 10 12.5 8.4 12.5c-.9 0-1.7-.3-2.4-1z"/></svg>`;
 
 const esc = s => String(s).replace(/[&<>"]/g, m => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[m]));
 const el = (h, t) => { const d = document.createElement("div"); d.innerHTML = h; return t ? d.firstElementChild : d; };
@@ -674,7 +678,9 @@ function slots(root) {
   });
 }
 
-const SCENE_TOTALI = Math.max(...STORY.scene.map((s, i) => s.n || i + 1));
+/* il numero che il pubblico legge: quello dichiarato, o la posizione nell'elenco */
+const NUM = (sc, k) => sc.n || k + 1;
+const SCENE_TOTALI = Math.max(...STORY.scene.map(NUM));
 
 const SLIDES = [
   { t: "cover" }, { t: "cast" },
@@ -700,15 +706,15 @@ const vista = typeof IntersectionObserver === "function"
   : null;
 const overlayEl = document.getElementById("overlay");
 
-/* ---------- schermate ---------- */
+/* ---- schermate ---- */
 
 function vCover() {
   return `<div class="sheet cover">
     <h1>Il mistero dell’<em>oliva blu</em></h1>
     <p class="sub">${esc(STORY.sottotitolo)}</p>
-    <div class="slot plate">
+    <div class="slot plate carta">
       ${opt(COVER_IMG, "", "Copertina")}
-      <p class="brief ph" style="text-align:left">Illustrazione di copertina — in lavorazione.</p>
+      <p class="brief ph">Illustrazione di copertina — in lavorazione.</p>
     </div>
     <div class="rule"></div>
     <p class="disclaimer">${esc(STORY.disclaimer)}</p>
@@ -718,9 +724,9 @@ function vCover() {
 function vCast() {
   /* il Narratore non e' un personaggio della storia: sta fuori dai fatti, quindi fuori da qui */
   const c = STORY.personaggi.filter(p => p.c !== "Narratore").map(p => `
-    <article class="card slot" data-c="${esc(p.c)}">
+    <article class="card slot centrata" data-c="${esc(p.c)}">
       ${opt(RITRATTO(p.c), "ritratto", p.n)}
-      <div class="ph ritratto">${esc(p.c[0])}</div>
+      <div class="ph ph-cifra ritratto">${esc(p.c[0])}</div>
       <div class="testo">
         <h3>${esc(p.n)}</h3>
         <p>${esc(p.d)}</p>
@@ -730,8 +736,6 @@ function vCast() {
     <div class="cast">${c}</div>
   </div>`;
 }
-
-const NUM = (sc, k) => sc.n || k + 1;
 
 /* Chi parla due volte di fila non prende due riquadri: il suo si allunga.
    L'inciso fa testo - "tra se'" dopo una battuta detta a voce alta e' un altro
@@ -766,27 +770,27 @@ function vScene(i) {
   return `<div class="sheet scena-doppia">
     <div class="alto">
     <header class="scene-head">
-      <span class="scene-no">${s.n || i + 1}</span>
-      <div><p class="eyebrow">Scena ${s.n || i + 1} di ${SCENE_TOTALI}${s.parte ? ` · ${s.parte}` : ""}</p><h2 class="scene-title">${esc(s.titolo)}</h2></div>
+      <span class="scene-no">${NUM(s, i)}</span>
+      <div><p class="eyebrow">Scena ${NUM(s, i)} di ${SCENE_TOTALI}${s.parte ? ` · ${s.parte}` : ""}</p><h2 class="scene-title">${esc(s.titolo)}</h2></div>
     </header>
     <div class="palco-box">
-    <div class="slot plate scena">
+    <div class="slot plate scena carta">
       <div class="palco">
-        ${opt(SCENE_IMG(i), "sfondo", `Scena ${i + 1}`, s.sfondo
+        ${opt(SCENE_IMG(i), "sfondo", `Scena ${NUM(s, i)}`, s.sfondo
           ? `transform:scale(${s.sfondo.scala}); transform-origin:${s.sfondo.fx}% ${s.sfondo.fy}%` : "")}
         ${(s.cast || []).map(a => `<img class="attore ${a.c === attivo ? "attivo" : ""}" src="${esc(ATTORE(a.c, i))}" alt="" style="left:${a.x}%; bottom:${a.b}%; height:${a.h}%${a.z === undefined ? "" : `; z-index:${a.z}`}">`).join("")}
         ${(s.primo || []).map(o => `<img class="primo" src="${esc(src(`${SFONDO(i)}-${o.lato}.png`))}" alt="" style="left:${o.x}%; bottom:${o.b}%; height:${o.h}%${o.z === undefined ? "" : `; z-index:${o.z}`}">`).join("")}
       </div>
       <div class="ph">
-        <p class="brief-label"><svg class="leaf" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M14 2C7 2 3 5 3 9c0 1.6.6 2.9 1.6 3.8L2 15h2l1.9-1.9C7 13.7 8 14 9 14c4 0 5-6 5-12zM6 11.5C6 8 9 5.5 12.3 4.6 11.6 9 10 12.5 8.4 12.5c-.9 0-1.7-.3-2.4-1z"/></svg><span>Brief illustrazione</span></p>
+        <p class="brief-label">${FOGLIA}<span>Brief illustrazione</span></p>
       </div>
     </div>
     </div>
     </div>
     <div class="basso">
-      <div class="parlante slot" data-c="${esc(attivo || "")}">
-        ${attivo ? opt(ATTORE(attivo, i), "figura-parlante", attivo) : ""}
-        ${attivo ? `<div class="ph sigla">${esc(attivo[0])}</div>` : ""}
+      <div class="parlante slot" data-c="${esc(attivo || "")}">${attivo ? `
+        ${opt(ATTORE(attivo, i), "figura-parlante", attivo)}
+        <div class="ph ph-cifra sigla">${esc(attivo[0])}</div>` : ""}
       </div>
       <div class="dialoghi">
         <div class="bubbles" id="bubbles">${shown}</div>
@@ -805,10 +809,10 @@ function vTavolo() {
       </div>`).join("");
     return `<div class="sheet">
       <p class="eyebrow">Gli indizi sul tavolo · ${state.clue + 1} di 4</p>
-      <div class="detail">
+      <div class="detail carta">
         <figure class="slot">
           ${opt(OGGETTO_IMG(state.clue), "", o.nome)}
-          <div class="ph" style="aspect-ratio:1;place-items:center;font-family:'Bodoni Moda',serif;font-size:5rem;color:var(--line)">${SIGLA[state.clue]}</div>
+          <div class="ph ph-cifra">${state.clue + 1}</div>
         </figure>
         <h3>${esc(o.nome)}</h3>
         <p class="eyebrow">${esc(o.tag)}</p>
@@ -819,10 +823,10 @@ function vTavolo() {
     </div>`;
   }
   const cards = STORY.oggetti.map((o, i) => `
-    <button class="clue slot" data-clue="${i}" aria-expanded="false">
+    <button class="clue slot carta sollevabile" data-clue="${i}" aria-expanded="false">
       <figure>
         ${opt(OGGETTO_IMG(i), "", o.nome)}
-        <div class="ph"><svg class="leaf" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M14 2C7 2 3 5 3 9c0 1.6.6 2.9 1.6 3.8L2 15h2l1.9-1.9C7 13.7 8 14 9 14c4 0 5-6 5-12zM6 11.5C6 8 9 5.5 12.3 4.6 11.6 9 10 12.5 8.4 12.5c-.9 0-1.7-.3-2.4-1z"/></svg></div>
+        <div class="ph">${FOGLIA}</div>
       </figure>
       <span class="n">${i + 1}</span>
       <h3>${esc(o.nome)}</h3>
@@ -831,7 +835,7 @@ function vTavolo() {
   return `<div class="sheet">
     <p class="eyebrow">L’indagine</p>
     <h2 class="scene-title">Gli indizi sul tavolo</h2>
-    <p style="max-width:60ch;color:var(--muted)">Quattro oggetti, nessun ordine obbligato. Chiedete al tavolo da dove vogliono cominciare.</p>
+    <p class="nota">Quattro oggetti, nessun ordine obbligato. Chiedete al tavolo da dove vogliono cominciare.</p>
     <div class="clues">${cards}</div>
   </div>`;
 }
@@ -839,7 +843,7 @@ function vTavolo() {
 /* Il narratore non ha corpo in scena e qui non ha nemmeno etichetta: la sua
    voce riempie lo schermo, e basta. */
 function vNarr() {
-  return `<div class="sheet narr-fine">
+  return `<div class="sheet narr-fine centrata">
     ${STORY.narratoreFinale.map(r => `<p>${esc(r)}</p>`).join("")}
   </div>`;
 }
@@ -850,7 +854,7 @@ function vQuiz(i) {
   const opts = q.opzioni.map((o, k) => {
     let cls = "";
     if (dato !== undefined) cls = k === q.giusta ? "right" : (k === dato ? "wrong" : "");
-    return `<button class="opt ${cls}" data-opt="${k}" ${dato !== undefined ? "disabled" : ""}>
+    return `<button class="opt carta sollevabile ${cls}" data-opt="${k}" ${dato !== undefined ? "disabled" : ""}>
       <span class="k">${"ABC"[k]}</span><span class="v">${esc(o)}</span></button>`;
   }).join("");
   const v = dato === undefined ? "" :
@@ -867,48 +871,53 @@ function vSol() {
   const date = state.risposte.filter(r => r !== undefined).length;
   return `<div class="sheet">
     <p class="eyebrow">Soluzione narrata</p>
-    ${date ? `<p class="score">${giuste} <span style="font-size:.4em;color:var(--muted)">su ${STORY.quiz.length}</span></p>` : ""}
+    ${date ? `<p class="score">${giuste} <small>su ${STORY.quiz.length}</small></p>` : ""}
     <div class="solution">${STORY.soluzione.map(r => `<p>${esc(r)}</p>`).join("")}</div>
   </div>`;
 }
 
 function vFine() {
   /* Il copione finisce sulla soluzione: qui resta solo il congedo. */
-  return `<div class="sheet fine">
+  return `<div class="sheet fine centrata">
     <p class="parola">Fine</p>
     <div class="rule"></div>
     <button class="btn" data-go="0">Ricomincia</button>
   </div>`;
 }
 
-/* ---------- render ---------- */
+const morbido = () => matchMedia("(prefers-reduced-motion:reduce)").matches ? "auto" : "smooth";
+const schede = () => stage.querySelectorAll(".card");
+
+/* ---- render ----
+   Una schermata per tipo: aggiungerne una vuol dire scrivere la sua vista e
+   metterla qui, non allungare una catena di condizioni. */
+const VISTE = {
+  cover: vCover, cast: vCast, tavolo: vTavolo, narr: vNarr, sol: vSol, fine: vFine,
+  scene: s => vScene(s.i), quiz: s => vQuiz(s.i)
+};
 
 function render() {
   const s = SLIDES[state.n];
-  const html = s.t === "cover" ? vCover() : s.t === "cast" ? vCast()
-    : s.t === "scene" ? vScene(s.i) : s.t === "tavolo" ? vTavolo()
-    : s.t === "narr" ? vNarr() : s.t === "quiz" ? vQuiz(s.i)
-    : s.t === "sol" ? vSol() : vFine();
-  stage.innerHTML = html;
+  const scena = s.t === "scene";
+  stage.innerHTML = VISTE[s.t](s);
   slots(stage);
-  if (state.regia && SLIDES[state.n].t === "scene") attivaRegia(SLIDES[state.n].i);
+
+  if (state.regia && scena) attivaRegia(s.i);
   else document.querySelector(".regia-pan")?.remove();
   if (state.sviluppo) pannelloDev();
+
   vista?.disconnect();
   if (vista) { stage.classList.add("dissolve"); schede().forEach(c => vista.observe(c)); }
-  /* la battuta appena scoperta si porta da sola sotto gli occhi del narratore */
-  if (SLIDES[state.n].t === "scene" && state.step > 0) {
-    // dopo l'impaginazione: partendo subito, le altezze non sono ancora quelle
-    // definitive e la battuta nuova restava sotto il bordo
-    requestAnimationFrame(() => {
-      stage.querySelector(".dialoghi")?.scrollTo({
-        top: 0, behavior: matchMedia("(prefers-reduced-motion:reduce)").matches ? "auto" : "smooth" });
-    });
-  }
+
+  /* la battuta appena scoperta si porta da sola sotto gli occhi del narratore.
+     Dopo l'impaginazione: partendo subito, le altezze non sono ancora quelle
+     definitive e la battuta nuova restava sotto il bordo. */
+  if (scena && state.step > 0)
+    requestAnimationFrame(() => stage.querySelector(".dialoghi")?.scrollTo({ top: 0, behavior: morbido() }));
+
   /* L'alone blu si accende alla prima battuta della scena del malore, non
      all'ultima: il colore deve arrivare insieme al fatto, non dopo. */
-  stage.classList.toggle("stage-blu", s.t === "scene" && !!STORY.scene[s.i].blu && state.step >= 1);
-
+  stage.classList.toggle("stage-blu", scena && !!STORY.scene[s.i].blu && state.step >= 1);
 }
 
 function vai(n, indietro) {
@@ -918,9 +927,6 @@ function vai(n, indietro) {
   state.step = (indietro && s.t === "scene") ? STORY.scene[s.i].battute.length : 0;
   render();
 }
-
-const morbido = () => matchMedia("(prefers-reduced-motion:reduce)").matches ? "auto" : "smooth";
-const schede = () => stage.querySelectorAll(".card");
 
 /* Sulla pagina dei personaggi "avanti" scorre di una scheda: sul proiettore
    il salto secco era troppo brusco, e col telecomando non si scorre. */
@@ -955,8 +961,7 @@ function indietro() {
   vai(state.n - 1, true);
 }
 
-
-/* ---------- prova a vuoto ----------
+/* ---- prova a vuoto ----
    Finche' Codex non consegna, il tasto "d" riempie sfondi e personaggi con
    sagome piatte: servono a provare posizioni, ritmo ed evidenziazione, non
    a somigliare a qualcosa. Si spengono premendo di nuovo "d". */
@@ -972,15 +977,18 @@ const demoAttore = c => dataSvg(`<svg xmlns="http://www.w3.org/2000/svg" viewBox
 
 function demo() {
   state.demo = !state.demo;
-  const chiavi = [...STORY.scene.map((_, i) => `scena${i + 1}.png`), ...Object.keys(DEMO_COL).map(c => `attore-${c}.png`)];
+  /* le caselle vere, non `scena${i+1}`: da quando una scena puo' essere divisa
+     in parti, l'indice nell'elenco non e' piu' il nome dello sfondo */
+  const sfondi = [...new Set(STORY.scene.map((_, i) => SFONDO(i)))];
+  const attori = Object.keys(DEMO_COL);
   if (state.demo) {
-    STORY.scene.forEach((_, i) => ASSETS[`scena${i + 1}.png`] = demoSfondo(i + 1));
-    Object.keys(DEMO_COL).forEach(c => ASSETS[`attore-${c}.png`] = demoAttore(c));
-  } else chiavi.forEach(k => delete ASSETS[k]);
+    sfondi.forEach((casella, k) => ASSETS[`${casella}.png`] = demoSfondo(k + 1));
+    attori.forEach(c => ASSETS[`attore-${c}.png`] = demoAttore(c));
+  } else [...sfondi.map(c => `${c}.png`), ...attori.map(c => `attore-${c}.png`)].forEach(k => delete ASSETS[k]);
   render();
 }
 
-/* ---------- voce dei personaggi ----------
+/* ---- voce dei personaggi ----
    Niente file audio: qualche bip sintetizzato al volo, come nei giochi a
    fumetti. Ogni personaggio ha la sua altezza - Mauro cupo, Rosalia acuta -
    e la battuta piu' lunga fa piu' bip. Si zittisce con "m". */
@@ -1044,7 +1052,7 @@ function muta() {
   if (!muto) parla("Giuseppe", "prova prova");   // riaccendendo si sente subito se funziona
 }
 
-/* ---------- modalita' sviluppo ----------
+/* ---- modalita' sviluppo ----
    Solo sul file locale, con "v": dice a che punto siamo, quali immagini non
    sono incorporate e permette di saltare a una schermata senza percorrerle
    tutte. Serve a provare una scena in mezzo senza rifare la strada. */
@@ -1078,7 +1086,7 @@ function pannelloDev() {
   let p = document.querySelector(".dev-pan");
   if (!p) {
     p = document.body.appendChild(el(
-      `<div class="regia-pan dev-pan">
+      `<div class="regia-pan dev-pan carta">
          <div class="riga"><b>Sviluppo</b><span id="dev-dove"></span>
            <span class="spacer"></span><span><kbd>v</kbd> per uscire</span></div>
          <div class="salti" id="dev-salti"></div>
@@ -1128,7 +1136,7 @@ function sviluppo() {
   else document.querySelector(".dev-pan")?.remove();
 }
 
-/* ---------- modalita' regia ----------
+/* ---- modalita' regia ----
    Si accende con "r" su una scena: personaggi e oggetti diventano trascinabili,
    la rotella (o i tasti + e -) li ridimensiona, e il pannello mostra le righe
    da incollare in STORY. Serve a decidere la regia con l'occhio invece che a
@@ -1149,7 +1157,7 @@ const rigaPrimo = sc => (sc.primo || []).length
 function pannello(i) {
   const sc = STORY.scene[i];
   const p = document.querySelector(".regia-pan") || document.body.appendChild(el(
-    `<div class="regia-pan">
+    `<div class="regia-pan carta">
        <div class="riga"><b>Regia scena ${i + 1}</b>
          <span>trascina per spostare · rotella o <kbd>+</kbd><kbd>-</kbd> per la taglia ·
          frecce per lo scatto fine · lo <b>sfondo</b> si prende toccando fuori dalle figure ·
@@ -1311,7 +1319,7 @@ function regia() {
   render();
 }
 
-/* ---------- interazione ---------- */
+/* ---- interazione ---- */
 
 stage.addEventListener("click", e => {
   const t = e.target.closest("[data-clue],[data-opt],[data-go]");
@@ -1329,9 +1337,7 @@ stage.addEventListener("click", e => {
   if (e.clientX - r.left < r.width * .1) indietro(); else avanti();
 });
 
-/* ---------- soprastrutture: brief illustrazioni e comandi ---------- */
-
-
+/* ---- finestra dei comandi ---- */
 
 function ovHelp() {
   const k = [
