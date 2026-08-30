@@ -12,7 +12,9 @@ from PIL import Image
 
 SRC, WEB, HTML = Path("assets/images"), Path("assets/web"), Path("oliva-blu.html")
 LARGH = {"ritratto": 900, "attore": 700, "scena": 1600, "indizio": 512, "copertina": 560}
-ALIAS = {"investigatore": "narratore"}          # il meeple investigatore e' il Narratore
+# Il Narratore e' uscito dall'elenco dei personaggi il 29 agosto 2026: nessuna
+# schermata disegna piu' il suo ritratto, quindi non lo si incorpora (erano 200KB).
+ALIAS = {}
 # Codex consegna varianti con nomi suoi: qui si dice quale riempie quale casella.
 # La versione (-vN) la sceglie comunque lo script, tenendo la piu' alta.
 SCELTE = {"copertina.png": "quadro-oliva-animato",
@@ -36,7 +38,7 @@ ATTESI = ({"copertina.png"}
           | {f"scena{i}-{lato}.png" for i in range(1, 6) for lato in ("sx", "dx")}
           | {f"attore-{n}.png" for n in PERSONE}
           | {f"attore-{n}.png" for n in POSE}
-          | {f"ritratto-{n}.png" for n in PERSONE + ["narratore"]}
+          | {f"ritratto-{n}.png" for n in PERSONE}
           | {f"indizio-{n}.png" for n in OGGETTI})
 
 def _blocco(medie, minimo=2):

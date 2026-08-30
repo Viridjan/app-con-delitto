@@ -1,14 +1,6 @@
-const fs = require("fs"), vm = require("vm");
-const js = [...fs.readFileSync("oliva-blu.html", "utf8").matchAll(/<script>([\s\S]*?)<\/script>/g)].map(m => m[1]).join("\n");
-const node = () => ({ _html:"", set innerHTML(v){this._html=v}, get innerHTML(){return this._html},
-  textContent:"", disabled:false, hidden:false, dataset:{}, classList:{toggle(){},add(){},remove(){}},
-  addEventListener(){}, focus(){}, scrollIntoView(){}, scrollTo(){},
-  querySelector:()=>node(), querySelectorAll:()=>[] });
-const doc = { createElement:node, addEventListener(){}, querySelector:()=>null, body:{appendChild:n=>n},
-  getElementById:()=>node(), documentElement:{requestFullscreen:()=>Promise.resolve()} };
-const S = vm.runInNewContext(js + ";STORY", { document:doc, Image:class{set src(_){}},
-  matchMedia:()=>({matches:false}), addEventListener(){}, requestAnimationFrame:f=>f(), console,
-  location:{protocol:"file:", hostname:""} });
+const fs = require("fs");
+const { apri } = require("./stub-dom");
+const { app: S } = apri("STORY");
 
 const R = [];
 const riga = t => R.push(t);

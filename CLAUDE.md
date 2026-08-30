@@ -12,23 +12,41 @@ A narrator drives it live in front of a table of players.
 - Artifact (private preview): https://claude.ai/code/artifact/ae31691c-accf-409e-bf55-64800d0de882
 - Repo: https://github.com/Viridjan/app-con-delitto
 
+## Commands
+
+```sh
+node smoke.js              # il controllo: schermate, quiz, copione, indagine, cancelli, voci
+node dom.js prima.txt      # fotografia del markup di ogni schermata (per i riordini)
+node estrai-copione.js     # riscrive copione.txt da STORY — dopo ogni modifica al testo
+python3 sync-assets.py     # aggancia le consegne di Codex e ricostruisce la mappa ASSETS
+```
+
+Non c'e' build, non c'e' watcher, non c'e' server: `oliva-blu.html` si apre da disco. Non esiste
+un modo di lanciare un solo controllo — `smoke.js` e' un file solo e dura meno di un secondo; per
+isolare un caso si commenta il resto.
+
 ## Files
 
 - `oliva-blu.html` — the whole app. One self-contained file: `<style>`, `const STORY`, `<script>`.
   No build, no dependencies, no server. Images are embedded as data URIs.
 - `index.html` — redirect for Pages, which serves `index.html` at the root.
 - `sync-assets.py` — hooks Codex's deliveries into the app. Run after every delivery.
-- `smoke.js` — `node smoke.js`. Walks every screen with a hand-rolled DOM stub and checks the
-  quiz maths. Run it after touching the script block.
+- `smoke.js` — walks every screen, checks the quiz maths, and guards what nothing else can:
+  the copione, the investigation's budget, the clue table's hand-written quotes, the public
+  build's gates, and the voice profiles shared with `voci.html`. Run it after touching the
+  script block.
+- `stub-dom.js` — the fake DOM the three node scripts share. Not run on its own.
+- `dom.js` — writes the markup of every screen to a file. Run it before and after a refactor:
+  with `class` and `style` stripped, the diff must be empty.
 - `voci.html` — the voice bench: sliders per character, plays them, prints the `VOCE` block to
   paste into the app. Its synth engine is a **deliberate copy** — change it in both files.
 - `copione.txt` — the approved script. The verbatim reference; `smoke.js` checks the app against
   it. Regenerate with `node estrai-copione.js` after any agreed change to the text.
 - `estrai-copione.js` — writes `copione.txt` out of `STORY`, so the two can never drift.
 - `img/ART.md` — the illustration brief Codex works from.
-- `assets/images/` — Codex's deliveries, named by subject (`donazione`, `brindisi`, `malore`,
-  `indagine`, `sala2`), mapped to slots in `SCELTE`. `assets/web/` and `assets/images/bocciate/`
-  are gitignored.
+- `assets/images/` — Codex's deliveries, named by subject (`sala2`, `sala1-scena2`, `brindisi`,
+  `malore`, the `indizio-*` plates), mapped to slots in `SCELTE`. Rejects go to
+  `assets/images/bocciate/`; that folder and `assets/web/` are gitignored.
 
 ## Rules that matter
 
@@ -47,14 +65,16 @@ the same commit — never left behind.
 goes live in a minute. Show the result (screenshot, or republish the artifact) and wait for a yes.
 Bug fixes, scripts and docs follow normal behaviour.
 
-**Blue is spent once.** `--blu` is Mauro's speech colour and the vignette over the malore screen
-— because the victim's mouth turns blue. Never use it for anything else. The vignette is driven
-by `blu:true` on the scene and now opens on its **first** line (`state.step >= 1`), not after the
-last: the colour has to arrive with the collapse, not once it is over.
+**Blue is tightly reserved.** `--blu` is Mauro's speech colour and the vignette over the malore
+screen — because the victim's mouth turns blue. There are exactly two deliberate interface
+exceptions: the words *oliva blu* in the cover title, and the border and heading of an open clue
+detail (`.detail`). Do not use blue anywhere else. The vignette is driven by `blu:true` on the
+scene and now opens on its **first** line (`state.step >= 1`), not after the last: the colour has
+to arrive with the collapse, not once it is over.
 
 **Nothing but the dialogue on a scene screen.** The “Lo sapevi?” boxes went on 26 August 2026;
 on 29 August 2026 the user cut the rest from `copione.txt` — every `descrizione` (art brief),
-every `indizi` block, scene 4's “Osserva bene!” box, and the closing educational message. The
+every `indizi` block, the malore's “Osserva bene!” box, and the closing educational message. The
 `s` and `i` keys are gone with them, `state` no longer carries `box`/`indizi`/`qa`, and the last
 screen is just *Fine · Ricomincia*. Do not restore any of it from the PDF. The art briefs live on
 for Codex in `img/ART.md`; the four clue objects and their table survive because they were never
@@ -63,8 +83,10 @@ part of the txt.
 **No bottom bar.** The `← Indietro / Avanti →` footer was removed on 28 August 2026: the screen
 itself is the remote. A click on the stage advances, a click inside its leftmost 10% goes back,
 and the keyboard keeps `spazio` / `→` / `←`. `#app` is a single-row grid now — do not put the
-bar back. Clicks on `[data-qa|clue|opt|go]` and inside an open `.detail` still do their own job
-and never advance, and staging mode (`r`) suppresses the advance so a drag is not a click.
+bar back. A click that lands on `[data-clue|chiedi|indagine|opt|go]`, or anywhere inside an open
+`.detail`, does its own job and never advances; staging mode (`r`) suppresses the advance too, so
+a drag is not a click. Any new interactive element needs its `data-` attribute in that list, or
+touching it will also turn the page.
 
 **Nobody gets dimmed on stage.** The speaker stands out by coming forward (lift, scale, shadow),
 not by darkening the others — heavy dimming was tried and rejected. What is left is a light
@@ -72,12 +94,19 @@ touch, raised again on 29 August 2026 because the cast read too dark on a projec
 `brightness(.88)` at rest, `1.06` for whoever is speaking. Keep both ends bright; the gap
 between them is what does the work, not the depth of the shadow.
 
+**Scene titles stay off the public site.** `TITOLI_OK` is `!PUBBLICO` like the other gates:
+`vScene` emits the `.scene-head` — number, "Scena N di M · parte", title — only where the author
+works. A title tells the story before it happens; *Il malore dell'oliva blu* announces the murder
+to a table that is still toasting. On Pages the scene opens on the picture alone, which also
+gives the stage the height the header was using.
+
 **Author tools stay off the public site.** `PUBBLICO` near `const state` is true on
-`*.github.io`, and both `REGIA_OK` and `DEV_OK` are its negation: `r` (staging) and `v` (the
-developer panel — current screen and line, expected images that are not embedded, one button per
-the screens listed one per row to jump anywhere in one click, and `tutte le battute` to reveal the open scene at once)
-work from the local file and from the artifact, and do nothing on Pages. Gating the developer
-panel to `file:` alone was wrong — the artifact is where the user actually works.
+`*.github.io`, and `REGIA_OK`, `DEV_OK` and `TITOLI_OK` are all its negation. `r` opens staging;
+`v` opens the developer panel — current screen and line, expected images that are not embedded,
+the screens listed one per row to jump anywhere in one click, and `tutte le battute` to reveal
+the open scene at once. Both work from the local file and from the artifact, and do nothing on
+Pages. Gating the developer panel to `file:` alone was wrong — the artifact is where the user
+actually works.
 The help overlay lists only the keys that actually work where it is running. `smoke.js` runs the
 app twice, once with `location.hostname` empty and once with `viridjan.github.io`, and fails if a
 gate leaks.
@@ -112,6 +141,16 @@ Normalised on 29 August 2026; keep it this way rather than adding a fourth way t
   `CASELLA(i)` the artwork slot, `SFONDO(i)` the room. Index-derived names had leaked into the
   background's `alt` (it announced "Scena 12" on the screen titled *Scena 4 · terza parte*) and
   into `demo()`, which filled slots named `scena7.png` that nothing draws.
+
+- **One DOM stub, not three.** `stub-dom.js` exports `apri(coda, loc)`: it reads the `<script>`
+  blocks out of the HTML, runs them in a fake context and hands back what `coda` names plus the
+  stage. `smoke.js`, `dom.js` and `estrai-copione.js` all use it. There were three hand-copied
+  stubs and they had already drifted — the oldest lacked `style`, `value` and
+  `getBoundingClientRect` and worked only because it never rendered anything.
+- **`smoke.js` guards the deliberate duplicates**: the `VOCE` profiles must match between
+  `voci.html` and the app (tuning voices on one page and performing with the other's was possible
+  before), the clue table's hand-written quotes must exist and name the right scene, and the
+  public build must show neither the author tools nor the scene titles.
 
 **Refactor with a snapshot, not by eye.** `dom.js` (`node dom.js prima.txt`) walks all 22 screens with the smoke
 stub, reveals every line, and dumps `stage.innerHTML`. Run it before and after: strip `class` and
@@ -178,6 +217,12 @@ that edit:
   Augusto and Roberto hand the explanation back and forth, and "Adoro l'Olo" became "Adoro
   l'Olio". Its "Indizi di gioco" block was dropped with it — that scene now has `indizi:{}` and
   `i` does nothing there.
+- **The audience is one person**, 30 August 2026: the app addresses a single player, not a
+  table. Three of Gervasio's lines moved from plural to singular — «Gli indizi sono tutti davanti
+  a **te**», «Ora tocca a **te** risolvere il caso!», «**Hai** risolto il mistero!» — along with
+  every string of the app's own. Giuseppe's «Alla vostra comunità» stays plural: he is speaking
+  to Roberto and Augusto, not to whoever is playing. That is the test for any future line — who
+  is being addressed, a character or the room.
 - **1 more PDF line cut**, 29 August 2026: Mauro's «La pace non basta, se dietro si nasconde il
   peccato…» — scene 1's second part now opens on him picking the note off the floor.
 - **2 PDF lines cut** from *La tensione*, 28 August 2026: Rosalia's "Ma zio Giuseppe… e la tua
@@ -211,6 +256,39 @@ it does cost: `STORY.oggetti[].refs` carry a hand-written `s:` number, and renum
 pointing at the wrong scene. `smoke.js` now checks each ref against the scene that actually holds
 that line.
 
+## The investigation has a price
+
+Added 30 August 2026, and it is the game, not decoration. On *Gli indizi sul tavolo* the table
+may ask about **two** of the four objects, and for each one may question **one** person. Opening
+a card is the choice — from that moment a question is spent — so the screen says how many are
+left before they commit. `state.indagine = { scelti, chiesto }` holds it; `SCELTE_MAX` is 2.
+
+All four suspects are always offered — `SOSPETTI` is every character except `VITTIMA`, since
+Giuseppe is dead and does not answer — and **two of them** can be questioned per object
+(`PERSONE_MAX`). Two objects times two people is four answers out of sixteen in a game, which is
+where the replay value lives.
+
+`o.risposte[personaggio]` holds those sixteen, written on 30 August 2026 and **not in the
+copione**: each is information the scene did not give. They are the culprit's problem — Mauro's
+«non me lo ricordo» about the bottle and «andava fermata» about the note only convict him
+together, so only the right pair of objects gets both. Under each answer the detail also lists
+what that person had already said in the scenes (`o.refs`), which is what keeps `refs` alive and
+gives the narrator the link. What was not asked stays unread — that is the point, so never add a
+way to peek.
+
+**A screen that asks for a choice cannot be left by clicking.** Everywhere else the stage is the
+remote, but on the clue table a stray tap would end the investigation with a question unspent,
+and on a quiz card it would skip the question. `SENZA_CLIC` names those two screen types and the
+click handler returns early for them; the only way on is a `data-avanti` button — `Chiudi
+l'indagine →`, and on the quiz a label that follows the state (`Avanti →`, `Prossima domanda →`,
+`Scopri la soluzione →`). The keyboard still works everywhere — `spazio`, `→`, `←` — because that
+is the narrator's deliberate hand, not a misplaced finger. Add a screen that asks for a decision
+and its type belongs in that set.
+
+`apriIndizio(i)` is the single door: the click handler and the `1`–`4` keys both go through it,
+or the keys would spend nothing and open everything. `smoke.js` opens all four and asserts only
+two took, and that a questioned character's lines appear while the others' do not.
+
 ## The running order, 29 August 2026
 
 Four scenes, twelve scene screens, twenty-two in all:
@@ -235,26 +313,28 @@ is missing, so the pipeline still reports it as undelivered.
 
 ## Screens vs scenes
 
-A scene in the script can be split across two screens: `slot` says which image slot it draws
-from, `n` the number shown to the audience, `parte` the sub-label. So *La donazione* and *Il
-racconto dell'olio* are two screens both labelled "Scena 2 di 5" and both drawing `scena2.png`.
-Never derive the image or the pose from the array index — splitting a scene would silently shift
-every later scene's artwork.
+One scene is several screens: `n` is the number the audience reads, `parte` the sub-label,
+`slot` the artwork casella. Scene 2 is four screens all labelled "Scena 2 di 4"; scene 4 is
+three. **Nothing may be derived from the array index** — splitting a scene would shift every
+later scene's artwork, and index-derived names have already leaked twice (the background's `alt`,
+and `demo()`).
 
-`sfondoDa` lets a screen borrow another slot's room without giving up its own poses or props —
-*Il brindisi* is `slot:"scena3"` (so the `-brindisi` cutouts apply) with `sfondoDa:"scena1"`, so
-it plays in the hall of the opening scene. The room moves as a whole: the background **and** its `primo` props
-resolve through `SFONDO()`, since a table belongs to the hall, not to the scene number. Poses
-stay on `CASELLA()`. Both parts of scene 3 now borrow scene 1's hall — the toast and the collapse happen in the same
-room, which is also the only way they can share the two foreground tables, since those exist
-only as `scena1-sx/dx`. `scena3.png` and `scena4.png` are consequently embedded while nothing
-draws them: about 580KB of dead weight, kept because the art is still moving.
+Three fields decide what a screen shows, and they are deliberately independent:
 
-`sfondo:{scala, fuoco}` zooms that screen's background (scene 2's first half is at 200% on the
-left) without touching the actor coordinates.
+| field | what it moves | resolved by |
+|---|---|---|
+| `slot` | the poses, and the casella name | `CASELLA(i)` |
+| `sfondoDa` | the room: background **and** its `primo` props | `SFONDO(i)` |
+| `sfondo:{scala,fx,fy}` | the zoom and focus of that background | inline transform |
 
-Two lines in *La donazione* are **not Gervasio's** — added on the user's instruction, flagged
-`nuova:true` in `STORY` and marked in `copione.txt`.
+*Il brindisi* is `slot:"scena3"` — so the `-brindisi` cutouts apply — with `sfondoDa:"scena1"`,
+so it plays in the opening scene's hall. A table belongs to a room, not to a scene number, which
+is why `primo` follows `SFONDO()`. Both parts of scene 3 borrow that hall: it is the only way
+they can share the two foreground tables, which exist solely as `scena1-sx/dx`. `sfondoDa` also
+takes a plain file stem, which is how four screens show a clue plate instead of a room.
+
+The cost: `scena3.png` and `scena4.png` are still embedded while nothing draws them, about 580KB,
+kept because the art is still moving.
 
 ## Poses
 
@@ -265,7 +345,8 @@ pose needs two edits: the entry in `POSE_SCENA` **and** the name in `sync-assets
 list, or the file Codex delivered is skipped and the scene quietly falls back to the neutral
 cutout. A character with no pose for that scene falls back to the
 neutral cutout, and a missing file falls back like any other image — so a half-delivered set
-never breaks a scene. Scene 4 is where they earn their keep: the whole cast reacts.
+never breaks a scene. The malore — scene 3's second part, casella `scena4` — is where they earn
+their keep: the whole cast reacts at once.
 
 ## How a scene is composed
 
@@ -298,8 +379,9 @@ drift across the line, lowpass cutoff and its own `vol` — so they are told apa
 only pitch. Square and sawtooth carry far more energy than sine at the same number, which is
 what the per-voice volume is for. Muted with `m` or the pill next to `?`.
 
-The narrator has no bubbles: his two screens (recap and narrated solution) get their voice in
-`vai()`, not in `avanti()`.
+The narrator has no profile at all, and `suona()` returns early without one — that early return
+is the whole implementation of "il narratore non ha voce". Only `avanti()` speaks, so stepping
+back through a scene is silent on purpose.
 
 The audio context starts suspended and `resume()` is async: schedule the blips **after** it has
 started, or they land in the past and nothing plays.

@@ -71,6 +71,10 @@ cambia la taglia, le frecce fanno lo scatto fine. Il pannello in basso mostra da
 Le modifiche vivono solo nella pagina aperta: per renderle definitive si incollano le righe nel
 file.
 
+Sul sito pubblico le scene non mostrano il **titolo**: «Il malore dell'oliva blu» racconterebbe
+il delitto al tavolo che sta ancora brindando. L'intestazione resta dove si lavora — file locale
+e artefatto — e online la scena si apre sull'immagine, che guadagna lo spazio del titolo.
+
 Regia e sviluppo **non esistono sul sito pubblico**: `r` e `v` rispondono solo aprendo il file
 da disco o nell'artefatto privato. La **modalità sviluppo** (`v`) mostra a che schermata e a che battuta siamo, quali immagini attese non sono
 incorporate, ed elenca le schermate — una per riga, dalla copertina al messaggio finale, con
@@ -95,6 +99,22 @@ dell'immagine**, quindi l'app resta presentabile anche a consegna incompleta.
 Premendo `d` dentro l'app compaiono sagome di prova al posto delle illustrazioni mancanti, utili
 per giudicare posizioni e ritmo prima che l'arte sia pronta.
 
+## L'indagine
+
+Sul tavolo degli indizi si può chiedere di **due oggetti su quattro**, e per ognuno si possono
+interrogare **due dei quattro sospetti**: gli altri, su quell'oggetto, non parleranno. Le loro
+risposte non stanno nel copione — sono informazioni nuove, sedici in tutto, e in una partita se
+ne sentono quattro. Aprire una scheda è
+già la scelta, e la schermata dice quante domande restano prima di spenderle. `Ricomincia
+l'indagine` azzera tutto per la partita successiva.
+
+Da questa schermata **non si esce toccando lo sfondo**: si passa oltre solo con `Chiudi
+l'indagine →`. Vale anche per le domande della scheda finale, dove il pulsante dice a che punto
+sei. Altrove il clic fa avanzare; dove si sceglie, costerebbe una domanda o una risposta.
+
+L'app dà del **tu a una persona sola**, non a un gruppo: le battute dei personaggi fra loro
+restano al plurale dove lo erano.
+
 ## Comandi del narratore
 
 | Tasto | Cosa fa |
@@ -103,7 +123,7 @@ per giudicare posizioni e ritmo prima che l'arte sia pronta.
 | clic sul bordo sinistro | indietro di una battuta |
 | `spazio` / `→` | battuta successiva, poi schermata successiva |
 | `←` | indietro di una battuta |
-| `1`–`4` | apre un indizio sul tavolo |
+| `1`–`4` | apre un indizio sul tavolo (ne restano due, poi si chiudono) |
 | `d` | sagome di prova al posto delle illustrazioni mancanti |
 | `r` | regia: sposta e ridimensiona personaggi e oggetti sulla scena (non sul sito pubblico) |
 | `[` `]` | in regia: porta il selezionato in secondo o in primo piano, oggetti compresi |
@@ -124,6 +144,10 @@ node dom.js prima.txt # scrive il markup di tutte le schermate, battute scoperte
 
 `dom.js` serve prima e dopo un riordino del codice: tolti gli attributi `class` e `style`, il
 `diff` fra i due file dev'essere vuoto. Se non lo è, il riordino ha cambiato anche la sostanza.
+
+I due script — e `estrai-copione.js` — leggono l'app attraverso **`stub-dom.js`**, un finto DOM
+di una dozzina di metodi. Non si lancia da solo. Prima ne esistevano tre copie scritte a mano, e
+avevano già cominciato a divergere.
 
 Il copione approvato è **[`copione.txt`](copione.txt)**: è quello che l'app deve mostrare, parola
 per parola, refusi dell'originale compresi. Il controllo verifica che ogni battuta fra «virgolette
