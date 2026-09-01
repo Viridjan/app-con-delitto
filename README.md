@@ -1,7 +1,7 @@
 # Il mistero dell'oliva blu
 
 App per il narratore di una "cena con delitto": quattro scene illustrate divise in dodici
-schermate, un tavolo di indizi da
+schermate (venti in tutto), un tavolo di indizi da
 esaminare in ordine libero, la scheda finale e la soluzione. Il narratore la guida davanti al
 tavolo dei giocatori — da proiettore, da tablet o da telefono.
 
@@ -105,12 +105,37 @@ Sul tavolo degli indizi si può chiedere di **due oggetti su quattro**, e per og
 interrogare **due dei quattro sospetti**: gli altri, su quell'oggetto, non parleranno. Le loro
 risposte non stanno nel copione — sono informazioni nuove, sedici in tutto, e in una partita se
 ne sentono quattro. Aprire una scheda è
-già la scelta, e la schermata dice quante domande restano prima di spenderle. `Ricomincia
-l'indagine` azzera tutto per la partita successiva.
+già la scelta, e la schermata dice quante domande restano prima di spenderle. Per rigiocare si
+ricarica la pagina: è l'unica cosa che azzera l'indagine e le risposte.
+
+Un **clic scopre**, un **pulsante cambia pagina**. Toccando lo schermo esce la battuta seguente;
+per passare alla schermata dopo c'è un pulsante: sopra l'ultima battuta nelle scene — fermo,
+mentre le battute gli scorrono sotto — e in fondo alla pagina altrove. Nelle scene si può premere
+anche a metà: scopre la battuta seguente come il clic, e cambia schermata solo quando non resta
+altro. Dove invece c'è una scelta aperta — una domanda della scheda, un indizio aperto — resta
+spento, perché premerlo costerebbe una domanda o una risposta.
+
+**La storia va in una direzione sola**: non si torna indietro né di una battuta né di una
+schermata. Quello che è stato scoperto resta scoperto, e chi guarda non vede mai riavvolgere. Per
+ricominciare si ricarica la pagina.
+
+Chiudendo l'indagine con delle domande ancora da fare, l'investigatore chiede conferma: riassume
+la serata e domanda se ne hai abbastanza, **senza nominare gli indizi** né dire quante domande
+restano.
 
 Da questa schermata **non si esce toccando lo sfondo**: si passa oltre solo con `Chiudi
 l'indagine →`. Vale anche per le domande della scheda finale, dove il pulsante dice a che punto
 sei. Altrove il clic fa avanzare; dove si sceglie, costerebbe una domanda o una risposta.
+
+La **scheda finale** è una pagina sola con sei domande: si risponde, la domanda si chiude in una
+riga e la successiva compare sotto. Ognuna offre **i quattro sospetti**, col volto sotto il nome:
+si sceglie una persona, non una frase. Tre chiedono di ricordare, tre di mettere insieme due momenti diversi.
+
+Le domande non pesano uguale — 2, 1, 1, 2, 1 punti, e **3 per il colpevole**, dieci in tutto — e
+il finale dà uno di cinque verdetti, a seconda che il nome sia giusto e di quanto regga il resto:
+dal *caso risolto perfettamente* al *qualcosa non torna*. Il verdetto sta da solo: `Vedi la
+soluzione` porta all'ultima schermata, dove l'investigatore racconta com'è andata e la storia
+si chiude con la parola *Fine*.
 
 L'app dà del **tu a una persona sola**, non a un gruppo: le battute dei personaggi fra loro
 restano al plurale dove lo erano.
@@ -119,18 +144,19 @@ restano al plurale dove lo erano.
 
 | Tasto | Cosa fa |
 |---|---|
-| clic sullo schermo | battuta successiva, poi schermata successiva |
-| clic sul bordo sinistro | indietro di una battuta |
-| `spazio` / `→` | battuta successiva, poi schermata successiva |
-| `←` | indietro di una battuta |
+| clic sullo schermo | scopre la battuta successiva |
+| `spazio` / `→` / `↓` | scopre la battuta successiva |
+| `←` / `↑` | niente: la storia non torna indietro (sui personaggi risfoglia le schede) |
+| pulsante «Prosegui» | l'unico modo di cambiare schermata |
 | `1`–`4` | apre un indizio sul tavolo (ne restano due, poi si chiudono) |
 | `d` | sagome di prova al posto delle illustrazioni mancanti |
 | `r` | regia: sposta e ridimensiona personaggi e oggetti sulla scena (non sul sito pubblico) |
 | `[` `]` | in regia: porta il selezionato in secondo o in primo piano, oggetti compresi |
 | `v` | sviluppo: stato, immagini mancanti, salto a una schermata (non sul sito pubblico) |
+| `↑` `↓` | col pannello sviluppo aperto: sfoglia le schermate |
 | `m` | zittisce la voce dei personaggi |
 | `f` | schermo intero |
-| `?` | tutti i comandi |
+| `?` | tutti i comandi (non c'è più un pulsante: solo il tasto) |
 
 Il sito pubblico sta su **https://viridjan.github.io/app-con-delitto/** e si aggiorna a ogni
 push su `main`.
@@ -140,6 +166,18 @@ push su `main`.
 ```sh
 node smoke.js         # percorre ogni schermata e controlla i conti del quiz
 node dom.js prima.txt # scrive il markup di tutte le schermate, battute scoperte
+```
+
+### Leggibilità da telefono
+
+`audit-mobile.js` si inietta nella pagina e misura, per ogni elemento con del testo, dimensione
+reale, contrasto e ingombro; `telaio-390.html` lo ospita dentro un iframe da 390px, perché
+Chromium headless non scende sotto i 500 per gli script. Insieme dicono se qualcosa è troppo
+piccolo, troppo poco contrastato o troppo stretto per un dito.
+
+```sh
+chromium --headless --allow-file-access-from-files --dump-dom \
+  "file://$PWD/telaio-390.html?p=pagina-da-provare.html"
 ```
 
 `dom.js` serve prima e dopo un riordino del codice: tolti gli attributi `class` e `style`, il

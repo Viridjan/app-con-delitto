@@ -11,7 +11,8 @@ from pathlib import Path
 from PIL import Image
 
 SRC, WEB, HTML = Path("assets/images"), Path("assets/web"), Path("oliva-blu.html")
-LARGH = {"ritratto": 900, "attore": 700, "scena": 1600, "indizio": 512, "copertina": 560}
+LARGH = {"ritratto": 900, "attore": 700, "scena": 1600, "indizio": 512, "copertina": 560,
+         "volto": 420, "detective": 520}
 # Il Narratore e' uscito dall'elenco dei personaggi il 29 agosto 2026: nessuna
 # schermata disegna piu' il suo ritratto, quindi non lo si incorpora (erano 200KB).
 ALIAS = {}
@@ -33,12 +34,15 @@ POSE = ["giuseppe-malore", "giuseppe-presentazione", "giuseppe-brindisi",
         "mauro-brindisi"]
 OGGETTI = ["bicchiere", "bottiglietta", "foglio", "biglietto"]
 # solo le caselle che l'app sa mostrare: le varianti e le prove restano fuori dal file
-ATTESI = ({"copertina.png"}
+ATTESI = ({"copertina.png", "detective-riflessione.png", "detective-osservazione.png",
+           "detective-presentazione.png", "detective-scoperta.png",
+           "detective-soluzione.png"}
           | {f"scena{i}.png" for i in range(1, 6)}
           | {f"scena{i}-{lato}.png" for i in range(1, 6) for lato in ("sx", "dx")}
           | {f"attore-{n}.png" for n in PERSONE}
           | {f"attore-{n}.png" for n in POSE}
           | {f"ritratto-{n}.png" for n in PERSONE}
+          | {f"volto-{n}.png" for n in PERSONE if n != "giuseppe"}   # i quattro sospetti
           | {f"indizio-{n}.png" for n in OGGETTI})
 
 def _blocco(medie, minimo=2):
