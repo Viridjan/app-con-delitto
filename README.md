@@ -79,7 +79,7 @@ Regia e sviluppo **non esistono sul sito pubblico**: `r` e `v` rispondono solo a
 da disco o nell'artefatto privato. La **modalità sviluppo** (`v`) mostra a che schermata e a che battuta siamo, quali immagini attese non sono
 incorporate, ed elenca le schermate — una per riga, dalla copertina al messaggio finale, con
 accesa quella in cui ci si trova — per andare dove serve in un clic invece che un passo alla
-volta. `Tutte le battute` scopre in un colpo la scena aperta.
+volta.
 
 ## Immagini
 
@@ -104,7 +104,8 @@ per giudicare posizioni e ritmo prima che l'arte sia pronta.
 Sul tavolo degli indizi si può chiedere di **due oggetti su quattro**, e per ognuno si possono
 interrogare **due dei quattro sospetti**: gli altri, su quell'oggetto, non parleranno. Le loro
 risposte non stanno nel copione — sono informazioni nuove, sedici in tutto, e in una partita se
-ne sentono quattro. Aprire una scheda è
+ne sentono quattro. Ogni nome porta il suo volto, dove si chiede e dove si risponde, e in tutta
+la sezione il testo ha una misura sola. Aprire una scheda è
 già la scelta, e la schermata dice quante domande restano prima di spenderle. Per rigiocare si
 ricarica la pagina: è l'unica cosa che azzera l'indagine e le risposte.
 

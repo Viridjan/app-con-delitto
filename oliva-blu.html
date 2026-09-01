@@ -23,6 +23,8 @@
   --plum:#96496D; --teal:#3F7565;
   --shadow:0 1px 2px rgba(35,40,26,.06),0 8px 28px rgba(35,40,26,.08);
   /* i tre caratteri, scritti una volta sola: titoli, testo, dati */
+  /* il corpo unico della sezione indizi: da telefono lo rialza la query */
+  --indizi:clamp(1rem,1.7vw,1.375rem);
   --serif:"Bodoni Moda","Didot","Times New Roman",serif;
   --sans:"Alegreya Sans","Segoe UI",system-ui,sans-serif;
   --mono:ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
@@ -285,10 +287,14 @@ kbd{font:inherit; font-size:.78em; border:1px solid var(--line); border-bottom-w
 .clue .stato{margin-top:.35rem; font-size:.78em; font-weight:700; color:var(--speaker,var(--gold))}
 .clue.fuori{opacity:.4; cursor:not-allowed; box-shadow:none}
 .chiedi{display:flex; flex-wrap:wrap; gap:.6rem; margin-top:.9rem}
-.btn.voce{border-color:var(--speaker,var(--line)); color:var(--speaker,var(--ink)); font-weight:700}
-.btn.voce:hover:not([disabled]){background:color-mix(in srgb,var(--speaker,var(--olive)) 14%,var(--surface))}
-.btn.voce.fatto{background:color-mix(in srgb,var(--speaker,var(--olive)) 18%,var(--surface))}
-.btn.voce[disabled]{opacity:.35; cursor:not-allowed}
+/* Le persone a cui chiedere sono le stesse carte della scheda finale: si
+   sceglie una faccia, non una parola. Qui in piu' c'e' lo stato — chi ha
+   gia' risposto resta acceso col suo colore, chi non si puo' piu' interrogare
+   si spegne. */
+.opt.voce .v{color:var(--speaker,var(--ink)); font-weight:700}
+.opt.voce.fatto{border-color:var(--speaker,var(--line));
+  background:color-mix(in srgb,var(--speaker,var(--olive)) 18%,var(--surface))}
+.opt.voce[disabled]{opacity:.35; cursor:not-allowed}
 /* la risposta di un interrogato, e sotto cio' che aveva gia' detto in scena */
 .risposta{border-left:3px solid var(--speaker,var(--line)); padding-left:.75rem}
 .risposta .src{font-size:.76rem; letter-spacing:.1em; text-transform:uppercase; color:var(--speaker,var(--muted)); font-weight:700}
@@ -296,6 +302,19 @@ kbd{font:inherit; font-size:.78em; border:1px solid var(--line); border-bottom-w
 .gia-detto{margin:.45rem 0 0; padding-left:1.1rem; font-size:.86em; color:var(--muted)}
 .gia-detto li{margin:.1rem 0}
 .clue .stato b{font-weight:700; color:var(--speaker,var(--gold))}
+
+/* Un corpo di testo solo per tutta la sezione: prima erano sette misure fra
+   titolo della scheda, etichetta, stato, descrizione, nota, nome di chi
+   risponde e citazioni, e l'occhio non sapeva cosa venisse prima. Il titolo
+   della pagina resta piu' grande: apre la schermata, non e' della lista. */
+.indagine h3, .indagine p, .indagine li,
+.indagine .tag, .indagine .stato, .indagine .src, .indagine .opt .v{font-size:var(--indizi)}
+/* il volto tondo accanto al nome: in `em`, cosi' segue il corpo qui sopra */
+.volto-mini{width:1.8em; height:1.8em; flex:none; border-radius:50%; object-fit:cover;
+  background:var(--surface-2)}
+.ph-cifra.volto-mini{font-size:.9em; opacity:.55; border:1px solid var(--line)}
+.slot.empty .ph-cifra.volto-mini{display:grid}
+.risposta .src{display:inline-flex; align-items:center; gap:.5em}
 
 /* ---- scheda finale: una pagina sola, le domande chiuse salgono ---- */
 .domande{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:1rem}
@@ -483,12 +502,10 @@ kbd{font:inherit; font-size:.78em; border:1px solid var(--line); border-bottom-w
   .narr-fine .detto p, .narr-fine .detto p:last-child,
   .giudizio p, .solution p{
     font-size:clamp(2.07rem,4vw,3.06rem); text-align:justify}
-  .clue h3{font-size:1.98rem}
-  .clue .tag{font-size:1.404em}
-  .clue .stato{font-size:1.404em}
+  /* la sezione indizi ha un corpo solo: qui e' quello di sopra per uno e otto */
+  :root{--indizi:clamp(1.65rem,3vw,2.475rem)}
   .opt .v{font-size:2.07rem}
-  .ref .src,.risposta .src{font-size:1.368rem}
-  .gia-detto{font-size:1.548em}
+  .ref .src{font-size:1.368rem}
   .plate .brief{font-size:1.53em}
   .plate .brief-label span{font-size:1.26rem}
 }
@@ -1059,8 +1076,13 @@ function vIndizio(i) {
      acceso col suo colore, chi non si puo' piu' interrogare si spegne */
   const scelta = SOSPETTI.map(c => {
     const fatto = chiesti.includes(c);
-    return `<button class="btn voce ${fatto ? "fatto" : ""}" data-chiedi="${esc(c)}" data-c="${esc(c)}"
-      ${!fatto && finite ? "disabled" : ""}>${esc(c)}</button>`;
+    const spento = !fatto && finite;
+    return `<button class="opt carta slot voce ${fatto ? "fatto" : ""} ${spento ? "" : "sollevabile"}"
+      data-chiedi="${esc(c)}" data-c="${esc(c)}" ${spento ? "disabled" : ""}>
+      <span class="riga"><span class="v">${esc(c)}</span></span>
+      ${opt(VOLTO(c), "volto", c)}
+      <span class="ph ph-cifra volto">${esc(c[0])}</span>
+    </button>`;
   }).join("");
   /* sotto la risposta, in piccolo, quello che quella persona ha gia' detto in
      scena su questo oggetto: al narratore serve il collegamento */
@@ -1069,12 +1091,13 @@ function vIndizio(i) {
       `<li>Scena ${r.s}: «${esc(r.t)}»</li>`).join("");
     return `
       <div class="risposta" data-c="${esc(c)}">
-        <p class="src">${esc(c)}</p>
+        <p class="src slot">${opt(VOLTO(c), "volto-mini", c)}<span
+          class="ph ph-cifra volto-mini">${esc(c[0])}</span>${esc(c)}</p>
         <p>${esc(o.risposte[c])}</p>
         ${detto ? `<ul class="gia-detto">${detto}</ul>` : ""}
       </div>`;
   }).join("");
-  return `<div class="sheet">
+  return `<div class="sheet indagine">
     <p class="eyebrow">L’indagine</p>
     <div class="detail carta">
       <figure class="slot">
@@ -1087,7 +1110,7 @@ function vIndizio(i) {
       <p class="nota">${finite
         ? "Hai già chiesto a due persone. Le altre, su questo oggetto, non parleranno."
         : "Non hai tempo per chiedere a tutti: scegli <b>due</b> persone a cui chiedere informazioni."}</p>
-      <div class="chiedi">${scelta}</div>
+      <div class="opts chiedi">${scelta}</div>
       ${risposte ? `<div class="refs">${risposte}</div>` : ""}
     </div>
     <p><button class="btn" data-clue="close">← Torna al tavolo</button></p>
@@ -1114,7 +1137,7 @@ function vTavolo() {
     </button>`;
   }).join("");
   const rimasti = restano();
-  return `<div class="sheet">
+  return `<div class="sheet indagine">
     <div class="apertura">
       <div class="slot guida">
         ${opt(src("detective-osservazione.png"), "", "L’investigatore osserva")}
@@ -1559,13 +1582,11 @@ function pannelloDev() {
          <div class="riga"><b>Sviluppo</b><span id="dev-dove"></span>
            <span class="spacer"></span><span><kbd>↑</kbd><kbd>↓</kbd> sfoglia · <kbd>v</kbd> esce</span></div>
          <div class="salti" id="dev-salti"></div>
-         <div class="riga"><button class="btn" id="dev-tutte">Tutte le battute</button></div>
          <div class="riga" id="dev-img"></div>
        </div>`, true));
     const salti = p.querySelector("#dev-salti");
     salti.innerHTML = SALTI.map((r, k) =>
       `<button data-salta="${r.va}"><i>${k + 1}</i>${esc(r.testo)}</button>`).join("");
-    p.querySelector("#dev-tutte").onclick = battuteTutte;
     /* i tasti restano al loro posto: cambia solo quale e' acceso */
     salti.onclick = e => {
       const b = e.target.closest("button");
@@ -1579,7 +1600,6 @@ function pannelloDev() {
     b.classList.toggle("qui", qui);
     if (qui) b.scrollIntoView({ block: "nearest" });
   });
-  p.querySelector("#dev-tutte").disabled = s.t !== "scene";
   p.querySelector("#dev-dove").textContent =
     `${state.n + 1}/${SLIDES.length} · ${s.t}`
     + (sc ? ` · ${CASELLA(s.i)} · scena ${NUM(sc, s.i)}${sc.parte ? " " + sc.parte : ""}`
@@ -1594,13 +1614,6 @@ function pannelloDev() {
 
 /* Scoprire una scena battuta per battuta serve al tavolo, non a chi prova:
    questo la mostra tutta in un colpo. */
-function battuteTutte() {
-  const s = SLIDES[state.n];
-  if (s.t !== "scene") return;
-  state.step = STORY.scene[s.i].battute.length;
-  render();
-}
-
 function sviluppo() {
   if (!DEV_OK) return;
   state.sviluppo = !state.sviluppo;
