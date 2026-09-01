@@ -225,6 +225,17 @@ next to the others; the field and the `--formato` variable were removed on 28 Au
 `object-fit:cover`, so a wide plate loses its edges — that is the trade, and the answer is to
 re-stage the figures with `r`, never to give one screen its own shape.
 
+**The four detective screens share one body size.** Avviso, recap, verdict, ending: from
+1 September 2026 one rule sets the text on all four — `clamp(1.15rem,2.2vw,1.7rem)`, centred on a
+big screen, and in the phone query `clamp(2.07rem,4vw,3.06rem)` with `text-align:justify`. Each
+had had its own before, from the avviso's small service body to the recap's large spoken lines,
+and stepping from one to the next the text jumped. The justified column at that size holds about five
+words, so the gaps between them open wide — that is accepted, and **hyphenation is off
+everywhere**: `*{hyphens:none}` on 1 September 2026, after `hyphens:auto` was tried on those
+paragraphs and the user chose wide spaces over broken words. `document.documentElement.lang` is
+still set from the script, for screen readers rather than for hyphenation, since the file has no
+`<html>` tag of its own.
+
 **Read the app on a phone before shipping.** Audited 31 August 2026 at 390px, both themes, with
 an in-page script that reads computed size, colour and box for every element carrying text. What
 it found and what was done:
@@ -472,12 +483,16 @@ tavolo degli indizi · narratore · scheda finale · verdetto · soluzione e con
 ```
 
 Twenty screens, twelve of them scenes. Codex delivered five meeple-detective poses on
-31 August 2026; `detective-riflessione` stands **above** the narrator's recap, the pose where he
+31 August 2026; `detective-riflessione` stands **above** the recap, the pose where he
 holds his chin while the case is handed over. He was beside it past 62rem until 1 September 2026,
 which fitted six large lines but left the button hanging at mid height, far from the text it
-follows; the column puts figure, text and button in that order at every width, and he is capped
-at 38vh so the last line stays above the fold — doubling him on request had already pushed it
-under. `detective-osservazione`, lens in hand, opens the clue table beside its title. `detective-presentazione` carries the **avviso**, the screen added on
+follows; the column puts figure, text and button in that order at every width. On the four
+screens he carries alone — avviso, recap, verdict, ending — he was **doubled** on request the
+same day: 76vh on the recap, 72 on the avviso, 64 on the other two, each with the width cap
+doubled to match. At 1280×800 that costs the fold — the stage scrolls by 30 to 78px and the
+button sits just under it. The trade was asked for with the figures on the table; the smaller
+caps are one number each if it is ever wanted back. The `v` panel's row for the recap reads
+**Il detective**, not *Il narratore*: the narrator is the person holding the remote. `detective-osservazione`, lens in hand, opens the clue table beside its title. `detective-presentazione` carries the **avviso**, the screen added on
 1 September 2026 between the cover and the cast: the disclaimer used to sit under the cover
 image, where nobody read it, and now it has a page of its own with the investigator above it —
 the same `.narr-fine` column as the recap, plus an `.avviso` class carrying its two differences:

@@ -46,7 +46,8 @@
 }
 
 /* ---- fondamenta ---- */
-*{box-sizing:border-box}
+/* mai una parola spezzata: il testo giustificato allarga gli spazi, e va bene cosi' */
+*{box-sizing:border-box; hyphens:none; -webkit-hyphens:none}
 body{
   margin:0; background:var(--bg); color:var(--ink);
   font-family:var(--sans);
@@ -187,23 +188,33 @@ kbd{font:inherit; font-size:.78em; border:1px solid var(--line); border-bottom-w
    ultima schermata, quindi la regola non sta piu' sotto una sola di loro */
 .guida{display:flex; justify-content:center}
 .guida img{display:block; width:auto; height:auto; max-width:min(100%,26rem); max-height:38vh}
+/* Il riepilogo del narratore al doppio come le altre tre: il testo e' poco e
+   la figura porta meta' del messaggio. */
+.narr-fine:not(.avviso):not(.verdetto):not(.fine-caso) .guida img{
+  max-height:76vh; max-width:min(100%,52rem)}
 .guida .ph{width:8rem; font-size:3rem; opacity:.4}
 .narr-fine .detto{display:flex; flex-direction:column; gap:.9rem}
 .narr-fine p{margin:0; max-width:34ch; font-size:clamp(1.3rem,3.2vw,2.2rem); line-height:1.35}
-/* l'avviso non e' una battuta: corpo di servizio, e in colonna a ogni
-   larghezza — investigatore sopra, testo in mezzo, pulsante sotto. Il
-   riepilogo si mette di fianco perche' ha sei righe grandi; qui il paragrafo
-   e' uno solo e piccolo, e di fianco lascerebbe mezzo schermo vuoto. */
-.avviso .detto p, .avviso .detto p:last-child{font-family:var(--sans); color:var(--muted);
-  font-size:clamp(.95rem,1.6vw,1.15rem); line-height:1.7; max-width:46ch;
-  text-align:left; margin-top:0}
-.avviso{text-align:left}
-.avviso .guida img{max-height:36vh; max-width:min(100%,22rem)}
+/* l'investigatore al doppio: su queste quattro schermate il testo e' poco e
+   la figura e' meta' del messaggio */
+.avviso .guida img{max-height:72vh; max-width:min(100%,44rem)}
+.avviso .detto p, .avviso .detto p:last-child{font-family:var(--sans); color:var(--muted)}
+
+/* Le quattro schermate dell'investigatore — avviso, riepilogo, verdetto,
+   soluzione — hanno un corpo di testo solo. Prima ognuna aveva il suo, dal
+   servizio piccolo dell'avviso alle righe grandi del riepilogo, e passando
+   dall'una all'altra il testo saltava di misura. Centrato: la colonna e'
+   centrata, e il testo e' poco. */
+.avviso .detto p, .avviso .detto p:last-child,
+.narr-fine .detto p, .narr-fine .detto p:last-child,
+.giudizio p, .solution p{
+  font-size:clamp(1.15rem,2.2vw,1.7rem); line-height:1.5;
+  max-width:46ch; margin-inline:auto; text-align:center}
 .narr-fine p:last-child{color:var(--gold); font-family:var(--serif); margin-top:.6rem}
 
 /* ---- l'ultima schermata: figura, racconto, congedo ---- */
 .fine-caso{gap:clamp(1rem,3vh,2rem); align-items:center}
-.fine-caso .guida img{max-height:32vh}
+.fine-caso .guida img{max-height:64vh; max-width:min(100%,52rem)}
 
 /* ---- il congedo, in coda alla soluzione ---- */
 .congedo{display:flex; flex-direction:column; align-items:center; gap:1rem; margin-top:1.2rem}
@@ -312,14 +323,14 @@ kbd{font:inherit; font-size:.78em; border:1px solid var(--line); border-bottom-w
 /* ---- soluzione ---- */
 /* niente filetto e niente rientro: il racconto finale sta al centro della
    pagina, come tutto quello che ha intorno */
-.solution{max-width:62ch; text-align:center}
+.solution{max-width:62ch}
 .solution p{margin:.6rem 0}
 .score{font-family:var(--serif); font-size:clamp(2rem,5vw,3.4rem); color:var(--gold); line-height:1}
 .score small{font-size:.4em; color:var(--muted)}
 /* il verdetto in colonna: l'investigatore, il punteggio, il giudizio, il
    pulsante. La posa e' gia' meta' del verdetto, quindi sta in cima. */
 .verdetto{gap:clamp(.8rem,2.5vh,1.6rem); align-items:center; text-align:center}
-.verdetto .guida img{max-height:32vh}
+.verdetto .guida img{max-height:64vh; max-width:min(100%,52rem)}
 .verdetto .azioni{width:100%; justify-content:center}
 .giudizio h2{font-size:clamp(1.2rem,2.4vw,1.7rem)}
 .giudizio p{margin:.4rem 0 0; color:var(--muted); max-width:52ch}
@@ -465,7 +476,13 @@ kbd{font:inherit; font-size:.78em; border:1px solid var(--line); border-bottom-w
   /* il nome di chi parla non e' in questo elenco: cresciuto anche lui,
      l'etichetta finiva piu' grande della battuta che etichetta */
   .card p{font-size:clamp(1.68rem,6.6vw,1.92rem)}
-  .avviso .detto p, .avviso .detto p:last-child{font-size:clamp(1.71rem,2.88vw,2.07rem)}
+  /* le quattro schermate dell'investigatore: stessa misura di tutti i piccoli
+     — la desktop per uno e otto — e testo giustificato. Senza sillabazione:
+     gli spazi si allargano, e va bene cosi'. */
+  .avviso .detto p, .avviso .detto p:last-child,
+  .narr-fine .detto p, .narr-fine .detto p:last-child,
+  .giudizio p, .solution p{
+    font-size:clamp(2.07rem,4vw,3.06rem); text-align:justify}
   .clue h3{font-size:1.98rem}
   .clue .tag{font-size:1.404em}
   .clue .stato{font-size:1.404em}
@@ -905,6 +922,8 @@ const PERSONE_MAX = 2;     // e a quante persone si puo' chiedere di ognuno
 const SENZA_CLIC = new Set(["tavolo", "quiz"]);
 /* `chiesto[i]` e' l'elenco di chi e' stato interrogato su quell'oggetto. */
 const nuovaIndagine = () => ({ scelti: [], chiesto: {} });
+
+document.documentElement.lang = "it";   // il file non ha un <html> suo: l'artefatto lo avvolge
 
 const state = { n: 0, step: 0, demo: false, regia: false, sviluppo: false, clue: null,
   indagine: nuovaIndagine(), risposte: [], overlay: null };
@@ -1495,7 +1514,7 @@ function muta() {
    sono incorporate e permette di saltare a una schermata senza percorrerle
    tutte. Serve a provare una scena in mezzo senza rifare la strada. */
 const NOME_SCHERMATA = { cover: "Copertina", avviso: "Avviso", cast: "I personaggi", tavolo: "Tavolo degli indizi",
-  narr: "Il narratore", sol: "Il verdetto", fine: "Soluzione e congedo" };
+  narr: "Il detective", sol: "Il verdetto", fine: "Soluzione e congedo" };
 const etichetta = x => {
   if (x.t === "quiz") return "Scheda finale";
   if (x.t !== "scene") return NOME_SCHERMATA[x.t] || x.t;
