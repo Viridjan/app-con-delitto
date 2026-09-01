@@ -8,6 +8,7 @@ const nodo = () => ({
   textContent: "", disabled: false, hidden: false, dataset: {}, style: {}, value: "",
   classList: { toggle() {}, add() {}, remove() {}, contains: () => false },
   addEventListener() {}, focus() {}, scrollIntoView() {}, scrollTo() {}, remove() {},
+  insertAdjacentHTML(dove, html) { this._html += html; },
   getBoundingClientRect: () => ({ left: 0, top: 0, width: 100, height: 100 }),
   get firstElementChild() { return nodo(); },
   querySelector: () => nodo(), querySelectorAll: () => [],

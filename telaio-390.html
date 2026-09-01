@@ -1,0 +1,12 @@
+<title>attendo</title>
+<style>html,body{margin:0;background:#000}iframe{width:390px;height:844px;border:0;display:block}</style>
+<iframe id="f"></iframe>
+<script>
+  const q = new URLSearchParams(location.search).get("p");
+  const f = document.getElementById("f");
+  f.onload = () => setTimeout(() => {
+    try { document.title = f.contentDocument.title; }
+    catch (e) { document.title = "BLOCCATO:" + e.message; }
+  }, 400);
+  f.src = q;
+</script>

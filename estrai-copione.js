@@ -1,6 +1,7 @@
 const fs = require("fs");
 const { apri } = require("./stub-dom");
-const { app: S } = apri("STORY");
+const { app } = apri("{STORY,SOSPETTI}");
+const S = app.STORY, SOSPETTI = app.SOSPETTI;
 
 const R = [];
 const riga = t => R.push(t);
@@ -27,8 +28,9 @@ S.narratoreFinale.forEach(r => riga(r));
 riga("");
 riga("— SCHEDA FINALE —");
 S.quiz.forEach((q, i) => {
-  riga(`${i + 1}. ${q.q}`);
-  q.opzioni.forEach((o, k) => riga(`   ${"ABC"[k]}. ${o}${k === q.giusta ? "   ← giusta" : ""}`));
+  riga(`${i + 1}. ${q.q}   [${q.punti} ${q.punti === 1 ? "punto" : "punti"}]`);
+  // le opzioni sono sempre i quattro sospetti, nello stesso ordine dell'app
+  SOSPETTI.forEach((o, k) => riga(`   ${String.fromCharCode(65 + k)}. ${o}${k === q.giusta ? "   ← giusta" : ""}`));
 });
 riga("");
 riga("— SOLUZIONE NARRATA —");

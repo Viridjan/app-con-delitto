@@ -104,31 +104,41 @@ Mauro, agitato: «Lui stava sbagliando! Andava fermato!»
 Rosalia: «Mauro… non era quello che intendevo…»
 
 — FRASE FINALE DEL NARRATORE —
-Gli indizi sono tutti davanti a te.
-Giuseppe voleva donare i suoi beni agli Oliviani.
-Rosalia era preoccupata e in disaccordo.
-Mauro ha portato il bicchiere.
-Nel bicchiere c’era un prodotto pericoloso.
-Ora tocca a te risolvere il caso!
+La festa degli Oliviani è finita con un malore.
+Giuseppe stava per donare tutto quello che aveva. Qualcuno, in quella stanza, era contrario.
+Aiutami a risolvere il caso!
 
 — SCHEDA FINALE —
-1. Giuseppe voleva donare i suoi beni a…
-   A. Gli Oliviani   ← giusta
-   B. I Marinai
-   C. I Musicisti
-2. Il bicchiere è stato portato da…
-   A. Mauro   ← giusta
+1. Chi ha portato il bicchiere a Giuseppe?   [2 punti]
+   A. Rosalia
    B. Roberto
-   C. Rosalia
-3. Nel bicchiere c’era un prodotto…
-   A. pericoloso   ← giusta
-   B. dolce
-   C. profumato
-4. Il colpevole è…
-   A. Mauro   ← giusta
-   B. Augusto
-   C. Giuseppe
+   C. Augusto
+   D. Mauro   ← giusta
+2. Chi ha scritto il biglietto per fermare la donazione?   [1 punto]
+   A. Rosalia   ← giusta
+   B. Roberto
+   C. Augusto
+   D. Mauro
+3. Chi ha letto quel biglietto senza dirlo a Giuseppe?   [1 punto]
+   A. Rosalia
+   B. Roberto
+   C. Augusto
+   D. Mauro   ← giusta
+4. Chi ha chiesto che la bottiglietta fosse messa via?   [2 punti]
+   A. Rosalia
+   B. Roberto
+   C. Augusto   ← giusta
+   D. Mauro
+5. Chi ha riconosciuto che nel bicchiere non c’era una bevanda?   [1 punto]
+   A. Rosalia
+   B. Roberto   ← giusta
+   C. Augusto
+   D. Mauro
+6. Il colpevole è…   [3 punti]
+   A. Rosalia
+   B. Roberto
+   C. Augusto
+   D. Mauro   ← giusta
 
 — SOLUZIONE NARRATA —
-Hai risolto il mistero!
 Giuseppe voleva donare i suoi beni agli Oliviani. Rosalia era preoccupata e voleva fermarlo, ma non voleva fargli del male. Mauro, invece, ha deciso di agire da solo. Ha portato a Giuseppe un bicchiere con un prodotto pericoloso. Per questo Giuseppe si è sentito male e la sua bocca è diventata blu. Il colpevole è Mauro.

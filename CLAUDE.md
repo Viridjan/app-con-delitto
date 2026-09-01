@@ -80,10 +80,17 @@ screen is just *Fine · Ricomincia*. Do not restore any of it from the PDF. The 
 for Codex in `img/ART.md`; the four clue objects and their table survive because they were never
 part of the txt.
 
-**No bottom bar.** The `← Indietro / Avanti →` footer was removed on 28 August 2026: the screen
-itself is the remote. A click on the stage advances, a click inside its leftmost 10% goes back,
-and the keyboard keeps `spazio` / `→` / `←`. `#app` is a single-row grid now — do not put the
-bar back. A click that lands on `[data-clue|chiedi|indagine|opt|go]`, or anywhere inside an open
+**The story only goes forward.** The `← Indietro / Avanti →` footer went on 28 August 2026 — the
+screen itself is the remote — and on 31 August 2026 going back went with it: no `indietro()`, no
+left-edge click, no `←`, no stepping back through a scene's lines. A line revealed stays
+revealed, and nobody watching ever sees the story rewind. `vai(n)` therefore always starts a
+screen at its beginning — `step 0` everywhere, and `step 1` on a scene, because from
+1 September 2026 a scene opens with its **first line already revealed** and its voice already
+spoken: opening on an empty column cost the narrator a gesture to make someone already on stage
+say the first word. `#app` is a single-row grid — do not put the bar or the backwards path
+back. The cost is real and deliberate: a narrator who overshoots cannot step back, and on the
+public site the only remedy is reloading. Where the author works, the developer panel's `↑`
+still pages freely — that is not the performance. A click that lands on `[data-clue|chiedi|indagine|opt|go]`, or anywhere inside an open
 `.detail`, does its own job and never advances; staging mode (`r`) suppresses the advance too, so
 a drag is not a click. Any new interactive element needs its `data-` attribute in that list, or
 touching it will also turn the page.
@@ -142,6 +149,25 @@ Normalised on 29 August 2026; keep it this way rather than adding a fourth way t
   background's `alt` (it announced "Scena 12" on the screen titled *Scena 4 · terza parte*) and
   into `demo()`, which filled slots named `scena7.png` that nothing draws.
 
+- **Six things live outside `#stage`**, and they are the ones that need care: `#k-muto` and
+  `#overlay` from the static markup, and `.avanza`, `.regia-pan`, `.dev-pan` appended to
+  `document.body` at runtime. `render()` wipes the stage with `stage.innerHTML = …`, so anything
+  inside it is born and dies for free; anything outside survives, must be removed by hand, and is
+  invisible to `slots()` — which walks `stage.querySelectorAll(".slot img")` — so an image put
+  there would never get its typographic fallback.
+- **A panel's look is `.pannello`, its identity is `.regia-pan` or `.dev-pan`.** They were the
+  same class until 31 August 2026, and `render()`'s `querySelector(".regia-pan")?.remove()` was
+  quietly deleting the *developer* panel on every render; `pannelloDev()` rebuilt it immediately,
+  so nothing looked wrong while an eighteen-row list was thrown away and redrawn each time. Never
+  let a class carry both a look and an identity.
+- **Two shapes for a button, and only two.** Drawn inside `#stage`: carry a `data-*` and let the
+  stage's delegated handler act, because the stage's markup is rewritten on every render and a
+  listener bolted to the element would die with it. Living outside `#stage` — the advance pill,
+  the staging and developer panels, `?` and mute: carry your own `onclick`, because you survive
+  the render and the stage's handler cannot see you. Container-level delegation stays for the two
+  containers whose content is replaced (`#stage`, `#overlay`). `addEventListener("click", …)` on
+  a single element is no longer used anywhere; `smoke.js` checks both directions of the stage
+  contract — a `data-*` drawn but unlistened, and one listened but never drawn.
 - **One DOM stub, not three.** `stub-dom.js` exports `apri(coda, loc)`: it reads the `<script>`
   blocks out of the HTML, runs them in a fake context and hands back what `coda` names plus the
   stage. `smoke.js`, `dom.js` and `estrai-copione.js` all use it. There were three hand-copied
@@ -167,9 +193,10 @@ percentages plus a gap overflow and produce a horizontal scrollbar.
 
 The dialogue column carries across the parts of one scene. Screens that share the same `n` are
 one conversation: `vScene` walks backwards while `NUM()` matches and appends each earlier part's
-lines in full, joined by `<hr class="atto">`. Entering a new part therefore opens with the rule
-at the top and nothing lit — `.bubble:first-child` matches no bubble while the current group is
-empty, which is what leaves the whole backlog dimmed until someone speaks.
+lines in full, joined by `<hr class="atto">`. Entering a new part opens with the rule at the top
+and the part's **first line already lit**, the backlog dimmed below it — the same everywhere,
+since `vai()` reveals it. Only a scene with no lines at all opens with nothing lit, and there
+`.bubble:first-child` matches no bubble because the current group is empty.
 
 Consecutive lines by the same speaker share one bubble — `raggruppa()` collapses the run and
 `bolla()` renders one `<p>` per line inside a single `.said`. A different `m` breaks the run: a
@@ -187,6 +214,27 @@ next to the others; the field and the `--formato` variable were removed on 28 Au
 `.palco` is `aspect-ratio:1` outright. A 16:9 background is cropped left and right by
 `object-fit:cover`, so a wide plate loses its edges — that is the trade, and the answer is to
 re-stage the figures with `r`, never to give one screen its own shape.
+
+**Read the app on a phone before shipping.** Audited 31 August 2026 at 390px, both themes, with
+an in-page script that reads computed size, colour and box for every element carrying text. What
+it found and what was done:
+
+- **The light palette failed AA and the dark one passed.** `--muted` sat at 4.29:1 and `--gold`
+  at 3.49:1 on the cream ground — and light is what anyone with a light OS sees by default. Only
+  those two moved, and only in the light block: `#6B7359 → #676F55`, `#A9741A → #966107`. Olive
+  (4.61), teal (4.60), plum (5.22) and blue (7.06) already passed and were left alone.
+- **Every button was 33px tall and the mute pill 35px**, under the 44px touch minimum. Fixed
+  under `@media (pointer:coarse),(max-width:700px)` — the width clause is there because
+  `pointer:coarse` cannot be exercised in headless while a narrow window can. The projector look
+  is untouched.
+- The fixed advance button covered the last line on a phone; the same query pads `.dialoghi` and
+  `.sheet` to clear it, and lifts `.eyebrow` off 12.8px.
+- No horizontal overflow on any of the eight screens, in either theme.
+
+A caveat about the measuring: headless Chromium clamps its window to 500px wide for scripts, so
+the audit runs the app inside a 390px `<iframe>` and reads the result out of the frame. Do not
+trust an `innerWidth` below 500 from `--dump-dom`. And the contrast figures ignore `opacity`, so
+dimmed or disabled elements read worse than they are — WCAG exempts them.
 
 **Never size the stage in `vh`.** The rows are declared (`54% / 46%`) and the stage takes the
 height left under the title, so it is the largest square that fits. Sized in `vh` it grew past
@@ -217,12 +265,45 @@ that edit:
   Augusto and Roberto hand the explanation back and forth, and "Adoro l'Olo" became "Adoro
   l'Olio". Its "Indizi di gioco" block was dropped with it — that scene now has `indizi:{}` and
   `i` does nothing there.
+- **The quiz is ours from 30 August 2026.** Gervasio's four questions had every right answer in
+  slot A and distractors nobody would pick (*I Marinai*, *I Musicisti*). Six now, and every one
+  offers **the four suspects** — `SOSPETTI`, in that order — so a question has no `opzioni` of
+  its own, only `giusta`. You pick a person, not a phrase, and no option can be ruled out on
+  sight. Half of them need two moments joined rather than one line recalled: who asked for the
+  bottle to be put away, who read the note without telling Giuseppe. `smoke.js` scores from
+  `giusta` rather than letters, fails if a question grows its own `opzioni`, and fails if the
+  right answer sits in fewer than three distinct columns.
+- **One page, six questions**, 31 August 2026. The quiz was six slides; now it is one, and
+  `domandaCorrente()` — the first unanswered index — is the whole state machine. A closed
+  question collapses to a line with the name chosen and nothing else — **no points, no right or
+  wrong**: the verdict lands once, at the end, and until then the sheet only records who was
+  accused. The next question opens beneath it. Only the open question renders options, which is why the
+  click handler can write `state.risposte[domandaCorrente()]` without the buttons carrying an
+  index. `Scopri la soluzione →` appears only when nothing is left open. Each option carries the
+  suspect's face (`volto-<nome>.png`, four of them, delivered 31 August 2026) under the name, so
+  the sheet reads as a line-up; the card is a `.slot`, so a missing face falls back to the
+  monogram like every other image.
+- **Ten points, five verdicts**, 31 August 2026. `punti` weights the questions — 2, 1, 1, 2, 1
+  and **3 for the culprit** — and `verdetto(punti, preso)` reads two things: whether the name is
+  right, and how much of the reconstruction stands. The bands leave no gap, because without the
+  culprit's three points nothing above seven is reachable: 10 / 6-9 / ≤5 with the name right,
+  6-7 / ≤5 without it. `smoke.js` builds one answer set per band, checks it really scores what it
+  claims, and then that its verdict appears.
 - **The audience is one person**, 30 August 2026: the app addresses a single player, not a
   table. Three of Gervasio's lines moved from plural to singular — «Gli indizi sono tutti davanti
-  a **te**», «Ora tocca a **te** risolvere il caso!», «**Hai** risolto il mistero!» — along with
+  a **te**», «Ora tocca a **te** risolvere il caso!», «**Hai** risolto il mistero!» (that last one
+  cut altogether on 1 September 2026: the verdict screen before it has already said how it went,
+  so congratulating on the way into the solution said it twice) — along with
   every string of the app's own. Giuseppe's «Alla vostra comunità» stays plural: he is speaking
   to Roberto and Augusto, not to whoever is playing. That is the test for any future line — who
   is being addressed, a character or the room.
+- **The narrator's recap is ours now**, 31 August 2026. Gervasio's five lines listed the clues —
+  «Mauro ha portato il bicchiere», «Nel bicchiere c'era un prodotto pericoloso» — which handed
+  over the culprit and the poison one screen before the sheet asks for them. Three lines replace
+  them: the evening summed up, no clue named, no name accused. His «Ora tocca a te risolvere il
+  caso!» became «**Aiutami** a risolvere il caso!» — the investigator asks for help rather than
+  handing over the job, which is also why he stands there looking stuck. Same rule as the confirmation dialog — **the investigator recaps,
+  he never lists**.
 - **1 more PDF line cut**, 29 August 2026: Mauro's «La pace non basta, se dietro si nasconde il
   peccato…» — scene 1's second part now opens on him picking the note off the floor.
 - **2 PDF lines cut** from *La tensione*, 28 August 2026: Rosalia's "Ma zio Giuseppe… e la tua
@@ -276,14 +357,66 @@ what that person had already said in the scenes (`o.refs`), which is what keeps 
 gives the narrator the link. What was not asked stays unread — that is the point, so never add a
 way to peek.
 
+**A click reveals; a button turns the page.** From 31 August 2026 the two are separate verbs:
+`scopri()` does what can be done inside the current **scene** — the next line, the next character
+card, and the step from one part of a scene to the next, because parts are a cut of staging and
+not a new chapter. It returns false only when the next move leaves the scene; that is the
+button's job, and nothing else calls `avanti()`. The button sits in the flow, right-aligned: **above the newest line** on a
+scene, at the head of the dialogue column, because that is where the narrator is already looking
+and the column scrolls back there on every line; and at the foot of the sheet everywhere else.
+On a scene the button is **outside the scrolling**: `.dialoghi` is a plain flex column, and it is
+`.bubbles` that scrolls, so the scrollbar starts under the button instead of running past it —
+`render()` therefore scrolls `.bubbles` back to the top on each line, not `.dialoghi`.
+The cast page keeps a strip of its own after the last card, ruled off so the button never looks
+like it is resting on a portrait — its cards measure `100dvh` each rather than inheriting a
+height, which is what leaves room for that strip. `render()` puts it there with one line, choosing `.azioni-scena`
+if the view offered one and the `.sheet` otherwise, so no view has to remember. It was a fixed
+corner pill until 1 September 2026; living outside `#stage` meant the stage's click handler could
+not see it, and for one publish it drew itself and did nothing. Now it is ordinary stage markup
+with a `data-avanti`, like every other button in there. On a scene it is **never disabled**, from
+1 September 2026: pressing it reveals the next line exactly as a click does, and changes screen
+only when nothing is left — `avanti()` tries `scopri()` first, so the two verbs still hold and
+the button simply gained the weaker one. It stays **live but harmless** where a screen asks for a
+decision: with a question still open or a clue card open it is disabled, because there a press
+would cost a question or an answer. Its label names the move only where the move is special — `Chiudi
+l'indagine`, `Alla scheda finale`, `Scopri la soluzione` — and is plain `Prosegui` everywhere
+else, including on into the clue table. The opening screens had two labels of their own,
+`Comincia` on the cover and `Inizia` under the cast; both went on 1 September 2026, because
+nothing special happens there either — you turn a page. There is none on the last
+screen.
+
+**Two gestures, two keys each.** Forward is `spazio`, `→` or `↓`; back is `←` or `↑`, and in the
+story back does nothing at all — every one of them goes through `scopri()`, never `avanti()`, so
+the button stays the only way to change screen. The arrows carry two author meanings that come
+first: in staging they nudge the selected figure, and with the developer panel open the verticals
+page through the screens.
+
+On the cast page one press past the last card scrolls to the closing strip rather than stopping
+dead, so the button is reached the same way as everything else. That page is also the one place
+where back does something: `←` / `↑` call `scorriScheda(-1)` and page back through the portraits.
+Leafing through a cast list is not rewinding the story — nothing is revealed there, so nothing is
+taken back. From the closing strip the step back lands on the **last card**: `scorriScheda()`
+reads `inFondo()` first, because the strip is shorter than a full screen and rounding
+`scrollTop / clientHeight` skipped a card. Scrolling there by finger never
+re-renders, so a `scroll` listener flips the button's `disabled` on its own — it touches only the
+state, never the markup, which `pulsanteAvanti()` owns.
+
 **A screen that asks for a choice cannot be left by clicking.** Everywhere else the stage is the
 remote, but on the clue table a stray tap would end the investigation with a question unspent,
 and on a quiz card it would skip the question. `SENZA_CLIC` names those two screen types and the
-click handler returns early for them; the only way on is a `data-avanti` button — `Chiudi
-l'indagine →`, and on the quiz a label that follows the state (`Avanti →`, `Prossima domanda →`,
-`Scopri la soluzione →`). The keyboard still works everywhere — `spazio`, `→`, `←` — because that
-is the narrator's deliberate hand, not a misplaced finger. Add a screen that asks for a decision
-and its type belongs in that set.
+click handler returns early for them, so not even a line-reveal fires there. Add a screen that
+asks for a decision and its type belongs in that set.
+
+With the developer panel open the verticals page through the screens, and the lit row scrolls
+itself into view.
+
+**Closing the investigation early asks first.** While `indagineCompleta()` is false — both
+objects chosen and every one of them questioned to the limit — `Chiudi l'indagine` opens a
+confirmation instead of moving on. The wording is the investigator's, not the rulebook's: it
+recaps the evening and asks whether you have enough, and it **never mentions the clues** or how
+many questions are left, because that would be coaching. `Torna indietro` takes the focus; going
+on has to be wanted. `mostraOverlay()` now fills the one overlay for both the commands window and
+the confirmation.
 
 `apriIndizio(i)` is the single door: the click handler and the `1`–`4` keys both go through it,
 or the keys would spend nothing and open everything. `smoke.js` opens all four and asserts only
@@ -291,18 +424,47 @@ two took, and that a questioned character's lines appear while the others' do no
 
 ## The running order, 29 August 2026
 
-Four scenes, twelve scene screens, twenty-two in all:
+Four scenes, twelve scene screens, twenty in all:
 
 ```
-copertina · personaggi
+copertina · avviso · personaggi
 1  L'inaugurazione degli Oliviani   sala + il biglietto + sala
 2  La donazione                     il foglio + sala + Il racconto dell'olio + La tensione
 3  Il brindisi                      sala + Il malore dell'oliva blu
 4  Gli indizi sul tavolo            la bottiglietta + il bicchiere + sala
-tavolo degli indizi · narratore · quiz 1-4 · soluzione · fine
+tavolo degli indizi · narratore · scheda finale · verdetto · soluzione e congedo
 ```
 
-Twenty-two screens, twelve of them scenes. Scene 1's third part exists for one reason: without it
+Twenty screens, twelve of them scenes. Codex delivered five meeple-detective poses on
+31 August 2026; `detective-riflessione` stands **above** the narrator's recap, the pose where he
+holds his chin while the case is handed over. He was beside it past 62rem until 1 September 2026,
+which fitted six large lines but left the button hanging at mid height, far from the text it
+follows; the column puts figure, text and button in that order at every width, and he is capped
+at 38vh so the last line stays above the fold — doubling him on request had already pushed it
+under. `detective-osservazione`, lens in hand, opens the clue table beside its title. `detective-presentazione` carries the **avviso**, the screen added on
+1 September 2026 between the cover and the cast: the disclaimer used to sit under the cover
+image, where nobody read it, and now it has a page of its own with the investigator above it —
+the same `.narr-fine` column as the recap, plus an `.avviso` class carrying its two differences:
+a service body instead of a narrated one, and text ranged left, because a paragraph of six lines
+centred reads as a poem. The text itself is untouched, so `copione.txt` does not move: it comes
+from `STORY.disclaimer` either way. `detective-scoperta`, finger raised, carries the **last
+screen**. All five are hooked from 1 September 2026; `sync-assets.py` now reports only
+`attore-augusto-spiegazione` and `quadro-oliva` as unused.
+
+The ending is two screens again from 1 September 2026: **`sol` is the verdict alone** — the score
+out of ten and the band it falls in — and **`fine`** is the investigator, `STORY.soluzione` read
+out, and the word *Fine*. Both are columns: figure, then text, then button. On the verdict the
+**pose is half the verdict**, and `POSA_VERDETTO()` picks it before a word is read —
+`detective-soluzione` for the full ten, `detective-osservazione` when the name is right and the
+reconstruction stands (6-9), `detective-riflessione` for everything else, the blank sheet
+included. `smoke.js` checks all five bands map to the pose they claim. The eyebrow reading *Il
+verdetto* went with the redesign: the screen says ten out of ten, which needs no label. They had been merged on 31 August, but reading how it went beside your
+own mark made the story look like a marked exercise; the button between them says `Vedi la
+soluzione`, so finding out is a choice. Landing on the verdict without having answered is only
+reachable by jumping with the developer panel, and the page says so rather than coming up blank.
+There is no *Ricomincia* any more either — a second
+performance means reloading the page, which is also the only thing that resets the investigation
+and the answers. Scene 1's third part exists for one reason: without it
 the biglietto plate and the foglio plate sat back to back, and two clue plates in a row read as
 one screen that changed picture.
 
