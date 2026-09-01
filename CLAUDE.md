@@ -448,8 +448,11 @@ the same `.narr-fine` column as the recap, plus an `.avviso` class carrying its 
 a service body instead of a narrated one, and text ranged left, because a paragraph of six lines
 centred reads as a poem. The text itself is untouched, so `copione.txt` does not move: it comes
 from `STORY.disclaimer` either way. `detective-scoperta`, finger raised, carries the **last
-screen**. All five are hooked from 1 September 2026; `sync-assets.py` now reports only
-`attore-augusto-spiegazione` and `quadro-oliva` as unused.
+screen**. All five are hooked from 1 September 2026, and `sync-assets.py` reports
+nothing unused: the two that were left over — `attore-augusto-spiegazione`, a good pose nobody
+ever put in `POSE_SCENA`, and `quadro-oliva`, the still the animated cover replaced — went to
+`bocciate/` the same day. They are on disk, out of git: bring the pose back if scene 2 ever wants
+it.
 
 The ending is two screens again from 1 September 2026: **`sol` is the verdict alone** — the score
 out of ten and the band it falls in — and **`fine`** is the investigator, `STORY.soluzione` read
