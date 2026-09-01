@@ -23,8 +23,21 @@
   --plum:#96496D; --teal:#3F7565;
   --shadow:0 1px 2px rgba(35,40,26,.06),0 8px 28px rgba(35,40,26,.08);
   /* i tre caratteri, scritti una volta sola: titoli, testo, dati */
-  /* il corpo unico della sezione indizi: da telefono lo rialza la query */
-  --indizi:clamp(1rem,1.7vw,1.375rem);
+  /* I sei gradini della scala tipografica. Prima ogni regola decideva un
+     corpo per conto suo: tredici misure sullo schermo, quattro delle quali
+     stavano dentro due pixel l'una dall'altra. Da telefono la query rialza
+     i gradini, non i selettori. */
+  --t-titolo:clamp(2.6rem,8vw,5.5rem);      /* copertina · Fine */
+  /* stesso motivo: sotto gli 800px la cifra scendeva sotto il nome */
+  --t-cifra:clamp(2.375rem,5vw,3.375rem);   /* punteggio · numero di scena */
+  --t-nome:clamp(1.6rem,6.5vw,2.375rem);    /* nomi dei personaggi · domande */
+  /* il minimo e' il corpo, non meno: sotto i 1240px il termine fluido scendeva
+     a 19.8 e la voce finiva sotto la battuta — i gradini si incrociavano */
+  --t-voce:clamp(1.375rem,2.2vw,1.7rem);    /* investigatore · titoli di scena */
+  --t-corpo:clamp(18px,2.6vw + .55rem,22px);/* battute · indizi · pulsanti */
+  --t-etichetta:.875rem;                    /* occhielli */
+  /* la sezione indizi ha il corpo comune; da telefono la query lo rialza */
+  --indizi:var(--t-corpo);
   --serif:"Bodoni Moda","Didot","Times New Roman",serif;
   --sans:"Alegreya Sans","Segoe UI",system-ui,sans-serif;
   --mono:ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
@@ -53,7 +66,7 @@
 body{
   margin:0; background:var(--bg); color:var(--ink);
   font-family:var(--sans);
-  font-size:clamp(18px,2.6vw + .55rem,22px); line-height:1.5;
+  font-size:var(--t-corpo); line-height:1.5;
   -webkit-font-smoothing:antialiased;
 }
 h1,h2,h3{font-family:var(--serif); font-weight:600; text-wrap:balance; margin:0}
@@ -69,9 +82,9 @@ button{font:inherit; color:inherit; background:none; border:none; cursor:pointer
   border-radius:50%; background:color-mix(in srgb,var(--surface) 82%,transparent);
   backdrop-filter:blur(6px); opacity:.55; transition:opacity .2s, border-color .2s}
 .aiuto:hover,.aiuto:focus-visible{opacity:1}
-.aiuto.muto{font-size:1.17rem}
+.aiuto.muto{font-size:var(--t-corpo)}
 .spacer{flex:1}
-.btn{border:1px solid var(--line); border-radius:999px; padding:.44rem 1.17rem; font-size:1.17rem;
+.btn{border:1px solid var(--line); border-radius:999px; padding:.44rem 1.17rem; font-size:var(--t-corpo);
   background:var(--surface-2); transition:border-color .15s, color .15s}
 .btn:hover{border-color:var(--olive); color:var(--olive)}
 .btn.primaria{background:var(--olive); border-color:var(--olive); color:var(--bg); font-weight:700}
@@ -107,10 +120,10 @@ kbd{font:inherit; font-size:.78em; border:1px solid var(--line); border-bottom-w
 #stage{padding:clamp(1rem,3vh,2.4rem) clamp(1rem,4vw,3rem); display:flex; justify-content:center;
   overflow-y:auto; min-height:0; scrollbar-width:thin}
 .sheet{width:100%; max-width:74rem; margin-block:auto; display:flex; flex-direction:column; gap:clamp(1rem,2.4vh,1.75rem)}
-.eyebrow{font-size:.8rem; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); font-weight:500}
+.eyebrow{font-size:var(--t-etichetta); letter-spacing:.16em; text-transform:uppercase; color:var(--muted); font-weight:500}
 .scene-head{display:flex; align-items:baseline; gap:1rem}
-.scene-no{font-family:var(--serif); font-size:clamp(1.8rem,3.4vw,2.6rem); line-height:1; color:var(--gold)}
-.scene-title{font-size:clamp(1.25rem,2vw,1.8rem)}
+.scene-no{font-family:var(--serif); font-size:var(--t-cifra); line-height:1; color:var(--gold)}
+.scene-title{font-size:var(--t-voce)}
 
 /* ---- la tavola illustrata, e il suo ripiego ---- */
 .plate{border-style:dashed; padding:clamp(1rem,2.5vw,1.9rem); position:relative}
@@ -148,9 +161,9 @@ kbd{font:inherit; font-size:.78em; border:1px solid var(--line); border-bottom-w
 .plate.scena:not(.empty)::before{display:none}
 .plate::before{content:""; position:absolute; inset:6px; border:1px solid var(--line); border-radius:1px; pointer-events:none; opacity:.6}
 .plate > img{display:block; width:100%; height:auto; border-radius:1px}
-.plate .brief{font-family:var(--mono); font-size:.85em; line-height:1.65; color:var(--muted); margin:0; max-width:70ch; text-align:left}
+.plate .brief{font-family:var(--mono); font-size:var(--t-etichetta); line-height:1.65; color:var(--muted); margin:0; max-width:70ch; text-align:left}
 .plate .brief-label{display:flex; align-items:center; gap:.55rem; margin-bottom:.7rem}
-.plate .brief-label span{font-size:.7rem; letter-spacing:.16em; text-transform:uppercase; color:var(--olive)}
+.plate .brief-label span{font-size:var(--t-etichetta); letter-spacing:.16em; text-transform:uppercase; color:var(--olive)}
 .leaf{width:14px; height:14px; flex:none; color:var(--olive)}
 
 /* ---- schermata di scena: i dialoghi ---- */
@@ -164,9 +177,15 @@ kbd{font:inherit; font-size:.78em; border:1px solid var(--line); border-bottom-w
 /* il passaggio da una parte all'altra della stessa scena: una riga, non un taglio */
 .bubbles hr.atto{width:100%; border:none; border-top:1px solid var(--line); margin:.15rem 0}
 @keyframes rise{from{opacity:0; transform:translateY(-10px)}to{opacity:1; transform:none}}
-.who{flex:none; width:clamp(6rem,11vw,10rem); text-align:right; font-weight:700; font-size:.9em;
+.who{flex:none; width:clamp(6rem,11vw,10rem); text-align:right; font-weight:700; font-size:var(--t-corpo);
   letter-spacing:.01em; color:var(--speaker,var(--muted)); padding-top:.18em}
-.who small{display:block; font-weight:400; font-style:italic; color:var(--muted); letter-spacing:0}
+/* L'inciso era l'unica misura che nasceva dal `small` del browser — 0.75em di
+   0.9em, fuori da ogni scala e, sul telefono, sotto il minimo di tutto il
+   resto. Ora prende esattamente il corpo del nome che sta sopra: a separarli
+   restano il corsivo, il peso e il colore, che e' come si separa tutto il
+   resto qui dentro. */
+.who small{display:block; font-size:1em; font-weight:400; font-style:italic;
+  color:var(--muted); letter-spacing:0}
 .said{flex:1; background:var(--surface); border:1px solid var(--line); border-left:3px solid var(--speaker,var(--line));
   border-radius:2px 10px 10px 2px; padding:.6rem .95rem; box-shadow:var(--shadow)}
 .said p{margin:0}
@@ -209,10 +228,12 @@ kbd{font:inherit; font-size:.78em; border:1px solid var(--line); border-bottom-w
    centrata, e il testo e' poco. */
 .avviso .detto p, .avviso .detto p:last-child,
 .narr-fine .detto p, .narr-fine .detto p:last-child,
-.giudizio p, .solution p{
-  font-size:clamp(1.15rem,2.2vw,1.7rem); line-height:1.5;
+.giudizio h2, .giudizio p, .vuoto, .solution p{
+  font-size:var(--t-voce); line-height:1.5;
   max-width:46ch; margin-inline:auto; text-align:center}
-.narr-fine p:last-child{color:var(--gold); font-family:var(--serif); margin-top:.6rem}
+/* l'ultima riga resta oro, ma nel carattere delle altre: il serif la faceva
+   leggere come un titolo in mezzo a un discorso */
+.narr-fine p:last-child{color:var(--gold); margin-top:.6rem}
 
 /* ---- l'ultima schermata: figura, racconto, congedo ---- */
 .fine-caso{gap:clamp(1rem,3vh,2rem); align-items:center}
@@ -220,11 +241,11 @@ kbd{font:inherit; font-size:.78em; border:1px solid var(--line); border-bottom-w
 
 /* ---- il congedo, in coda alla soluzione ---- */
 .congedo{display:flex; flex-direction:column; align-items:center; gap:1rem; margin-top:1.2rem}
-.congedo .parola{font-family:var(--serif); font-size:clamp(2.4rem,8vw,5rem); line-height:1; color:var(--gold); margin:0}
+.congedo .parola{font-family:var(--serif); font-size:var(--t-titolo); line-height:1; color:var(--gold); margin:0}
 
 /* ---- copertina ---- */
 .cover{text-align:center; display:flex; flex-direction:column; gap:1.1rem; align-items:center; padding:clamp(1rem,5vh,3rem) 0}
-.cover h1{font-size:clamp(2.6rem,8vw,6rem); line-height:.95; font-weight:700}
+.cover h1{font-size:var(--t-titolo); line-height:.95; font-weight:700}
 .cover h1 em{font-style:italic; color:var(--blu)}
 .cover .sub{color:var(--muted); max-width:46ch}
 .rule{width:min(18rem,60%); height:1px; background:var(--line)}
@@ -253,9 +274,9 @@ kbd{font:inherit; font-size:.78em; border:1px solid var(--line); border-bottom-w
 .dissolve .card{opacity:.25; transform:translateY(2.5vh) scale(.97);
   transition:opacity .55s ease, transform .55s cubic-bezier(.2,.7,.3,1)}
 .dissolve .card.in{opacity:1; transform:none}
-.card h3{font-size:clamp(1.6rem,6.5vw,2.4rem); color:var(--speaker,var(--ink)); text-align:center;
+.card h3{font-size:var(--t-nome); color:var(--speaker,var(--ink)); text-align:center;
   padding-inline:1rem}
-.card p{margin:0; color:var(--muted); font-size:clamp(1.05rem,4.4vw,1.25rem); line-height:1.45;
+.card p{margin:0; color:var(--muted); font-size:var(--t-corpo); line-height:1.45;
   text-align:center; max-width:40ch; padding-inline:1.25rem}
 /* i ritratti sono quadrati: la casella li segue, cosi' niente vuoto attorno.
    Sul telefono la limita la larghezza, sul proiettore l'altezza. */
@@ -273,15 +294,14 @@ kbd{font:inherit; font-size:.78em; border:1px solid var(--line); border-bottom-w
 .apertura .nota{margin-top:.4rem}
 .clues{display:grid; gap:1rem; grid-template-columns:repeat(auto-fit,minmax(min(13rem,100%),1fr))}
 .clue{padding:1.1rem 1rem; text-align:left; display:flex; flex-direction:column; gap:.4rem}
-.clue h3{font-size:1.1rem}
 .clue .tag{font-size:.78em; color:var(--muted)}
 .detail{border-color:var(--blu); padding:1.1rem 1.2rem; animation:rise .3s ease-out both}
-.detail h3{color:var(--blu); font-size:1.25rem; margin-bottom:.3rem}
+.detail h3{color:var(--blu); margin-bottom:.3rem}
 .detail .refs{display:flex; flex-direction:column; gap:.55rem; margin-top:.9rem}
 .detail figure .ph{aspect-ratio:1; place-items:center; color:var(--line)}
 .detail figure .ph .leaf{width:38%; height:auto}
 .ref{border-left:3px solid var(--speaker,var(--line)); padding-left:.75rem}
-.ref .src{font-size:.76rem; letter-spacing:.1em; text-transform:uppercase; color:var(--muted)}
+.ref .src{font-size:var(--t-etichetta); letter-spacing:.1em; text-transform:uppercase; color:var(--muted)}
 
 /* una scheda gia' scelta dice a chi si e' chiesto; una fuori portata non si apre */
 .clue .stato{margin-top:.35rem; font-size:.78em; font-weight:700; color:var(--speaker,var(--gold))}
@@ -297,9 +317,9 @@ kbd{font:inherit; font-size:.78em; border:1px solid var(--line); border-bottom-w
 .opt.voce[disabled]{opacity:.35; cursor:not-allowed}
 /* la risposta di un interrogato, e sotto cio' che aveva gia' detto in scena */
 .risposta{border-left:3px solid var(--speaker,var(--line)); padding-left:.75rem}
-.risposta .src{font-size:.76rem; letter-spacing:.1em; text-transform:uppercase; color:var(--speaker,var(--muted)); font-weight:700}
+.risposta .src{ letter-spacing:.1em; text-transform:uppercase; color:var(--speaker,var(--muted)); font-weight:700}
 .risposta p{margin:.1rem 0}
-.gia-detto{margin:.45rem 0 0; padding-left:1.1rem; font-size:.86em; color:var(--muted)}
+.gia-detto{margin:.45rem 0 0; padding-left:1.1rem; color:var(--muted)}
 .gia-detto li{margin:.1rem 0}
 .clue .stato b{font-weight:700; color:var(--speaker,var(--gold))}
 
@@ -323,15 +343,15 @@ kbd{font:inherit; font-size:.78em; border:1px solid var(--line); border-bottom-w
 .domande .fatta .q{margin:0; flex:1 1 18rem; min-width:0}
 .domande .fatta .data{margin:0; font-weight:700; color:var(--speaker,var(--olive)); white-space:nowrap}
 .domande .corrente{animation:rise .32s ease-out both}
-.quiz h2{font-size:clamp(1.5rem,3.4vw,2.6rem); margin:.2rem 0 1.2rem}
+.quiz h2{font-size:var(--t-nome); margin:.2rem 0 1.2rem}
 .opts{display:grid; gap:.9rem; grid-template-columns:repeat(auto-fit,minmax(min(14rem,100%),1fr))}
 .opt{padding:1.1rem 1rem; display:flex; flex-direction:column; gap:.7rem; text-align:left}
 .opt .riga{display:flex; gap:.8rem; align-items:center}
 /* il volto sotto il nome: quattro facce in fila, si sceglie una persona */
 .opt .volto{display:block; width:100%; max-width:9.5rem; margin-inline:auto; height:auto; aspect-ratio:1; object-fit:contain}
 .opt .ph.volto{width:100%; max-width:9.5rem; margin-inline:auto; font-size:3rem; opacity:.45}
-.opt .k{font-family:var(--serif); font-size:1.7rem; color:var(--gold); line-height:1}
-.opt .v{font-size:1.15rem}
+.opt .k{font-family:var(--serif); font-size:var(--t-voce); color:var(--gold); line-height:1}
+.opt .v{font-size:var(--t-corpo)}
 .opt.right{border-color:var(--olive); background:color-mix(in srgb,var(--olive) 14%,var(--surface))}
 .opt.right .k{color:var(--olive)}
 .opt.wrong{border-color:var(--plum); background:color-mix(in srgb,var(--plum) 12%,var(--surface))}
@@ -344,14 +364,20 @@ kbd{font:inherit; font-size:.78em; border:1px solid var(--line); border-bottom-w
    pagina, come tutto quello che ha intorno */
 .solution{max-width:62ch}
 .solution p{margin:.6rem 0}
-.score{font-family:var(--serif); font-size:clamp(2rem,5vw,3.4rem); color:var(--gold); line-height:1}
-.score small{font-size:.4em; color:var(--muted)}
+.score{font-family:var(--serif); font-size:var(--t-cifra); color:var(--gold); line-height:1}
+.score small{font-size:var(--t-corpo); color:var(--muted)}   /* «su 10»: e' testo, non cifra */
 /* il verdetto in colonna: l'investigatore, il punteggio, il giudizio, il
    pulsante. La posa e' gia' meta' del verdetto, quindi sta in cima. */
 .verdetto{gap:clamp(.8rem,2.5vh,1.6rem); align-items:center; text-align:center}
+/* Il verdetto parla con una voce sola: un carattere — quello delle battute —
+   e una misura, quella del punteggio. Erano tre corpi e due caratteri per
+   quattro righe: la cifra in Bodoni oro, il giudizio in Bodoni bianco, la
+   spiegazione in Alegreya. */
+.verdetto .score, .verdetto .score small, .verdetto h2, .verdetto p{
+  font-family:var(--sans); font-size:var(--t-cifra)}
 .verdetto .guida img{max-height:64vh; max-width:min(100%,52rem)}
 .verdetto .azioni{width:100%; justify-content:center}
-.giudizio h2{font-size:clamp(1.2rem,2.4vw,1.7rem)}
+.giudizio h2{font-weight:600}   /* la misura la da' il corpo comune delle quattro schermate */
 .giudizio p{margin:.4rem 0 0; color:var(--muted); max-width:52ch}
 /* si arriva al verdetto senza aver risposto solo saltando col pannello: la
    pagina lo dice invece di restare bianca */
@@ -368,7 +394,7 @@ kbd{font:inherit; font-size:.78em; border:1px solid var(--line); border-bottom-w
 .conferma{max-width:34rem; margin:auto; text-align:center; align-items:center}
 .conferma .nota{margin-inline:auto}
 .conferma .azioni{justify-content:center}
-.conferma h2{font-size:clamp(1.4rem,3vw,2rem)}
+.conferma h2{font-size:var(--t-voce)}
 .conferma .azioni{display:flex; gap:.8rem; flex-wrap:wrap; margin-top:.6rem}
 .keys{display:grid; gap:.5rem; grid-template-columns:repeat(auto-fit,minmax(min(16rem,100%),1fr))}
 .keys div{display:flex; gap:.6rem; align-items:baseline}
@@ -477,31 +503,45 @@ kbd{font:inherit; font-size:.78em; border:1px solid var(--line); border-bottom-w
      la stessa espressione gia' moltiplicata per 1.5, scritta in px perche'
      il rem e' gia' cresciuto e si moltiplicherebbe due volte.
      clamp(18px, 2.6vw + .55rem, 22px) → tutto per uno e mezzo */
-  body{font-size:clamp(27px,3.9vw + 13.2px,33px)}
+  :root{--t-corpo:clamp(27px,3.9vw + 13.2px,33px);
+    /* il titolo di scena stava a 33 come l'occhiello che lo introduce: due
+       misure a un decimo di distanza, cioe' una sola presa due volte */
+    --t-voce:clamp(1.65rem,3vw,2.55rem);
+    /* copertina e punteggio erano 62.4 e 57: un gradino solo, preso il piu'
+       basso, cosi' il titolo di copertina si accorcia invece di allargare
+       il numerone */
+    --t-titolo:2.375rem; --t-cifra:2.375rem;
+    /* i nomi dei personaggi stavano a 38.4 contro i 39.6 dei titoli: un
+       gradino solo, e la descrizione non li sovrasta piu' di tanto */
+    --t-nome:var(--t-voce)}
   .btn{min-height:57px; padding-inline:1.43rem}
   .aiuto{width:57px; height:57px}
   .opt,.clue{min-height:44px}
-  /* le etichette a 12.8px sono al limite del leggibile su un telefono */
-  .eyebrow{font-size:.88rem}
 
   /* Ancora meta' misura, ma solo su quello che era rimasto piccolo: etichette,
      pulsanti, didascalie, descrizioni. I titoli, i numeri e le battute stanno
      gia' sopra i 28px e non si toccano — crescendo anche loro, una battuta
      starebbe su dieci lettere per riga. I valori qui sono quelli di sopra per
      uno e mezzo, poi per uno e due: ×1.8 in tutto. */
-  .eyebrow{font-size:1.38rem}
-  .btn{font-size:2.106rem}
-  .aiuto.muto{font-size:2.106rem}
+  /* l'occhiello non supera la battuta: stesso gradino del corpo */
+  .eyebrow{font-size:var(--t-corpo)}
+  .btn{font-size:2.07rem}
+  .aiuto.muto{font-size:2.07rem}
   /* il nome di chi parla non e' in questo elenco: cresciuto anche lui,
      l'etichetta finiva piu' grande della battuta che etichetta */
-  .card p{font-size:clamp(1.68rem,6.6vw,1.92rem)}
+  /* la descrizione del personaggio legge come le quattro schermate
+     dell'investigatore: stessa misura, un gradino invece di due */
+  .card p{font-size:clamp(2.07rem,4vw,3.06rem)}
   /* le quattro schermate dell'investigatore: stessa misura di tutti i piccoli
      — la desktop per uno e otto — e testo giustificato. Senza sillabazione:
      gli spazi si allargano, e va bene cosi'. */
   .avviso .detto p, .avviso .detto p:last-child,
   .narr-fine .detto p, .narr-fine .detto p:last-child,
-  .giudizio p, .solution p{
+  .giudizio h2, .giudizio p, .vuoto, .solution p{
     font-size:clamp(2.07rem,4vw,3.06rem); text-align:justify}
+  /* il verdetto tiene la sua voce sola anche qui: la riga di sopra gli
+     rimetteva due misure sotto il punteggio */
+  .verdetto .score, .verdetto .score small, .verdetto h2, .verdetto p{font-size:var(--t-cifra)}
   /* la sezione indizi ha un corpo solo: qui e' quello di sopra per uno e otto */
   :root{--indizi:clamp(1.65rem,3vw,2.475rem)}
   .opt .v{font-size:2.07rem}
