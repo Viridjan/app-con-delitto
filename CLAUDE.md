@@ -110,9 +110,10 @@ gives the stage the height the header was using.
 **Author tools stay off the public site.** `PUBBLICO` near `const state` is true on
 `*.github.io`, and `REGIA_OK`, `DEV_OK` and `TITOLI_OK` are all its negation. `r` opens staging;
 `v` opens the developer panel — current screen and line, expected images that are not embedded,
-the screens listed one per row to jump anywhere in one click, and `tutte le battute` to reveal
-the open scene at once. Both work from the local file and from the artifact, and do nothing on
-Pages. Gating the developer panel to `file:` alone was wrong — the artifact is where the user
+and the screens listed one per row to jump anywhere in one click. It had a
+`Tutte le battute` button too, gone on 1 September 2026 with `battuteTutte()`: a scene now opens
+with its first line already revealed, and the rest is one keypress each. Both panels work from
+the local file and from the artifact, and do nothing on Pages. Gating the developer panel to `file:` alone was wrong — the artifact is where the user
 actually works.
 The help overlay lists only the keys that actually work where it is running. `smoke.js` runs the
 app twice, once with `location.hostname` empty and once with `viridjan.github.io`, and fails if a
@@ -383,6 +384,21 @@ not for the number on screen, which is exactly why renumbering a scene costs not
 it does cost: `STORY.oggetti[].refs` carry a hand-written `s:` number, and renumbering left them
 pointing at the wrong scene. `smoke.js` now checks each ref against the scene that actually holds
 that line.
+
+**The investigation section has one text size**, from 1 September 2026, and the names carry
+faces. Both clue screens are marked `.sheet.indagine`, and one rule sets everything inside them —
+`h3`, every `p`, every `li`, `.tag`, `.stato`, `.src`, `.btn.voce` — to `--indizi`, a token so the
+phone query can raise it once instead of listing selectors again. Seven sizes had collected
+there. Two things to know: the rule has to sit **after** the section's own rules, and `.src` and
+`.tag` must be named explicitly, because `.risposta .src` (0,2,0) outranks `.indagine p` (0,1,1)
+and quietly won. The page's `h2` stays larger — it opens the screen, it is not part of the list;
+so does the plain `.btn`, which keeps the button size everyone else has. The faces are `volto-<nome>.png`: on each answer's header
+in a round `1.8em` frame — sized in `em`, so it follows the text — and on the people you can ask,
+which from the same day are **the sheet's own cards**, `.opt.carta.slot` in an `.opts` grid, so
+choosing whom to question looks like naming a suspect. They carry a state the sheet's do not:
+`.opt.voce.fatto` keeps whoever answered lit in their own colour, and the two you can no longer
+question go to `opacity:.35`. No letter before the name — `1`–`4` open clues, not people. Each is a `.slot`, so a missing face
+falls back to the monogram.
 
 ## The investigation has a price
 
