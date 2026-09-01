@@ -357,11 +357,12 @@ kbd{font:inherit; font-size:.78em; border:1px solid var(--line); border-bottom-w
 /* palco: lo sfondo sta sotto, i personaggi ritagliati sopra, chi parla viene avanti */
 /* Il palco e' sempre quadrato: nessuna scena ha un formato suo. */
 /* Il palco resta un quadrato — tutte le posizioni sono percentuali sue — ma
-   la sua fascia alta e' ritagliata via: sopra le figure c'e' solo soffitto.
-   Si taglia la cornice, non l'immagine: niente ingrandimento, niente lati
-   persi, e la regia gia' decisa resta valida al millimetro. */
+   le sue fasce si ritagliano via: sopra le figure c'e' soffitto, sotto il
+   pavimento vuoto. Si taglia la cornice, non l'immagine: niente
+   ingrandimento, niente lati persi, e la regia gia' decisa resta valida al
+   millimetro. */
 .palco{position:relative; height:100%; width:auto; max-width:100%; aspect-ratio:1;
-  clip-path:inset(15% 0 0 0);
+  clip-path:inset(10% 0 10% 0);
   overflow:hidden; border:1px solid var(--line); border-radius:2px; box-shadow:var(--shadow)}
 .palco .sfondo{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; border-radius:1px}
 .palco .attore{position:absolute; width:auto; transform:translateX(-50%); transform-origin:bottom center;
@@ -393,7 +394,7 @@ kbd{font:inherit; font-size:.78em; border:1px solid var(--line); border-bottom-w
 /* ---- modalita' regia: si trascina, si ridimensiona, si copia il risultato ---- */
 .palco.regia .attore,.palco.regia .primo{pointer-events:auto; cursor:grab; touch-action:none}
 .palco.regia .sel{outline:2px dashed var(--gold); outline-offset:3px}
-.palco.regia::after{content:"REGIA"; position:absolute; top:calc(15% + .4rem); left:.5rem; z-index:9;
+.palco.regia::after{content:"REGIA"; position:absolute; top:calc(10% + .4rem); left:.5rem; z-index:9;
   font-size:.62rem; letter-spacing:.18em; color:var(--gold);
   background:color-mix(in srgb,var(--bg) 75%,transparent); padding:.15rem .45rem; border-radius:2px}
 /* La cassa comune ai due pannelli d'autore. L'identita' e' `.regia-pan` o

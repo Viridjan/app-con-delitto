@@ -209,14 +209,15 @@ opacity to 1 and would cancel the dimming of the rest.
 Highlighting the speaker must **not** change the stacking order: no `z-index` on `.attivo`. The
 depth is what the staging decided — including any explicit `z` in `cast` / `primo`.
 
-**The stage's top 15% is clipped away**, from 1 September 2026. The band above the figures is
-ceiling, and cutting it was tried twice: first by drawing the *background* taller and pushing it
-up, which zoomed the picture, ate the sides and was rejected on sight — it is the **frame** that
-shrinks, not the image. `.palco` keeps `aspect-ratio:1` and every coordinate keeps its meaning;
-`clip-path:inset(15% 0 0 0)` simply hides the top. No zoom, no lost sides, and the staging that
-was already decided stays valid to the millimetre. The cost is a blank strip at the top of the
-stage's half — the picture sits lower, nearer the dialogue. The staging badge moved down by the
-same 15%, or the clip would have swallowed it.
+**The stage is clipped 10% top and bottom**, from 1 September 2026: ceiling above the figures,
+empty floor below. Cutting it was tried three ways: first by drawing the *background* taller and
+pushing it up, which zoomed the picture, ate the sides and was rejected on sight — it is the
+**frame** that shrinks, not the image; then 15% off the top alone; then both bands at 10%.
+`.palco` keeps `aspect-ratio:1` and every coordinate keeps its meaning; `clip-path:inset(10% 0
+10% 0)` simply hides the two bands. No zoom, no lost sides, and the staging that was already
+decided stays valid to the millimetre. What the bottom band costs is real: a figure standing at
+`b:0` loses its feet, and so do the foreground tables, which are anchored to the bottom corners.
+The staging badge moved down 10%, or the clip would have swallowed it.
 
 **Every stage is square.** Scene 2's three parts carried `formato:"16 / 9"` and read as a strip
 next to the others; the field and the `--formato` variable were removed on 28 August 2026 and
