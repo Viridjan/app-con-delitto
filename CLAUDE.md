@@ -223,6 +223,15 @@ it found and what was done:
   at 3.49:1 on the cream ground — and light is what anyone with a light OS sees by default. Only
   those two moved, and only in the light block: `#6B7359 → #676F55`, `#A9741A → #966107`. Olive
   (4.61), teal (4.60), plum (5.22) and blue (7.06) already passed and were left alone.
+- **All text is 150% on a phone**, from 1 September 2026: the app is read at arm's length there,
+  not across a room. One rule does it — `:root{font-size:150%}` inside that same query — because
+  almost every size is in rem, and inside a `clamp()` on a narrow screen it is nearly always the
+  rem minimum that wins. The one exception is `body`'s own `clamp(18px, 2.6vw + .55rem, 22px)`,
+  whose ends are in px: the query restates it already multiplied, **in px**, since the root has
+  already grown and rem would compound. Every string measured at 390px comes out at ×1.50, the
+  smallest at 21px, with no horizontal overflow on any screen and no touch target under 44px.
+  Where the author works this shrinks the stage a little — the scene title now wraps to two lines
+  and the square takes what is left — but on Pages the titles are gated off anyway.
 - **Every button was 33px tall and the mute pill 35px**, under the 44px touch minimum. Fixed
   under `@media (pointer:coarse),(max-width:700px)` — the width clause is there because
   `pointer:coarse` cannot be exercised in headless while a narrow window can. The projector look

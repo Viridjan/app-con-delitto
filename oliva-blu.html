@@ -429,6 +429,16 @@ kbd{font:inherit; font-size:.78em; border:1px solid var(--line); border-bottom-w
    Anche la larghezza fa da spia, perche' `pointer:coarse` non si puo' provare
    in headless mentre una finestra stretta si'. */
 @media (pointer:coarse),(max-width:700px){
+  /* Su un telefono si legge a un braccio di distanza, non a due metri: tutto
+     il testo cresce di una volta e mezza. Si tocca la radice, non le singole
+     regole, cosi' cresce anche quello che e' scritto in rem dentro un clamp —
+     su schermo stretto e' quasi sempre il minimo in rem a vincere. */
+  :root{font-size:150%}
+  /* la misura del corpo ha estremi in px, che la radice non tocca: qui c'e'
+     la stessa espressione gia' moltiplicata per 1.5, scritta in px perche'
+     il rem e' gia' cresciuto e si moltiplicherebbe due volte.
+     clamp(18px, 2.6vw + .55rem, 22px) → tutto per uno e mezzo */
+  body{font-size:clamp(27px,3.9vw + 13.2px,33px)}
   .btn{min-height:44px; padding-inline:1.1rem}
   .aiuto{width:44px; height:44px}
   .opt,.clue{min-height:44px}
