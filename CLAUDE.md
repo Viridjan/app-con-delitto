@@ -18,6 +18,8 @@ A narrator drives it live in front of a table of players.
 node smoke.js              # il controllo: schermate, quiz, copione, indagine, cancelli, voci
 node dom.js prima.txt      # fotografia del markup di ogni schermata (per i riordini)
 node estrai-copione.js     # riscrive copione.txt da STORY — dopo ogni modifica al testo
+# censimento.js: iniettato nella pagina, dice quante misure di testo arrivano
+# davvero sullo schermo e quali testi non hanno una regola loro. Devono restare sei.
 python3 sync-assets.py     # aggancia le consegne di Codex e ricostruisce la mappa ASSETS
 ```
 
@@ -135,6 +137,27 @@ Normalised on 29 August 2026; keep it this way rather than adding a fourth way t
 
 - **Type is tokenised** like colour: `--serif`, `--sans`, `--mono` on `:root`. Nine literal font
   stacks in three different spellings were collapsed into these. Never write a family list again.
+- **Size is tokenised too**, from 2 September 2026, and there are **six steps**, no more:
+  `--t-titolo` (cover, *Fine*), `--t-cifra` (score, scene numeral), `--t-nome` (character names,
+  the sheet's questions), `--t-voce` (the investigator's four screens, scene titles),
+  `--t-corpo` (dialogue, the clue section, buttons, the speaker's name) and `--t-etichetta`
+  (eyebrows). Thirteen sizes reached the screen before, and four of them sat within 2.2px of each
+  other — 22, 21.8, 20, 19.8 — four independent decisions nobody could tell apart. A new rule
+  takes a step; it does not invent a seventh. `node`-less check: inject `censimento.js`, walk all
+  twenty screens, group every text-bearing element by computed size. Two crossings were found
+  that way and fixed by raising a floor, never by adding a step: `--t-voce`'s fluid term dropped
+  below `--t-corpo` under 1240px (the investigator spoke smaller than the dialogue), and
+  `--t-cifra` dropped below `--t-nome` under 800px. Both now clamp at the step above. As the
+  window narrows the steps **merge** — 6 at 1280, 5 at 900, 4 at 750 — which is fine; they must
+  never swap. The phone query overrides the tokens, not the selectors, but still carries its own
+  per-selector exceptions from the days it was tuned by hand, and at 390px, after five merges asked for
+  one by one on 2 September 2026, the count is **four**: 57 (cover, *Fine*, score, scene
+  numeral), 49.7 (buttons, the investigator's four screens, character descriptions), 39.6 (scene
+  titles, character names, the whole clue section) and 28.4 (dialogue, the speaker's name,
+  eyebrows, the sheet's closed rows). Each merge took one of the two existing values, never a new
+  one — the lower where a display size would have grown, the higher where reading text would have
+  shrunk. One inversion survives and is known: a character's description (49.7) is larger than
+  the name above it (39.6). Raising `--t-nome` in the query is the fix if it is ever wanted.
 - **Four reusable classes** carry the shapes that repeat, declared under `/* ---- ricette ---- */`
   right after the chrome: `.carta` (surface, hairline, radius, shadow), `.sollevabile` (the
   hover lift, `:not([disabled])`), `.centrata` (full-height centred column), `.ph-cifra` (the
@@ -199,6 +222,13 @@ and the part's **first line already lit**, the backlog dimmed below it — the s
 since `vai()` reveals it. Only a scene with no lines at all opens with nothing lit, and there
 `.bubble:first-child` matches no bubble because the current group is empty.
 
+The inciso under a speaker's name — *piano*, *tra sé* — is the same size as the name, from
+2 September 2026. `.who small` styled it italic and grey but never sized it, so it fell to the
+browser's own `small`: 0.75em of 0.9em, the only measure in the app nobody had chosen, and on a
+phone the smallest text anywhere. Italic, weight and colour separate it now; the size does not.
+A census across all twenty screens counts the sizes that reach the screen — 13 at 1280, 14 at
+390 — and every one of them is now a decision.
+
 Consecutive lines by the same speaker share one bubble — `raggruppa()` collapses the run and
 `bolla()` renders one `<p>` per line inside a single `.said`. A different `m` breaks the run: a
 line said out loud and one said "tra sé" are two moments, not one speech.
@@ -227,7 +257,10 @@ next to the others; the field and the `--formato` variable were removed on 28 Au
 re-stage the figures with `r`, never to give one screen its own shape.
 
 **The four detective screens share one body size.** Avviso, recap, verdict, ending: from
-1 September 2026 one rule sets the text on all four — `clamp(1.15rem,2.2vw,1.7rem)`, centred on a
+1 September 2026 one rule sets the text on all four — on the verdict that includes its heading,
+`.giudizio h2`, which kept only its weight; it matched the description at 1280 but not on a
+phone, where it was not in the ×1.8 list and came out 29px against 50. The score itself is left
+out: it is a numeral, not text — `clamp(1.15rem,2.2vw,1.7rem)`, centred on a
 big screen, and in the phone query `clamp(2.07rem,4vw,3.06rem)` with `text-align:justify`. Each
 had had its own before, from the avviso's small service body to the recap's large spoken lines,
 and stepping from one to the next the text jumped. The justified column at that size holds about five
@@ -523,7 +556,12 @@ it.
 
 The ending is two screens again from 1 September 2026: **`sol` is the verdict alone** — the score
 out of ten and the band it falls in — and **`fine`** is the investigator, `STORY.soluzione` read
-out, and the word *Fine*. Both are columns: figure, then text, then button. On the verdict the
+out, and the word *Fine*. Both are columns: figure, then text, then button. The verdict speaks
+with one voice from 2 September 2026 — one family, `--sans`, and one size, `--t-cifra`, for the
+score, its «su 10», the band's name and its explanation. It had three sizes and two families for
+four lines. The score keeps the gold and the weight; it no longer keeps a size of its own. The
+rule has to be repeated inside the phone query, or the four-screens override there puts two
+sizes back under the score. On the verdict the
 **pose is half the verdict**, and `POSA_VERDETTO()` picks it before a word is read —
 `detective-soluzione` for the full ten, `detective-osservazione` when the name is right and the
 reconstruction stands (6-9), `detective-riflessione` for everything else, the blank sheet
