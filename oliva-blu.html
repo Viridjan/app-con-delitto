@@ -62,13 +62,13 @@ button{font:inherit; color:inherit; background:none; border:none; cursor:pointer
 /* ---- chrome ---- */
 /* il muto galleggia sopra la scena: discreto finche' non lo si cerca.
    La finestra dei comandi non ha piu' un tasto suo: si apre col "?". */
-.aiuto{position:fixed; top:.7rem; right:.7rem; z-index:6; width:2.2rem; height:2.2rem; padding:0;
+.aiuto{position:fixed; top:.7rem; right:.7rem; z-index:6; width:2.86rem; height:2.86rem; padding:0;
   border-radius:50%; background:color-mix(in srgb,var(--surface) 82%,transparent);
   backdrop-filter:blur(6px); opacity:.55; transition:opacity .2s, border-color .2s}
 .aiuto:hover,.aiuto:focus-visible{opacity:1}
-.aiuto.muto{font-size:.9rem}
+.aiuto.muto{font-size:1.17rem}
 .spacer{flex:1}
-.btn{border:1px solid var(--line); border-radius:999px; padding:.34rem .9rem; font-size:.9rem;
+.btn{border:1px solid var(--line); border-radius:999px; padding:.44rem 1.17rem; font-size:1.17rem;
   background:var(--surface-2); transition:border-color .15s, color .15s}
 .btn:hover{border-color:var(--olive); color:var(--olive)}
 .btn.primaria{background:var(--olive); border-color:var(--olive); color:var(--bg); font-weight:700}
@@ -429,7 +429,10 @@ kbd{font:inherit; font-size:.78em; border:1px solid var(--line); border-bottom-w
   *,*::before,*::after{animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important}
 }
 @media (max-width:700px){
-  .btn{padding:.3rem .7rem; white-space:nowrap}
+  /* niente `nowrap` qui: a pulsanti cresciuti «Chiudi l'indagine →» e
+     «Scopri la soluzione →» erano piu' larghi di un telefono e uscivano
+     tagliati a sinistra. Vanno a capo dentro la pastiglia. */
+  .btn{padding:.39rem .91rem; max-width:100%}
 }
 /* Col dito servono bersagli da 44px: col mouse no, e il proiettore resta com'e'.
    Anche la larghezza fa da spia, perche' `pointer:coarse` non si puo' provare
@@ -445,8 +448,8 @@ kbd{font:inherit; font-size:.78em; border:1px solid var(--line); border-bottom-w
      il rem e' gia' cresciuto e si moltiplicherebbe due volte.
      clamp(18px, 2.6vw + .55rem, 22px) → tutto per uno e mezzo */
   body{font-size:clamp(27px,3.9vw + 13.2px,33px)}
-  .btn{min-height:44px; padding-inline:1.1rem}
-  .aiuto{width:44px; height:44px}
+  .btn{min-height:57px; padding-inline:1.43rem}
+  .aiuto{width:57px; height:57px}
   .opt,.clue{min-height:44px}
   /* le etichette a 12.8px sono al limite del leggibile su un telefono */
   .eyebrow{font-size:.88rem}
@@ -454,25 +457,23 @@ kbd{font:inherit; font-size:.78em; border:1px solid var(--line); border-bottom-w
   /* Ancora meta' misura, ma solo su quello che era rimasto piccolo: etichette,
      pulsanti, didascalie, descrizioni. I titoli, i numeri e le battute stanno
      gia' sopra i 28px e non si toccano — crescendo anche loro, una battuta
-     starebbe su dieci lettere per riga. Tutti i valori qui sono quelli di
-     sopra per uno e mezzo. */
-  /* l'occhiello si ferma sotto il titolo che introduce: a misura piena
-     usciva piu' grande di lui */
-  .eyebrow{font-size:1.15rem}
-  .btn{font-size:1.35rem}
-  .aiuto.muto{font-size:1.35rem}
-  /* il nome di chi parla resta sotto la sua battuta: cresciuto anche lui,
-     l'etichetta finiva piu' grande di quello che dice */
-  .card p{font-size:clamp(1.4rem,5.5vw,1.6rem)}   /* e la descrizione sotto il nome */
-  .avviso .detto p, .avviso .detto p:last-child{font-size:clamp(1.425rem,2.4vw,1.725rem)}
-  .clue h3{font-size:1.65rem}
-  .clue .tag{font-size:1.17em}
-  .clue .stato{font-size:1.17em}
-  .opt .v{font-size:1.725rem}
-  .ref .src,.risposta .src{font-size:1.14rem}
-  .gia-detto{font-size:1.29em}
-  .plate .brief{font-size:1.275em}
-  .plate .brief-label span{font-size:1.05rem}
+     starebbe su dieci lettere per riga. I valori qui sono quelli di sopra per
+     uno e mezzo, poi per uno e due: ×1.8 in tutto. */
+  .eyebrow{font-size:1.38rem}
+  .btn{font-size:2.106rem}
+  .aiuto.muto{font-size:2.106rem}
+  /* il nome di chi parla non e' in questo elenco: cresciuto anche lui,
+     l'etichetta finiva piu' grande della battuta che etichetta */
+  .card p{font-size:clamp(1.68rem,6.6vw,1.92rem)}
+  .avviso .detto p, .avviso .detto p:last-child{font-size:clamp(1.71rem,2.88vw,2.07rem)}
+  .clue h3{font-size:1.98rem}
+  .clue .tag{font-size:1.404em}
+  .clue .stato{font-size:1.404em}
+  .opt .v{font-size:2.07rem}
+  .ref .src,.risposta .src{font-size:1.368rem}
+  .gia-detto{font-size:1.548em}
+  .plate .brief{font-size:1.53em}
+  .plate .brief-label span{font-size:1.26rem}
 }
 @media (max-width:640px){
   .bubble{flex-direction:column; gap:.2rem}

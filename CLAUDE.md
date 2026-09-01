@@ -242,18 +242,27 @@ it found and what was done:
   smallest at 21px, with no horizontal overflow on any screen and no touch target under 44px.
   Where the author works this shrinks the stage a little — the scene title now wraps to two lines
   and the square takes what is left — but on Pages the titles are gated off anyway.
-- **Then another half on the small text only**, the same day: everything that was still under
-  28px on a phone — labels, buttons, captions, clue titles, the suspects' names on the sheet —
-  is restated in the query at ×1.5 again. What was already 28px or more does not move: titles,
-  the numerals, the questions, and **the dialogue**, which at ×2.25 would have run to ten letters
-  a line. Three exceptions were measured and pulled back rather than shipped: `.who`, the
-  speaker's name, must stay under the line it labels; `.card p` under the name above it; and
-  `.eyebrow` under the heading it introduces. Read the whole rule before adding to it: it is a
-  pile of literal sizes, and each one is the size above it times one and a half.
+- **Then another half, and then a fifth, on the small text only**, the same day: everything that
+  was still under 28px on a phone — labels, buttons, captions, clue titles, the suspects' names
+  on the sheet — is restated in the query at **×1.8** of its desktop size. What was already 28px
+  or more does not move: titles, the numerals, the questions, and **the dialogue**, which at that
+  factor would have run to ten letters a line. `.who` is the one deliberate omission — the
+  speaker's name has to stay under the line it labels. The hierarchy that costs: at ×1.8 the
+  eyebrow (33px) is larger than the heading it introduces (30), a clue card's title (47) larger
+  than the page's (30), a cast description (40) larger than the name above it (38), and every
+  button (39) larger than the dialogue (28). The user has been shown those figures; the fix, if
+  it is ever wanted, is to raise the headings rather than to cap the labels again. Read the whole
+  rule before adding to it: it is a pile of literal sizes, each one the desktop size times 1.8.
 - **Every button was 33px tall and the mute pill 35px**, under the 44px touch minimum. Fixed
   under `@media (pointer:coarse),(max-width:700px)` — the width clause is there because
-  `pointer:coarse` cannot be exercised in headless while a narrow window can. The projector look
-  is untouched.
+  `pointer:coarse` cannot be exercised in headless while a narrow window can.
+- **Then every button grew 30%**, 1 September 2026, and this one is **not** phone-only: `.btn`
+  and `.aiuto` are bigger everywhere, projector included — type, padding and the touch floor,
+  which went from 44px to 57. Growing them broke something that had held until then: `Chiudi
+  l'indagine →` and `Scopri la soluzione →` came out wider than a 390px phone and were clipped on
+  the left, because the narrow query pinned `.btn` to `white-space:nowrap`. That clause is gone;
+  a long label wraps inside the pill instead. Measured at 390px: nothing under 57px, nothing
+  clipped, no horizontal overflow.
 - The fixed advance button covered the last line on a phone; the same query pads `.dialoghi` and
   `.sheet` to clear it, and lifts `.eyebrow` off 12.8px.
 - No horizontal overflow on any of the eight screens, in either theme.
