@@ -266,11 +266,9 @@ kbd{font:inherit; font-size:.78em; border:1px solid var(--line); border-bottom-w
    scheda misura una schermata intera da se', invece di ereditarla. */
 .sheet:has(.cast){height:auto; margin-block:0; gap:0}
 .cast{display:flex; flex-direction:column; gap:0; width:100%}
-/* dopo l'ultima scheda una fascia sua, con una riga che la stacca: il pulsante
-   non deve sembrare appoggiato sul ritratto */
-.sheet:has(.cast) .azioni{justify-content:center;
-  padding:clamp(1.2rem,5vh,3rem) clamp(1rem,4vw,3rem);
-  background:var(--bg); border-top:1px solid var(--line); scroll-snap-align:start}
+/* ogni scheda ha il suo pulsante sotto al testo, sempre acceso: premuto prima
+   dell'ultima porta al personaggio seguente, sull'ultima cambia schermata */
+.card .azioni{justify-content:center; flex:none; padding-top:clamp(.4rem,1.6vh,1rem)}
 .card{flex:none; height:100dvh; gap:clamp(.4rem,1.6vh,1rem); width:100%;
   padding:clamp(.75rem,2.5vh,1.6rem) 0; scroll-snap-align:start; scroll-snap-stop:always}
 .dissolve .card{opacity:.25; transform:translateY(2.5vh) scale(.97);
@@ -528,6 +526,10 @@ kbd{font:inherit; font-size:.78em; border:1px solid var(--line); border-bottom-w
      uno e mezzo, poi per uno e due: ×1.8 in tutto. */
   /* l'occhiello non supera la battuta: stesso gradino del corpo */
   .eyebrow{font-size:var(--t-corpo)}
+  /* col testo grande e il pulsante dentro la scheda, il ritratto restava alto
+     98px: qui la scheda puo' crescere e il ritratto ha una quota sua */
+  .card{height:auto; min-height:100dvh}
+  .card .ritratto{height:40dvh; width:auto; max-width:100%; max-height:none}
   .btn{font-size:2.07rem}
   .aiuto.muto{font-size:2.07rem}
   /* il nome di chi parla non e' in questo elenco: cresciuto anche lui,
@@ -1013,15 +1015,15 @@ function vCover() {
    stava in coda al titolo e nessuno lo leggeva. Stessa impaginazione del
    riepilogo — l'investigatore accanto al testo — ma con il corpo di un testo
    di servizio, non di una battuta narrata. */
-function vAvviso() {
-  return `<div class="sheet narr-fine avviso centrata">
-    <div class="slot guida">
-      ${opt(src("detective-presentazione.png"), "", "L’investigatore si presenta")}
-      <div class="ph ph-cifra">?</div>
-    </div>
-    <div class="detto"><p>${esc(STORY.disclaimer)}</p></div>
+/* Due schermate hanno la stessa forma: la cornice, l'investigatore, e le righe
+   che dice. Cambiano la posa, una classe e quante righe sono. */
+const vDetto = (classe, posa, alt, righe) => `<div class="sheet narr-fine ${classe} centrata">
+    ${guida(posa, alt)}
+    <div class="detto">${righe.map(r => `<p>${esc(r)}</p>`).join("")}</div>
   </div>`;
-}
+
+const vAvviso = () =>
+  vDetto("avviso", "detective-presentazione.png", "L’investigatore si presenta", [STORY.disclaimer]);
 
 function vCast() {
   /* il Narratore non e' un personaggio della storia: sta fuori dai fatti, quindi fuori da qui */
@@ -1033,6 +1035,7 @@ function vCast() {
         <h3>${esc(p.n)}</h3>
         <p>${esc(p.d)}</p>
       </div>
+      ${pulsanteAvanti()}
     </article>`).join("");
   return `<div class="sheet">
     <div class="cast">${c}</div>
@@ -1121,12 +1124,8 @@ function vIndizio(i) {
   const scelta = SOSPETTI.map(c => {
     const fatto = chiesti.includes(c);
     const spento = !fatto && finite;
-    return `<button class="opt carta slot voce ${fatto ? "fatto" : ""} ${spento ? "" : "sollevabile"}"
-      data-chiedi="${esc(c)}" data-c="${esc(c)}" ${spento ? "disabled" : ""}>
-      <span class="riga"><span class="v">${esc(c)}</span></span>
-      ${opt(VOLTO(c), "volto", c)}
-      <span class="ph ph-cifra volto">${esc(c[0])}</span>
-    </button>`;
+    return cartaSospetto(c, { dati: `data-chiedi="${esc(c)}"`, spento,
+      classi: `voce ${fatto ? "fatto" : ""} ${spento ? "" : "sollevabile"}` });
   }).join("");
   /* sotto la risposta, in piccolo, quello che quella persona ha gia' detto in
      scena su questo oggetto: al narratore serve il collegamento */
@@ -1183,10 +1182,7 @@ function vTavolo() {
   const rimasti = restano();
   return `<div class="sheet indagine">
     <div class="apertura">
-      <div class="slot guida">
-        ${opt(src("detective-osservazione.png"), "", "L’investigatore osserva")}
-        <div class="ph ph-cifra">?</div>
-      </div>
+      ${guida("detective-osservazione.png", "L’investigatore osserva")}
       <div>
         <p class="eyebrow">L’indagine</p>
         <h2 class="scene-title">Gli indizi sul tavolo</h2>
@@ -1203,15 +1199,23 @@ function vTavolo() {
 
 /* Il narratore non ha corpo in scena e qui non ha nemmeno etichetta: la sua
    voce riempie lo schermo, e basta. */
-function vNarr() {
-  return `<div class="sheet narr-fine centrata">
-    <div class="slot guida">
-      ${opt(src("detective-riflessione.png"), "", "L’investigatore riflette")}
-      <div class="ph ph-cifra">?</div>
-    </div>
-    <div class="detto">${STORY.narratoreFinale.map(r => `<p>${esc(r)}</p>`).join("")}</div>
-  </div>`;
-}
+const vNarr = () =>
+  vDetto("", "detective-riflessione.png", "L’investigatore riflette", STORY.narratoreFinale);
+
+/* L'investigatore in cima a una schermata: cinque viste disegnavano lo stesso
+   riquadro, immagine piu' ripiego. */
+const guida = (posa, alt) =>
+  `<div class="slot guida">${opt(src(posa), "", alt)}<div class="ph ph-cifra">?</div></div>`;
+
+/* La carta di un sospetto — volto sotto il nome — la usano la scheda finale e
+   le persone a cui chiedere su un indizio: cambiano la lettera davanti, il
+   `data-*` che porta e lo stato, non la carta. */
+const cartaSospetto = (nome, { dati = "", classi = "", lettera = "", spento = false } = {}) =>
+  `<button class="opt carta slot ${classi}" ${dati} data-c="${esc(nome)}"${spento ? " disabled" : ""}>
+      <span class="riga">${lettera ? `<span class="k">${lettera}</span>` : ""}<span class="v">${esc(nome)}</span></span>
+      ${opt(VOLTO(nome), "volto", nome)}
+      <span class="ph ph-cifra volto">${esc(nome[0])}</span>
+    </button>`;
 
 const LETTERA = k => String.fromCharCode(65 + k);
 const VOLTO = c => src(`volto-${c.toLowerCase()}.png`);
@@ -1229,11 +1233,7 @@ function vDomanda(i, corrente) {
       <p class="data" data-c="${esc(SOSPETTI[dato])}">${esc(SOSPETTI[dato])}</p>
     </li>`;
   const opts = SOSPETTI.map((o, k) =>
-    `<button class="opt carta sollevabile slot" data-opt="${k}" data-c="${esc(o)}">
-      <span class="riga"><span class="k">${LETTERA(k)}</span><span class="v">${esc(o)}</span></span>
-      ${opt(VOLTO(o), "volto", o)}
-      <span class="ph ph-cifra volto">${esc(o[0])}</span>
-    </button>`).join("");
+    cartaSospetto(o, { dati: `data-opt="${k}"`, classi: "sollevabile", lettera: LETTERA(k) })).join("");
   return `<li class="corrente">
     <p class="eyebrow">Domanda ${i + 1} di ${STORY.quiz.length}</p>
     <h2>${esc(q.q)}</h2>
@@ -1282,22 +1282,22 @@ function verdetto(punti, preso) {
 /* La posa dice l'esito prima delle parole: in piedi con la soluzione in mano
    se e' tutto giusto, con la lente se il nome e' quello giusto e la
    ricostruzione regge, altrimenti quella di chi ci sta ancora pensando. */
+const punteggio = () =>
+  state.risposte.reduce((n, r, i) => n + (r === STORY.quiz[i].giusta ? STORY.quiz[i].punti : 0), 0);
+const preso = () => state.risposte[COLPEVOLE] === STORY.quiz[COLPEVOLE].giusta;
+
 function POSA_VERDETTO(punti, date) {
-  const preso = state.risposte[COLPEVOLE] === STORY.quiz[COLPEVOLE].giusta;
-  if (date && preso && punti === PUNTI_TOTALI) return "detective-soluzione.png";
-  if (date && preso && punti >= 6) return "detective-osservazione.png";
+  if (date && preso() && punti === PUNTI_TOTALI) return "detective-soluzione.png";
+  if (date && preso() && punti >= 6) return "detective-osservazione.png";
   return "detective-riflessione.png";
 }
 
 function vSol() {
-  const punti = state.risposte.reduce((n, r, i) => n + (r === STORY.quiz[i].giusta ? STORY.quiz[i].punti : 0), 0);
+  const punti = punteggio();
   const date = state.risposte.filter(r => r !== undefined).length;
-  const v = verdetto(punti, state.risposte[COLPEVOLE] === STORY.quiz[COLPEVOLE].giusta);
+  const v = verdetto(punti, preso());
   return `<div class="sheet centrata verdetto">
-    <div class="slot guida">
-      ${opt(src(POSA_VERDETTO(punti, date)), "", "L’investigatore")}
-      <div class="ph ph-cifra">?</div>
-    </div>
+    ${guida(POSA_VERDETTO(punti, date), "L’investigatore")}
     ${date ? `<p class="score">${punti} <small>su ${PUNTI_TOTALI}</small></p>
       <div class="giudizio"><h2>${esc(v.t)}</h2><p>${esc(v.d)}</p></div>`
       : `<p class="vuoto">La scheda è rimasta in bianco: nessuna accusa.</p>`}
@@ -1308,10 +1308,7 @@ function vSol() {
    andata, e la parola Fine. Non porta altrove, quindi non ha pulsante. */
 function vFine() {
   return `<div class="sheet centrata fine-caso">
-    <div class="slot guida">
-      ${opt(src("detective-scoperta.png"), "", "L’investigatore ha risolto il caso")}
-      <div class="ph ph-cifra">?</div>
-    </div>
+    ${guida("detective-scoperta.png", "L’investigatore ha risolto il caso")}
     <div class="solution">${STORY.soluzione.map(r => `<p>${esc(r)}</p>`).join("")}</div>
     <div class="congedo">
       <div class="rule"></div>
@@ -1336,13 +1333,15 @@ function render() {
   const scena = s.t === "scene";
   stage.innerHTML = VISTE[s.t](s);
   /* la scena si porta il posto dove il pulsante deve stare; le altre schermate
-     lo prendono in fondo al foglio */
-  (stage.querySelector(".azioni-scena") || stage.querySelector(".sheet"))
-    ?.insertAdjacentHTML("beforeend", pulsanteAvanti());
+     lo prendono in fondo al foglio. I personaggi ne mettono uno per scheda e
+     se lo disegnano da soli: qui non si aggiunge niente. */
+  if (!stage.querySelector("[data-avanti]"))
+    (stage.querySelector(".azioni-scena") || stage.querySelector(".sheet"))
+      ?.insertAdjacentHTML("beforeend", pulsanteAvanti());
   slots(stage);
 
   if (state.regia && scena) attivaRegia(s.i);
-  else document.querySelector(".regia-pan")?.remove();
+  else panRegia = chiudiPannello(panRegia);
   if (state.sviluppo) pannelloDev();
 
   vista?.disconnect();
@@ -1376,25 +1375,26 @@ function vai(n) {
   render();
 }
 
-/* Sulla pagina dei personaggi "avanti" scorre di una scheda: sul proiettore
-   il salto secco era troppo brusco, e col telecomando non si scorre. */
-const inFondo = () => stage.scrollHeight - stage.scrollTop - stage.clientHeight < 8;
-
+/* Sulla pagina dei personaggi "avanti" scorre di una scheda: ogni scheda ha
+   il suo pulsante sotto al testo, e premerlo porta al personaggio seguente.
+   Dall'ultima non resta niente da scorrere, quindi la pagina si dichiara
+   finita e a cambiarla ci pensa `avanti()`. */
 function scorriScheda(verso) {
   const c = schede();
   if (!c.length) return false;
-  const alto = stage.scrollTop, h = stage.clientHeight;
-  /* dalla fascia in fondo si torna all'ultima scheda: l'arrotondamento la
-     saltava, perche' la fascia e' piu' bassa di una schermata intera */
-  const i = (inFondo() ? c.length : Math.round(alto / h)) + verso;
-  if (i < 0) return false;
-  if (i >= c.length) {
-    /* oltre l'ultima scheda resta la fascia col pulsante: un passo ancora la
-       porta in vista, e solo dopo la pagina si dichiara finita */
-    if (inFondo()) return false;
-    stage.scrollTo({ top: stage.scrollHeight, behavior: morbido() });
-    return true;
-  }
+  /* quale scheda si sta guardando: quella che comincia piu' vicino al bordo.
+     Non si divide per l'altezza dello schermo — da telefono una scheda e' piu'
+     alta di una schermata — e non si guarda "sopra il bordo": l'ultima scheda
+     resta qualche pixel sotto, perche' non c'e' piu' scorrimento per portarla
+     in cima, e la pagina non finiva mai. */
+  const bordo = stage.getBoundingClientRect().top;
+  let qui = 0, meglio = Infinity;
+  c.forEach((x, k) => {
+    const d = Math.abs(x.getBoundingClientRect().top - bordo);
+    if (d < meglio) { meglio = d; qui = k; }
+  });
+  const i = qui + verso;
+  if (i < 0 || i >= c.length) return false;
   c[i].scrollIntoView({ block: "start", behavior: morbido() });
   return true;
 }
@@ -1435,15 +1435,10 @@ function avanti() {
    nello stesso angolo. Resta in vista per tutta la schermata, spento finche'
    c'e' ancora qualcosa da scoprire: cosi' si vede dove si sta andando, ma non
    ci si arriva prima del tempo. */
-/* La pagina dei personaggi e' finita quando si e' arrivati in fondo, cioe' alla
-   fascia col pulsante: prima di allora resta una scheda da vedere. */
-const ultimaScheda = () => !schede().length || inFondo();
-
 function restaDaScoprire() {
   const s = SLIDES[state.n];
   if (s.t === "scene")
     return state.step < STORY.scene[s.i].battute.length || stessaScena(s, SLIDES[state.n + 1]);
-  if (s.t === "cast") return !ultimaScheda();
   if (s.t === "quiz") return domandaCorrente() !== -1;
   if (s.t === "tavolo") return state.clue !== null;   // dall'indizio si torna prima al tavolo
   return false;
@@ -1617,11 +1612,19 @@ function attesi() {
   return [...new Set(a)];
 }
 
+/* I due pannelli d'autore si tengono per riferimento. Cercarli per classe
+   costava un bug muto: il pannello di sviluppo portava anche `.regia-pan`, e
+   `querySelector` rende il primo che trova, cosi' `render()` cancellava quello
+   sbagliato a ogni battuta e `pannelloDev()` lo ricostruiva subito dopo. Con
+   una variabile per pannello la classe torna a essere solo un fatto di stile. */
+let panRegia = null, panDev = null;
+const chiudiPannello = q => { q?.remove(); return null; };
+
 function pannelloDev() {
   const s = SLIDES[state.n], sc = s.t === "scene" ? STORY.scene[s.i] : null;
-  let p = document.querySelector(".dev-pan");
+  let p = panDev;
   if (!p) {
-    p = document.body.appendChild(el(
+    p = panDev = document.body.appendChild(el(
       `<div class="pannello dev-pan carta">
          <div class="riga"><b>Sviluppo</b><span id="dev-dove"></span>
            <span class="spacer"></span><span><kbd>↑</kbd><kbd>↓</kbd> sfoglia · <kbd>v</kbd> esce</span></div>
@@ -1662,7 +1665,7 @@ function sviluppo() {
   if (!DEV_OK) return;
   state.sviluppo = !state.sviluppo;
   if (state.sviluppo) pannelloDev();
-  else document.querySelector(".dev-pan")?.remove();
+  else panDev = chiudiPannello(panDev);
 }
 
 /* ---- modalita' regia ----
@@ -1685,7 +1688,7 @@ const rigaPrimo = sc => (sc.primo || []).length
 
 function pannello(i) {
   const sc = STORY.scene[i];
-  const p = document.querySelector(".regia-pan") || document.body.appendChild(el(
+  const p = panRegia || (panRegia = document.body.appendChild(el(
     `<div class="pannello regia-pan carta">
        <div class="riga"><b>Regia scena ${i + 1}</b>
          <span>trascina per spostare · rotella o <kbd>+</kbd><kbd>-</kbd> per la taglia ·
@@ -1699,7 +1702,7 @@ function pannello(i) {
        <textarea readonly spellcheck="false"></textarea>
        <div class="riga"><button class="btn" id="regia-copia">Copia</button>
          <span id="regia-eco"></span></div>
-     </div>`, true));
+     </div>`, true)));
   p.querySelector("textarea").value = [rigaSfondo(sc), rigaCast(sc), rigaPrimo(sc)].filter(Boolean).join("\n");
   p.querySelector("#regia-sel").textContent = !sel ? "niente selezionato"
     : sel.sfondo
@@ -1844,7 +1847,7 @@ function regia() {
   if (!REGIA_OK || s.t !== "scene") return;
   state.regia = !state.regia;
   sel = null;
-  document.querySelector(".regia-pan")?.remove();
+  panRegia = chiudiPannello(panRegia);
   render();
 }
 
@@ -1866,15 +1869,6 @@ function apriIndizio(i) {
   state.clue = i;
   render();
 }
-
-/* Le schede dei personaggi si scorrono anche col dito, senza passare da un
-   render: il pulsante si accende arrivando in fondo, e qui gli si tocca solo
-   lo stato — il markup lo ha gia' scritto `pulsanteAvanti()`. */
-stage.addEventListener("scroll", () => {
-  if (SLIDES[state.n].t !== "cast") return;
-  const b = stage.querySelector(".avanza");
-  if (b) b.disabled = restaDaScoprire();
-});
 
 stage.addEventListener("click", e => {
   const t = e.target.closest("[data-clue],[data-chiedi],[data-avanti],[data-opt]");

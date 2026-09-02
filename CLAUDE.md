@@ -6,7 +6,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 A presenter webapp for *Il mistero dell'oliva blu*, an Italian "cena con delitto" script by
 Carlo Maria Gervasio (`ullgi_L-inaugurazione_COSTA_rev.pdf`), used with the author's permission.
-A narrator drives it live in front of a table of players.
+A narrator drives it live in front of a table of players. The rights to the text stay his: the
+permission covers this app, not reuse anywhere else, so never publish the copione or lift lines
+out of it into another place.
 
 - Public site: https://viridjan.github.io/app-con-delitto/ (Pages builds from `main`, root)
 - Artifact (private preview): https://claude.ai/code/artifact/ae31691c-accf-409e-bf55-64800d0de882
@@ -18,10 +20,16 @@ A narrator drives it live in front of a table of players.
 node smoke.js              # il controllo: schermate, quiz, copione, indagine, cancelli, voci
 node dom.js prima.txt      # fotografia del markup di ogni schermata (per i riordini)
 node estrai-copione.js     # riscrive copione.txt da STORY — dopo ogni modifica al testo
-# censimento.js: iniettato nella pagina, dice quante misure di testo arrivano
-# davvero sullo schermo e quali testi non hanno una regola loro. Devono restare sei.
 python3 sync-assets.py     # aggancia le consegne di Codex e ricostruisce la mappa ASSETS
+
+# la leggibilita' da telefono: l'app dentro una cornice da 390px, e il referto nel titolo
+chromium --headless --allow-file-access-from-files --dump-dom \
+  "file://$PWD/telaio-390.html?p=copia-con-audit-mobile.html"
 ```
+
+`censimento.js` non si lancia: si incolla in coda allo `<script>` di una copia dell'app e stampa
+quante misure e quanti stili di testo arrivano davvero sullo schermo. Sei misure su schermo
+grande, quattro da telefono: se il conto sale, un gradino nuovo e' entrato di nascosto.
 
 Non c'e' build, non c'e' watcher, non c'e' server: `oliva-blu.html` si apre da disco. Non esiste
 un modo di lanciare un solo controllo — `smoke.js` e' un file solo e dura meno di un secondo; per
@@ -45,6 +53,12 @@ isolare un caso si commenta il resto.
 - `copione.txt` — the approved script. The verbatim reference; `smoke.js` checks the app against
   it. Regenerate with `node estrai-copione.js` after any agreed change to the text.
 - `estrai-copione.js` — writes `copione.txt` out of `STORY`, so the two can never drift.
+- `censimento.js` — inject it into the page and it reports how many text sizes and how many
+  distinct text styles actually reach the screen, and which texts carry no rule of their own.
+  The count is a contract: six sizes on a big screen, four on a phone.
+- `audit-mobile.js` + `telaio-390.html` — the phone readability audit. The frame exists because
+  headless Chromium will not give a script a window under 500px, so the app runs inside a 390px
+  iframe and the result is read out of it.
 - `img/ART.md` — the illustration brief Codex works from.
 - `assets/images/` — Codex's deliveries, named by subject (`sala2`, `sala1-scena2`, `brindisi`,
   `malore`, the `indizio-*` plates), mapped to slots in `SCELTE`. Rejects go to
@@ -77,8 +91,8 @@ to arrive with the collapse, not once it is over.
 **Nothing but the dialogue on a scene screen.** The “Lo sapevi?” boxes went on 26 August 2026;
 on 29 August 2026 the user cut the rest from `copione.txt` — every `descrizione` (art brief),
 every `indizi` block, the malore's “Osserva bene!” box, and the closing educational message. The
-`s` and `i` keys are gone with them, `state` no longer carries `box`/`indizi`/`qa`, and the last
-screen is just *Fine · Ricomincia*. Do not restore any of it from the PDF. The art briefs live on
+`s` and `i` keys are gone with them, `state` no longer carries `box`/`indizi`/`qa`, and the story
+ends on the verdict and the narrated solution — see *The running order*. Do not restore any of it from the PDF. The art briefs live on
 for Codex in `img/ART.md`; the four clue objects and their table survive because they were never
 part of the txt.
 
@@ -98,9 +112,9 @@ a drag is not a click. Any new interactive element needs its `data-` attribute i
 touching it will also turn the page.
 
 **Nobody gets dimmed on stage.** The speaker stands out by coming forward (lift, scale, shadow),
-not by darkening the others — heavy dimming was tried and rejected. What is left is a light
-touch, raised again on 29 August 2026 because the cast read too dark on a projector:
-`brightness(.88)` at rest, `1.06` for whoever is speaking. Keep both ends bright; the gap
+not by darkening the others — heavy dimming was tried and rejected, and so was a darker version
+of what replaced it: the cast read too dim on a projector. `brightness(.88)` at rest, `1.06` for
+whoever is speaking. Keep both ends bright; the gap
 between them is what does the work, not the depth of the shadow.
 
 **Scene titles stay off the public site.** `TITOLI_OK` is `!PUBBLICO` like the other gates:
@@ -168,22 +182,37 @@ Normalised on 29 August 2026; keep it this way rather than adding a fourth way t
   script. The stylesheet opens with its own table of contents.
 - **Views are a table, not a ternary chain**: `VISTE` maps a slide's `t` to its function. A new
   kind of screen is a function plus one line there.
+- **Three markup helpers carry what repeats across views**, added 2 September 2026: `guida(posa,
+  alt)` is the investigator with his fallback, drawn by five screens; `cartaSospetto(nome,
+  {dati, classi, lettera, spento})` is the face-under-name card, which the sheet's questions and
+  the people you can ask on a clue now share — they differ by a letter, a `data-*` and a state,
+  not by a card; and `vDetto(classe, posa, alt, righe)` is the whole avviso and the whole recap,
+  which differ by a class, a pose and how many lines there are. Those two views are now one line
+  each — and being arrows rather than declarations, they must stay above `VISTE`, which holds
+  their value, not their name. `punteggio()` and `preso()` sit next to them for the same reason: the score and
+  "was the culprit named" were each computed in two places.
+- **`document.querySelector` is not used anywhere.** Inside the stage nothing needs it — the
+  markup is rewritten every render; outside it, the two panels are held by reference. If a new
+  one appears, ask what it is standing in for.
 - **Nothing is derived from the array index.** `NUM(sc, k)` gives the number the audience reads,
   `CASELLA(i)` the artwork slot, `SFONDO(i)` the room. Index-derived names had leaked into the
   background's `alt` (it announced "Scena 12" on the screen titled *Scena 4 · terza parte*) and
   into `demo()`, which filled slots named `scena7.png` that nothing draws.
 
-- **Six things live outside `#stage`**, and they are the ones that need care: `#k-muto` and
-  `#overlay` from the static markup, and `.avanza`, `.regia-pan`, `.dev-pan` appended to
-  `document.body` at runtime. `render()` wipes the stage with `stage.innerHTML = …`, so anything
+- **Four things live outside `#stage`**, and they are the ones that need care: `#k-muto` and
+  `#overlay` from the static markup, and `.regia-pan`, `.dev-pan` appended to `document.body` at
+  runtime. The advance button was a fifth until 1 September 2026, and that is exactly why it drew
+  itself and did nothing for one publish: the stage's delegated handler cannot see outside. `render()` wipes the stage with `stage.innerHTML = …`, so anything
   inside it is born and dies for free; anything outside survives, must be removed by hand, and is
   invisible to `slots()` — which walks `stage.querySelectorAll(".slot img")` — so an image put
   there would never get its typographic fallback.
-- **A panel's look is `.pannello`, its identity is `.regia-pan` or `.dev-pan`.** They were the
-  same class until 31 August 2026, and `render()`'s `querySelector(".regia-pan")?.remove()` was
-  quietly deleting the *developer* panel on every render; `pannelloDev()` rebuilt it immediately,
-  so nothing looked wrong while an eighteen-row list was thrown away and redrawn each time. Never
-  let a class carry both a look and an identity.
+- **The two author panels are held by reference**, `panRegia` and `panDev`, and never looked up
+  by class. They used to share one class and `render()`'s `querySelector(".regia-pan")?.remove()`
+  deleted the *developer* panel on every render; `pannelloDev()` rebuilt it immediately, so
+  nothing looked wrong while an eighteen-row list was thrown away and redrawn each line. Splitting
+  the classes fixed the symptom; holding the node fixed the cause, on 2 September 2026, and the
+  classes went back to being nothing but style. `chiudiPannello(q)` removes one and returns
+  `null`, so a caller cannot forget to clear its variable.
 - **Two shapes for a button, and only two.** Drawn inside `#stage`: carry a `data-*` and let the
   stage's delegated handler act, because the stage's markup is rewritten on every render and a
   listener bolted to the element would die with it. Living outside `#stage` — the advance pill,
@@ -202,7 +231,7 @@ Normalised on 29 August 2026; keep it this way rather than adding a fourth way t
   before), the clue table's hand-written quotes must exist and name the right scene, and the
   public build must show neither the author tools nor the scene titles.
 
-**Refactor with a snapshot, not by eye.** `dom.js` (`node dom.js prima.txt`) walks all 22 screens with the smoke
+**Refactor with a snapshot, not by eye.** `dom.js` (`node dom.js prima.txt`) walks all 20 screens with the smoke
 stub, reveals every line, and dumps `stage.innerHTML`. Run it before and after: strip `class` and
 `style` attributes from both and the diff must be empty. That is how this pass was proved to
 change styling hooks only.
@@ -226,8 +255,8 @@ The inciso under a speaker's name — *piano*, *tra sé* — is the same size as
 2 September 2026. `.who small` styled it italic and grey but never sized it, so it fell to the
 browser's own `small`: 0.75em of 0.9em, the only measure in the app nobody had chosen, and on a
 phone the smallest text anywhere. Italic, weight and colour separate it now; the size does not.
-A census across all twenty screens counts the sizes that reach the screen — 13 at 1280, 14 at
-390 — and every one of them is now a decision.
+A census across all twenty screens counts the sizes that reach the screen — six on a big screen,
+four on a phone — and every one of them is a decision; see *Type and the phone*.
 
 Consecutive lines by the same speaker share one bubble — `raggruppa()` collapses the run and
 `bolla()` renders one `<p>` per line inside a single `.said`. A different `m` breaks the run: a
@@ -240,21 +269,7 @@ opacity to 1 and would cancel the dimming of the rest.
 Highlighting the speaker must **not** change the stacking order: no `z-index` on `.attivo`. The
 depth is what the staging decided — including any explicit `z` in `cast` / `primo`.
 
-**The stage is clipped 10% top and bottom**, from 1 September 2026: ceiling above the figures,
-empty floor below. Cutting it was tried three ways: first by drawing the *background* taller and
-pushing it up, which zoomed the picture, ate the sides and was rejected on sight — it is the
-**frame** that shrinks, not the image; then 15% off the top alone; then both bands at 10%.
-`.palco` keeps `aspect-ratio:1` and every coordinate keeps its meaning; `clip-path:inset(10% 0
-10% 0)` simply hides the two bands. No zoom, no lost sides, and the staging that was already
-decided stays valid to the millimetre. What the bottom band costs is real: a figure standing at
-`b:0` loses its feet, and so do the foreground tables, which are anchored to the bottom corners.
-The staging badge moved down 10%, or the clip would have swallowed it.
-
-**Every stage is square.** Scene 2's three parts carried `formato:"16 / 9"` and read as a strip
-next to the others; the field and the `--formato` variable were removed on 28 August 2026 and
-`.palco` is `aspect-ratio:1` outright. A 16:9 background is cropped left and right by
-`object-fit:cover`, so a wide plate loses its edges — that is the trade, and the answer is to
-re-stage the figures with `r`, never to give one screen its own shape.
+## Type and the phone
 
 **The four detective screens share one body size.** Avviso, recap, verdict, ending: from
 1 September 2026 one rule sets the text on all four — on the verdict that includes its heading,
@@ -264,11 +279,14 @@ out: it is a numeral, not text — `clamp(1.15rem,2.2vw,1.7rem)`, centred on a
 big screen, and in the phone query `clamp(2.07rem,4vw,3.06rem)` with `text-align:justify`. Each
 had had its own before, from the avviso's small service body to the recap's large spoken lines,
 and stepping from one to the next the text jumped. The justified column at that size holds about five
-words, so the gaps between them open wide — that is accepted, and **hyphenation is off
-everywhere**: `*{hyphens:none}` on 1 September 2026, after `hyphens:auto` was tried on those
-paragraphs and the user chose wide spaces over broken words. `document.documentElement.lang` is
-still set from the script, for screen readers rather than for hyphenation, since the file has no
-`<html>` tag of its own.
+words, so the gaps between them open wide: that is the user's choice, taken against
+`hyphens:auto`, and **hyphenation is off everywhere** — `*{hyphens:none}`, so no later rule can
+turn it back on by accident. `document.documentElement.lang` is still set from the script, for
+screen readers, since the file has no `<html>` tag of its own.
+
+On a phone the cast card grows instead of clipping: `height:auto; min-height:100dvh`, with the
+portrait given `40dvh` of its own. With the phone's big text and a button inside the card, the
+portrait had been squeezed to 98px.
 
 **Read the app on a phone before shipping.** Audited 31 August 2026 at 390px, both themes, with
 an in-page script that reads computed size, colour and box for every element carrying text. What
@@ -292,12 +310,10 @@ it found and what was done:
   on the sheet — is restated in the query at **×1.8** of its desktop size. What was already 28px
   or more does not move: titles, the numerals, the questions, and **the dialogue**, which at that
   factor would have run to ten letters a line. `.who` is the one deliberate omission — the
-  speaker's name has to stay under the line it labels. The hierarchy that costs: at ×1.8 the
-  eyebrow (33px) is larger than the heading it introduces (30), a clue card's title (47) larger
-  than the page's (30), a cast description (40) larger than the name above it (38), and every
-  button (39) larger than the dialogue (28). The user has been shown those figures; the fix, if
-  it is ever wanted, is to raise the headings rather than to cap the labels again. Read the whole
-  rule before adding to it: it is a pile of literal sizes, each one the desktop size times 1.8.
+  speaker's name has to stay under the line it labels. It costs the hierarchy — a button reads larger than the dialogue
+  above it — and that was shown to the user in figures and kept. Read the whole rule before
+  adding to it: it is a pile of literal sizes, each one the desktop size times 1.8. Five of them
+  were then merged into each other, which is why a phone shows four sizes and not nine.
 - **Every button was 33px tall and the mute pill 35px**, under the 44px touch minimum. Fixed
   under `@media (pointer:coarse),(max-width:700px)` — the width clause is there because
   `pointer:coarse` cannot be exercised in headless while a narrow window can.
@@ -308,22 +324,12 @@ it found and what was done:
   the left, because the narrow query pinned `.btn` to `white-space:nowrap`. That clause is gone;
   a long label wraps inside the pill instead. Measured at 390px: nothing under 57px, nothing
   clipped, no horizontal overflow.
-- The fixed advance button covered the last line on a phone; the same query pads `.dialoghi` and
-  `.sheet` to clear it, and lifts `.eyebrow` off 12.8px.
-- No horizontal overflow on any of the eight screens, in either theme.
+- No horizontal overflow on any of the twenty screens, in either theme.
 
 A caveat about the measuring: headless Chromium clamps its window to 500px wide for scripts, so
 the audit runs the app inside a 390px `<iframe>` and reads the result out of the frame. Do not
 trust an `innerWidth` below 500 from `--dump-dom`. And the contrast figures ignore `opacity`, so
 dimmed or disabled elements read worse than they are — WCAG exempts them.
-
-**Never size the stage in `vh`.** The rows are declared (`54% / 46%`) and the stage takes the
-height left under the title, so it is the largest square that fits. Sized in `vh` it grew past
-its own half on phones, got clipped, and read as if the picture were zoomed in — that bug came
-back once already.
-
-A percentage `max-height` needs a definite height on the container, or it is ignored and the
-figure spills out of its half.
 
 ## Where the app departs from the PDF
 
@@ -344,8 +350,8 @@ that edit:
   ends the evening. Of 53 spoken lines, 17 are not Gervasio's.
 - ***Il racconto dell'olio* is the user's rewrite**, 28 August 2026: nine lines instead of six,
   Augusto and Roberto hand the explanation back and forth, and "Adoro l'Olo" became "Adoro
-  l'Olio". Its "Indizi di gioco" block was dropped with it — that scene now has `indizi:{}` and
-  `i` does nothing there.
+  l'Olio". Its "Indizi di gioco" block was dropped with it, and the `indizi`
+  field no longer exists on any scene.
 - **The quiz is ours from 30 August 2026.** Gervasio's four questions had every right answer in
   slot A and distractors nobody would pick (*I Marinai*, *I Musicisti*). Six now, and every one
   offers **the four suspects** — `SOSPETTI`, in that order — so a question has no `opzioni` of
@@ -400,8 +406,8 @@ that edit:
   took the file from 5.9MB to 5.5MB, since it was a second copy of scene 1's room.
 - **Every box, brief and clue list removed**, 29 August 2026 (see the rule above), "Osserva
   bene!" included. `STORY.oggetti` and the clue table are untouched: they never lived in the txt.
-  `smoke.js` now also fails if a clue card quotes a line nobody says any more — those `refs` are
-  hand-copied and had already drifted twice.
+  `smoke.js` fails if a clue card quotes a line nobody says any more: those `refs` are written by
+  hand and drift on their own.
 - Nothing else is missing. Labels, the clue captions, the narrator's recap, the solution and the
   closing message are all still there — they live outside `battute`, so a dialogue-only check
   will not see them.
@@ -420,7 +426,7 @@ that line.
 
 **The investigation section has one text size**, from 1 September 2026, and the names carry
 faces. Both clue screens are marked `.sheet.indagine`, and one rule sets everything inside them —
-`h3`, every `p`, every `li`, `.tag`, `.stato`, `.src`, `.btn.voce` — to `--indizi`, a token so the
+`h3`, every `p`, every `li`, `.tag`, `.stato`, `.src`, the name on an ask card — to `--indizi`, a token so the
 phone query can raise it once instead of listing selectors again. Seven sizes had collected
 there. Two things to know: the rule has to sit **after** the section's own rules, and `.src` and
 `.tag` must be named explicitly, because `.risposta .src` (0,2,0) outranks `.indagine p` (0,1,1)
@@ -463,10 +469,13 @@ and the column scrolls back there on every line; and at the foot of the sheet ev
 On a scene the button is **outside the scrolling**: `.dialoghi` is a plain flex column, and it is
 `.bubbles` that scrolls, so the scrollbar starts under the button instead of running past it —
 `render()` therefore scrolls `.bubbles` back to the top on each line, not `.dialoghi`.
-The cast page keeps a strip of its own after the last card, ruled off so the button never looks
-like it is resting on a portrait — its cards measure `100dvh` each rather than inheriting a
-height, which is what leaves room for that strip. `render()` puts it there with one line, choosing `.azioni-scena`
-if the view offered one and the `.sheet` otherwise, so no view has to remember. It was a fixed
+The cast page carries **one button per card**, under the description, always live: pressing it
+before the last portrait scrolls to the next character, and on the last it changes screen —
+`avanti()` tries `scopri()` first, and `scopri()` on that page is `scorriScheda(1)`. It was a
+single strip after the last card until 2 September 2026, disabled until you had scrolled there.
+`render()` places the button with one line, choosing `.azioni-scena` if the view offered one and
+the `.sheet` otherwise — **unless the view already drew a `[data-avanti]` itself**, which is how
+the cast page keeps its five. It was a fixed
 corner pill until 1 September 2026; living outside `#stage` meant the stage's click handler could
 not see it, and for one publish it drew itself and did nothing. Now it is ordinary stage markup
 with a `data-avanti`, like every other button in there. On a scene it is **never disabled**, from
@@ -487,15 +496,15 @@ the button stays the only way to change screen. The arrows carry two author mean
 first: in staging they nudge the selected figure, and with the developer panel open the verticals
 page through the screens.
 
-On the cast page one press past the last card scrolls to the closing strip rather than stopping
-dead, so the button is reached the same way as everything else. That page is also the one place
-where back does something: `←` / `↑` call `scorriScheda(-1)` and page back through the portraits.
-Leafing through a cast list is not rewinding the story — nothing is revealed there, so nothing is
-taken back. From the closing strip the step back lands on the **last card**: `scorriScheda()`
-reads `inFondo()` first, because the strip is shorter than a full screen and rounding
-`scrollTop / clientHeight` skipped a card. Scrolling there by finger never
-re-renders, so a `scroll` listener flips the button's `disabled` on its own — it touches only the
-state, never the markup, which `pulsanteAvanti()` owns.
+The cast page is the one place where back does something: `←` / `↑` call `scorriScheda(-1)` and
+page back through the portraits. Leafing through a cast list is not rewinding the story — nothing
+is revealed there, so nothing is taken back.
+
+`scorriScheda()` finds the current card as **the one whose top is nearest the stage's**, and that
+wording is load-bearing. Dividing `scrollTop` by `clientHeight` broke first: on a phone a card is
+taller than a screen. Taking "the last card starting above the edge" broke next: the last card
+sits a few pixels below it, because there is no scroll left to bring it up, so the page never
+declared itself finished and the button stopped working. Nearest survives both.
 
 **A screen that asks for a choice cannot be left by clicking.** Everywhere else the stage is the
 remote, but on the clue table a stray tap would end the investigation with a question unspent,
@@ -548,11 +557,10 @@ the same `.narr-fine` column as the recap, plus an `.avviso` class carrying its 
 a service body instead of a narrated one, and text ranged left, because a paragraph of six lines
 centred reads as a poem. The text itself is untouched, so `copione.txt` does not move: it comes
 from `STORY.disclaimer` either way. `detective-scoperta`, finger raised, carries the **last
-screen**. All five are hooked from 1 September 2026, and `sync-assets.py` reports
-nothing unused: the two that were left over — `attore-augusto-spiegazione`, a good pose nobody
-ever put in `POSE_SCENA`, and `quadro-oliva`, the still the animated cover replaced — went to
-`bocciate/` the same day. They are on disk, out of git: bring the pose back if scene 2 ever wants
-it.
+screen**; all five are hooked, and `sync-assets.py` reports nothing unused. Two files that were
+left over went to `bocciate/`: `attore-augusto-spiegazione`, a good pose nobody ever put in
+`POSE_SCENA`, and `quadro-oliva`, the still the animated cover replaced. They are on disk, out of
+git — bring the pose back if scene 2 ever wants it.
 
 The ending is two screens again from 1 September 2026: **`sol` is the verdict alone** — the score
 out of ten and the band it falls in — and **`fine`** is the investigator, `STORY.soluzione` read
@@ -583,8 +591,8 @@ one screen that changed picture.
 
 Four screens show a clue plate instead of a room: `sfondoDa` takes any file stem, so
 `sfondoDa:"indizio-foglio"` puts the 1:1 plate on the square stage with `cast:[]`. That is also
-how *Gli indizi sul tavolo* has any artwork at all — `indagine.png` was rejected and `scena5.png`
-is missing, so the pipeline still reports it as undelivered.
+how *Gli indizi sul tavolo* has any artwork at all: its own plate was rejected and never
+redelivered, so `scena5.png` is still on the pipeline's missing list.
 
 ## Screens vs scenes
 
@@ -647,6 +655,29 @@ This is the only `z-index` anyone may set on the stage; `.attivo` still must not
 drag to move, wheel or `+`/`-` to resize, arrows for fine steps. The panel prints the `cast:` and
 `primo:` lines to paste back into `STORY`. Changes live only in the open page.
 
+**The stage is clipped 10% top and bottom**, from 1 September 2026: ceiling above the figures,
+empty floor below. Do not cut it by moving the *background*: drawing it taller and pushing it up
+zooms the picture and eats the sides, and was rejected on sight. It is the **frame** that
+shrinks, not the image. `.palco` keeps `aspect-ratio:1` and every coordinate keeps its meaning; `clip-path:inset(10% 0
+10% 0)` simply hides the two bands. No zoom, no lost sides, and the staging that was already
+decided stays valid to the millimetre. What the bottom band costs is real: a figure standing at
+`b:0` loses its feet, and so do the foreground tables, which are anchored to the bottom corners.
+The staging badge moved down 10%, or the clip would have swallowed it.
+
+**Every stage is square.** Scene 2's three parts carried `formato:"16 / 9"` and read as a strip
+next to the others; the field and the `--formato` variable were removed on 28 August 2026 and
+`.palco` is `aspect-ratio:1` outright. A 16:9 background is cropped left and right by
+`object-fit:cover`, so a wide plate loses its edges — that is the trade, and the answer is to
+re-stage the figures with `r`, never to give one screen its own shape.
+
+**Never size the stage in `vh`.** The rows are declared (`54% / 46%`) and the stage takes the
+height left under the title, so it is the largest square that fits. Sized in `vh` it grew past
+its own half on phones, got clipped, and read as if the picture were zoomed in — that bug came
+back once already.
+
+A percentage `max-height` needs a definite height on the container, or it is ignored and the
+figure spills out of its half.
+
 ## Voices
 
 Each character is a synth profile in `VOCE` — waveform, pitch, blip rate, note length, pitch
@@ -663,10 +694,8 @@ started, or they land in the past and nothing plays.
 
 ## Images pipeline
 
-```sh
-python3 sync-assets.py   # newest -vN per slot, web-sized WebP, embedded as data URIs
-node smoke.js
-```
+`python3 sync-assets.py` then `node smoke.js`, in that order, after every delivery: the sync
+keeps the newest `-vN` per slot, makes a web-sized WebP of it and rewrites the `ASSETS` map.
 
 Codex names files its own way **and renames them between deliveries** — `scena3-sala2-*` became
 `sala2-*` mid-project. `SCELTE` declares which file fills which slot (`copertina.png ←
