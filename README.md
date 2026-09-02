@@ -111,7 +111,8 @@ ricarica la pagina: è l'unica cosa che azzera l'indagine e le risposte.
 
 Un **clic scopre**, un **pulsante cambia pagina**. Toccando lo schermo esce la battuta seguente;
 per passare alla schermata dopo c'è un pulsante: sopra l'ultima battuta nelle scene — fermo,
-mentre le battute gli scorrono sotto — e in fondo alla pagina altrove. Nelle scene si può premere
+mentre le battute gli scorrono sotto — sotto la descrizione di ogni personaggio nella loro
+pagina, dove porta al successivo, e in fondo alla pagina altrove. Nelle scene si può premere
 anche a metà: scopre la battuta seguente come il clic, e cambia schermata solo quando non resta
 altro. Dove invece c'è una scelta aperta — una domanda della scheda, un indizio aperto — resta
 spento, perché premerlo costerebbe una domanda o una risposta.
