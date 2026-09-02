@@ -487,74 +487,42 @@ kbd{font:inherit; font-size:.78em; border:1px solid var(--line); border-bottom-w
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important}
 }
-@media (max-width:700px){
-  /* niente `nowrap` qui: a pulsanti cresciuti «Chiudi l'indagine →» e
-     «Scopri la soluzione →» erano piu' larghi di un telefono e uscivano
-     tagliati a sinistra. Vanno a capo dentro la pastiglia. */
-  .btn{padding:.39rem .91rem; max-width:100%}
-}
 /* Col dito servono bersagli da 44px: col mouse no, e il proiettore resta com'e'.
    Anche la larghezza fa da spia, perche' `pointer:coarse` non si puo' provare
    in headless mentre una finestra stretta si'. */
 @media (pointer:coarse),(max-width:700px){
-  /* Su un telefono si legge a un braccio di distanza, non a due metri: tutto
-     il testo cresce di una volta e mezza. Si tocca la radice, non le singole
-     regole, cosi' cresce anche quello che e' scritto in rem dentro un clamp —
-     su schermo stretto e' quasi sempre il minimo in rem a vincere. */
-  :root{font-size:150%}
-  /* la misura del corpo ha estremi in px, che la radice non tocca: qui c'e'
-     la stessa espressione gia' moltiplicata per 1.5, scritta in px perche'
-     il rem e' gia' cresciuto e si moltiplicherebbe due volte.
-     clamp(18px, 2.6vw + .55rem, 22px) → tutto per uno e mezzo */
-  :root{--t-corpo:clamp(27px,3.9vw + 13.2px,33px);
-    /* il titolo di scena stava a 33 come l'occhiello che lo introduce: due
-       misure a un decimo di distanza, cioe' una sola presa due volte */
-    --t-voce:clamp(1.65rem,3vw,2.55rem);
-    /* copertina e punteggio erano 62.4 e 57: un gradino solo, preso il piu'
-       basso, cosi' il titolo di copertina si accorcia invece di allargare
-       il numerone */
-    --t-titolo:2.375rem; --t-cifra:2.375rem;
-    /* i nomi dei personaggi stavano a 38.4 contro i 39.6 dei titoli: un
-       gradino solo, e la descrizione non li sovrasta piu' di tanto */
-    --t-nome:var(--t-voce)}
-  .btn{min-height:57px; padding-inline:1.43rem}
-  .volume .icona{font-size:2.6rem}
-  .volume input{width:9rem; height:44px}
-  .opt,.clue{min-height:44px}
+  /* Su un telefono si legge a un braccio di distanza, non a due metri, ma non
+     a un palmo: la radice cresce di poco e tutta la scala segue, perche' su
+     schermo stretto dentro un `clamp()` vince quasi sempre il minimo in rem.
+     Era 150%, con quattordici misure riscritte a mano sopra — sulla cornice
+     da 390px sembrava giusto, ma il `<meta viewport>` mancava e su un telefono
+     vero quelle regole non entravano mai in funzione. Con il viewport a posto
+     il testo e' uscito enorme, e la pila di valori letterali e' sparita. */
+  :root{font-size:112%}
 
-  /* Ancora meta' misura, ma solo su quello che era rimasto piccolo: etichette,
-     pulsanti, didascalie, descrizioni. I titoli, i numeri e le battute stanno
-     gia' sopra i 28px e non si toccano — crescendo anche loro, una battuta
-     starebbe su dieci lettere per riga. I valori qui sono quelli di sopra per
-     uno e mezzo, poi per uno e due: ×1.8 in tutto. */
-  /* l'occhiello non supera la battuta: stesso gradino del corpo */
-  .eyebrow{font-size:var(--t-corpo)}
+  /* Col dito servono bersagli da 44px: col mouse no, e il proiettore resta
+     com'e'. La larghezza fa da spia perche' `pointer:coarse` non si puo'
+     provare in headless mentre una finestra stretta si'. */
+  .btn{min-height:44px; padding-inline:1.2rem; max-width:100%}
+  .volume .icona{font-size:2.2rem}
+  .volume input{width:8rem; height:44px}
+  .opt,.clue{min-height:44px}
+  /* il volume galleggia in alto a destra: su uno schermo stretto l'occhiello
+     della scena gli finiva sotto. La colonna del titolo si stringe, cosi' il
+     testo va a capo prima invece di passarci dietro. */
+  .scene-head{padding-right:12rem}
+  .scene-head > div{min-width:0}   /* senza questo il flex non scende sotto il testo */
+
   /* col testo grande e il pulsante dentro la scheda, il ritratto restava alto
      98px: qui la scheda puo' crescere e il ritratto ha una quota sua */
   .card{height:auto; min-height:100dvh}
   .card .ritratto{height:40dvh; width:auto; max-width:100%; max-height:none}
-  .btn{font-size:2.07rem}
-  /* il nome di chi parla non e' in questo elenco: cresciuto anche lui,
-     l'etichetta finiva piu' grande della battuta che etichetta */
-  /* la descrizione del personaggio legge come le quattro schermate
-     dell'investigatore: stessa misura, un gradino invece di due */
-  .card p{font-size:clamp(2.07rem,4vw,3.06rem)}
-  /* le quattro schermate dell'investigatore: stessa misura di tutti i piccoli
-     — la desktop per uno e otto — e testo giustificato. Senza sillabazione:
-     gli spazi si allargano, e va bene cosi'. */
+
+  /* le quattro schermate dell'investigatore: testo giustificato, senza
+     sillabazione — gli spazi si allargano, e va bene cosi' */
   .avviso .detto p, .avviso .detto p:last-child,
   .narr-fine .detto p, .narr-fine .detto p:last-child,
-  .giudizio h2, .giudizio p, .vuoto, .solution p{
-    font-size:clamp(2.07rem,4vw,3.06rem); text-align:justify}
-  /* verdetto e soluzione seguono l'avviso anche qui: senza questa riga il
-     punteggio si riprendeva una misura sua */
-  .verdetto .score, .verdetto .score small, .verdetto h2, .verdetto p{
-    font-size:clamp(2.07rem,4vw,3.06rem)}
-  /* la sezione indizi ha un corpo solo: qui e' quello di sopra per uno e otto */
-  :root{--indizi:clamp(1.65rem,3vw,2.475rem)}
-  .opt .v{font-size:2.07rem}
-    .plate .brief{font-size:1.53em}
-  .plate .brief-label span{font-size:1.26rem}
+  .giudizio h2, .giudizio p, .vuoto, .solution p{text-align:justify}
 }
 @media (max-width:640px){
   .bubble{flex-direction:column; gap:.2rem}

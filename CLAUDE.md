@@ -340,34 +340,24 @@ it found and what was done:
   at 3.49:1 on the cream ground — and light is what anyone with a light OS sees by default. Only
   those two moved, and only in the light block: `#6B7359 → #676F55`, `#A9741A → #966107`. Olive
   (4.61), teal (4.60), plum (5.22) and blue (7.06) already passed and were left alone.
-- **All text is 150% on a phone**, from 1 September 2026: the app is read at arm's length there,
-  not across a room. One rule does it — `:root{font-size:150%}` inside that same query — because
-  almost every size is in rem, and inside a `clamp()` on a narrow screen it is nearly always the
-  rem minimum that wins. The one exception is `body`'s own `clamp(18px, 2.6vw + .55rem, 22px)`,
-  whose ends are in px: the query restates it already multiplied, **in px**, since the root has
-  already grown and rem would compound. Every string measured at 390px comes out at ×1.50, the
-  smallest at 21px, with no horizontal overflow on any screen and no touch target under 44px.
-  Where the author works this shrinks the stage a little — the scene title now wraps to two lines
-  and the square takes what is left — but on Pages the titles are gated off anyway.
-- **Then another half, and then a fifth, on the small text only**, the same day: everything that
-  was still under 28px on a phone — labels, buttons, captions, clue titles, the suspects' names
-  on the sheet — is restated in the query at **×1.8** of its desktop size. What was already 28px
-  or more does not move: titles, the numerals, the questions, and **the dialogue**, which at that
-  factor would have run to ten letters a line. `.who` is the one deliberate omission — the
-  speaker's name has to stay under the line it labels. It costs the hierarchy — a button reads larger than the dialogue
-  above it — and that was shown to the user in figures and kept. Read the whole rule before
-  adding to it: it is a pile of literal sizes, each one the desktop size times 1.8. Five of them
-  were then merged into each other, which is why a phone shows four sizes and not nine.
+- **The phone tier is one knob**: `:root{font-size:112%}` inside that query, and the whole scale
+  follows, because on a narrow screen it is nearly always the rem minimum inside a `clamp()` that
+  wins. It was 150% with fourteen literal sizes rewritten on top of it, grown over four requests
+  — and all of it measured inside the 390px iframe while the document had **no `<meta viewport>`**,
+  so on a real phone those rules never applied at all. Once the viewport landed the text came out
+  enormous, the user said so, and the pile of literals went. At 390px the six steps read
+  46.6 / 42.6 / 28.7 / 24.6 / 20 / 15.7, against 88 / 54 / 38 / 27.2 / 22 / 14 on a big screen.
+  Measure on the device, not only in the frame: the frame cannot tell you the meta is missing.
 - **Every button was 33px tall and the mute pill 35px**, under the 44px touch minimum. Fixed
   under `@media (pointer:coarse),(max-width:700px)` — the width clause is there because
   `pointer:coarse` cannot be exercised in headless while a narrow window can.
 - **Then every button grew 30%**, 1 September 2026, and this one is **not** phone-only: `.btn`
   and the volume control are bigger everywhere, projector included — type, padding and the touch floor,
-  which went from 44px to 57. Growing them broke something that had held until then: `Chiudi
-  l'indagine →` and `Scopri la soluzione →` came out wider than a 390px phone and were clipped on
-  the left, because the narrow query pinned `.btn` to `white-space:nowrap`. That clause is gone;
-  a long label wraps inside the pill instead. Measured at 390px: nothing under 57px, nothing
-  clipped, no horizontal overflow.
+  and on a phone the touch floor went with them. The floor came back to 44px on 2 September when
+  the whole phone tier was rescaled. Growing them had broken something that held until then:
+  `Chiudi l'indagine →` and `Scopri la soluzione →` came out wider than a 390px phone and were
+  clipped on the left, because the narrow query pinned `.btn` to `white-space:nowrap`. That clause
+  is gone for good; a long label wraps inside the pill instead.
 - No horizontal overflow on any of the twenty screens, in either theme.
 
 A caveat about the measuring: headless Chromium clamps its window to 500px wide for scripts, so
