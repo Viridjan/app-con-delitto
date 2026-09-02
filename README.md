@@ -126,6 +126,10 @@ Chiudendo l'indagine con delle domande ancora da fare, l'investigatore chiede co
 la serata e domanda se ne hai abbastanza, **senza nominare gli indizi** né dire quante domande
 restano.
 
+Anche la soluzione si chiede due volte — «Sei sicuro?», poi «Sei veramente sicuro?», con
+`Ritenta` e `Vedi la soluzione` — perché dopo il punteggio la tentazione è forte e leggerla
+chiude la partita. Ogni finestra di conferma si apre con l'investigatore che riflette.
+
 Da questa schermata **non si esce toccando lo sfondo**: si passa oltre solo con `Chiudi
 l'indagine →`. Vale anche per le domande della scheda finale, dove il pulsante dice a che punto
 sei. Altrove il clic fa avanzare; dove si sceglie, costerebbe una domanda o una risposta.
