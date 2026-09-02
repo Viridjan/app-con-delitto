@@ -219,7 +219,9 @@ kbd{font:inherit; font-size:.78em; border:1px solid var(--line); border-bottom-w
 /* l'investigatore al doppio: su queste quattro schermate il testo e' poco e
    la figura e' meta' del messaggio */
 .avviso .guida img{max-height:72vh; max-width:min(100%,44rem)}
-.avviso .detto p, .avviso .detto p:last-child{font-family:var(--sans); color:var(--muted)}
+/* le quattro schermate dell'investigatore parlano col testo pieno, non col
+   grigio di servizio: e' lui che racconta, non una nota a margine */
+.avviso .detto p, .avviso .detto p:last-child{font-family:var(--sans); color:var(--ink)}
 
 /* Le quattro schermate dell'investigatore — avviso, riepilogo, verdetto,
    soluzione — hanno un corpo di testo solo. Prima ognuna aveva il suo, dal
@@ -369,19 +371,20 @@ kbd{font:inherit; font-size:.78em; border:1px solid var(--line); border-bottom-w
 /* il verdetto in colonna: l'investigatore, il punteggio, il giudizio, il
    pulsante. La posa e' gia' meta' del verdetto, quindi sta in cima. */
 .verdetto{gap:clamp(.8rem,2.5vh,1.6rem); align-items:center; text-align:center}
-/* Il verdetto parla con una voce sola: un carattere — quello delle battute —
-   e una misura, quella del punteggio. Erano tre corpi e due caratteri per
-   quattro righe: la cifra in Bodoni oro, il giudizio in Bodoni bianco, la
-   spiegazione in Alegreya. */
-.verdetto .score, .verdetto .score small, .verdetto h2, .verdetto p{
-  font-family:var(--sans); font-size:var(--t-cifra)}
+/* Verdetto e soluzione parlano come l'avviso: stesso carattere, stesso
+   corpo, stesso peso, stesso grigio. Erano tre corpi e due caratteri per
+   quattro righe — la cifra in Bodoni oro, il giudizio in Bodoni bianco, la
+   spiegazione in Alegreya. Il punteggio tiene solo l'oro: e' l'unico numero
+   della schermata e quello deve restare riconoscibile. */
+.verdetto .score, .verdetto .score small, .verdetto h2, .verdetto p, .solution p{
+  font-family:var(--sans); font-size:var(--t-voce); font-weight:400; color:var(--ink)}
+.verdetto .score{color:var(--gold)}
 .verdetto .guida img{max-height:64vh; max-width:min(100%,52rem)}
 .verdetto .azioni{width:100%; justify-content:center}
-.giudizio h2{font-weight:600}   /* la misura la da' il corpo comune delle quattro schermate */
-.giudizio p{margin:.4rem 0 0; color:var(--muted); max-width:52ch}
+.giudizio p{margin:.4rem 0 0; max-width:52ch}   /* il colore lo da' la regola dell'investigatore */
 /* si arriva al verdetto senza aver risposto solo saltando col pannello: la
    pagina lo dice invece di restare bianca */
-.vuoto{color:var(--muted); max-width:52ch}
+.vuoto{max-width:52ch}
 
 /* ---- finestra dei comandi ---- */
 #overlay{position:fixed; inset:0; background:color-mix(in srgb,var(--bg) 88%,#000); z-index:20;
@@ -539,9 +542,10 @@ kbd{font:inherit; font-size:.78em; border:1px solid var(--line); border-bottom-w
   .narr-fine .detto p, .narr-fine .detto p:last-child,
   .giudizio h2, .giudizio p, .vuoto, .solution p{
     font-size:clamp(2.07rem,4vw,3.06rem); text-align:justify}
-  /* il verdetto tiene la sua voce sola anche qui: la riga di sopra gli
-     rimetteva due misure sotto il punteggio */
-  .verdetto .score, .verdetto .score small, .verdetto h2, .verdetto p{font-size:var(--t-cifra)}
+  /* verdetto e soluzione seguono l'avviso anche qui: senza questa riga il
+     punteggio si riprendeva una misura sua */
+  .verdetto .score, .verdetto .score small, .verdetto h2, .verdetto p{
+    font-size:clamp(2.07rem,4vw,3.06rem)}
   /* la sezione indizi ha un corpo solo: qui e' quello di sopra per uno e otto */
   :root{--indizi:clamp(1.65rem,3vw,2.475rem)}
   .opt .v{font-size:2.07rem}
