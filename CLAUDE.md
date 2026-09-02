@@ -554,6 +554,21 @@ asks for a decision and its type belongs in that set.
 With the developer panel open the verticals page through the screens, and the lit row scrolls
 itself into view.
 
+**Every confirmation opens with the investigator.** `conferma(domanda, spiega, avanza, poi,
+indietro)` puts `detective-riflessione` above the question — he is the one asking, and the pose
+says so before the words do — then calls `slots(overlayEl)`, because the overlay lives outside
+`#stage` and `render()`'s own `slots()` never reaches it. `spiega` is optional now: two of the
+three confirmations are one line and a choice. The way out is named per question, since it is
+not the same one twice.
+
+**The solution is asked for twice**, from 2 September 2026. From the verdict, `Vedi la soluzione`
+opens *Sei sicuro di voler vedere la soluzione?* and, if you say yes, *Sei veramente sicuro…* —
+the same two buttons each time, `Ritenta` and `Vedi la soluzione`, and only the second yes turns
+the page. After a score the temptation is strong and reading it ends the game; `Ritenta` sends
+you back to the sheet, not to the previous screen. `chiediEAvanza()` is where both this and the
+clue table's confirmation hang, so a screen that must ask before leaving belongs there and
+nowhere else.
+
 **Closing the investigation early asks first.** While `indagineCompleta()` is false — both
 objects chosen and every one of them questioned to the limit — `Chiudi l'indagine` opens a
 confirmation instead of moving on. The wording is the investigator's, not the rulebook's: it

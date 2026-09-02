@@ -393,6 +393,8 @@ kbd{font:inherit; font-size:.78em; border:1px solid var(--line); border-bottom-w
 .ov-head{display:flex; align-items:baseline; gap:1rem}
 /* la finestra di conferma: una domanda, due strade */
 .conferma{max-width:34rem; margin:auto; text-align:center; align-items:center}
+.conferma .guida{margin-bottom:.4rem}
+.conferma .guida img{max-height:26vh; max-width:min(100%,14rem)}
 .conferma .nota{margin-inline:auto}
 .conferma .azioni{justify-content:center}
 .conferma h2{font-size:var(--t-voce)}
@@ -1472,7 +1474,19 @@ function pulsanteAvanti() {
 
 /* Chiudere l'indagine a meta' non e' un passo qualunque: prima si chiede.
    Parla l'investigatore, non il regolamento — degli indizi non fa parola. */
+/* La soluzione si chiede due volte: dopo il verdetto la tentazione e' forte,
+   e leggerla chiude la partita. `Ritenta` riporta alla scheda, non alla
+   schermata precedente. */
+function chiediLaSoluzione() {
+  conferma("Sei sicuro di voler vedere la soluzione?", "",
+    "Vedi la soluzione", () =>
+      conferma("Sei veramente sicuro di voler vedere la soluzione?", "",
+        "Vedi la soluzione", avanti, "Ritenta"),
+    "Ritenta");
+}
+
 function chiediEAvanza() {
+  if (SLIDES[state.n].t === "sol") return chiediLaSoluzione();
   if (SLIDES[state.n].t === "tavolo" && !indagineCompleta())
     return conferma("Giuseppe è morto durante la festa degli Oliviani.",
       "Quattro persone erano in quella stanza, e non tutte hanno raccontato la stessa sera. Vuoi chiudere qui, o c’è ancora qualcosa che vuoi sapere?",
@@ -1968,15 +1982,20 @@ function apri() { ovHelp(); mostraOverlay(overlayEl.innerHTML, "Comandi dell’i
 
 /* Chiede conferma prima di un passo che non si puo' disfare. Il "no" e' il
    tasto che prende il fuoco: chi tira dritto deve volerlo. */
-function conferma(domanda, spiega, avanza, poi) {
+/* Ogni conferma si apre con l'investigatore che riflette: e' lui che sta
+   chiedendo, e la figura lo dice prima delle parole. `indietro` nomina la via
+   d'uscita, perche' non e' la stessa in tutte le domande. */
+function conferma(domanda, spiega, avanza, poi, indietro = "Torna indietro") {
   mostraOverlay(`<div class="ov conferma">
+      ${guida("detective-riflessione.png", "L’investigatore riflette")}
       <h2>${esc(domanda)}</h2>
-      <p class="nota">${esc(spiega)}</p>
+      ${spiega ? `<p class="nota">${esc(spiega)}</p>` : ""}
       <div class="azioni">
-        <button class="btn" data-close>Torna indietro</button>
+        <button class="btn" data-close>${esc(indietro)}</button>
         <button class="btn primaria" id="ov-si">${esc(avanza)}</button>
       </div>
     </div>`, domanda);
+  slots(overlayEl);
   overlayEl.querySelector("#ov-si").onclick = () => { chiudi(); poi(); };
 }
 function chiudi() { state.overlay = false; overlayEl.hidden = true; stage.focus(); }
