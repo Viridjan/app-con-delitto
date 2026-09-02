@@ -556,12 +556,17 @@ it.
 
 The ending is two screens again from 1 September 2026: **`sol` is the verdict alone** — the score
 out of ten and the band it falls in — and **`fine`** is the investigator, `STORY.soluzione` read
-out, and the word *Fine*. Both are columns: figure, then text, then button. The verdict speaks
-with one voice from 2 September 2026 — one family, `--sans`, and one size, `--t-cifra`, for the
-score, its «su 10», the band's name and its explanation. It had three sizes and two families for
-four lines. The score keeps the gold and the weight; it no longer keeps a size of its own. The
-rule has to be repeated inside the phone query, or the four-screens override there puts two
-sizes back under the score. On the verdict the
+out, and the word *Fine*. Both are columns: figure, then text, then button. Verdict and ending read like the avviso from
+2 September 2026: same family, same `--t-voce`, same weight 400, same `--muted`, for the score,
+its «su 10», the band's name, its explanation and the narrated solution. The verdict had three
+sizes and two families for four lines. The score keeps only the gold — it is the screen's one
+number and has to stay findable. All four are `--ink`, not `--muted`, from 2 September 2026: the
+investigator is telling the story, not annotating it in the margin. Two rules had to give up
+their own `color` for that — `.giudizio p` and `.vuoto` — because they tie on specificity with
+the shared rule and sit below it. The rule must be repeated inside the phone query, or the
+four-screens override there gives the score a size of its own again; and `.giudizio h2` may not
+carry a weight, or it beats the shared rule on specificity and the band's name comes out bold
+among four regular lines. On the verdict the
 **pose is half the verdict**, and `POSA_VERDETTO()` picks it before a word is read —
 `detective-soluzione` for the full ten, `detective-osservazione` when the name is right and the
 reconstruction stands (6-9), `detective-riflessione` for everything else, the blank sheet
