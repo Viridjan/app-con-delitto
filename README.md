@@ -184,7 +184,9 @@ node dom.js prima.txt # scrive il markup di tutte le schermate, battute scoperte
 
 `audit-mobile.js` si inietta nella pagina e misura, per ogni elemento con del testo, dimensione
 reale, contrasto e ingombro; `telaio-390.html` lo ospita dentro un iframe da 390px, perché
-Chromium headless non scende sotto i 500 per gli script. Insieme dicono se qualcosa è troppo
+Chromium headless non scende sotto i 500 per gli script. La cornice però non sostituisce il
+telefono: per mesi ha misurato regole che sul dispositivo non entravano nemmeno in funzione,
+perché mancava il `<meta viewport>`. Insieme dicono se qualcosa è troppo
 piccolo, troppo poco contrastato o troppo stretto per un dito.
 
 ```sh
