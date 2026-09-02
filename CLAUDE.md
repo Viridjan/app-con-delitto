@@ -386,16 +386,36 @@ that edit:
   malore's art brief follows. She names the victim.
 - **"signor De Robertis" became "signor Giuseppe"**, 29 August 2026, in Mauro's toast and in
   Roberto's added line. The surname survives only in the cast list.
-- **17 lines added**, every one flagged `nuova:true` and marked `[aggiunta, non di Gervasio]` in
-  the txt. Two in *La donazione* (28 August); then on 29 August a whole revision the user drafted
+- **31 lines added.** They used to carry `nuova:true` in `STORY` and print
+  `[aggiunta, non di Gervasio]` beside themselves in the txt; both went on 2 September 2026, at
+  the user's word, when the added lines had grown to half the script and the marker had stopped
+  telling anyone anything. `copione.txt` is now the text and nothing else. What follows is the
+  record, and it is the only one left — do not try to read provenance out of the files.
+  Two lines in *La donazione* (28 August); then on 29 August a whole revision the user drafted
   as `trash/documenti/copione-v2.txt`: Mauro's judgement of Giuseppe, the note found and read aloud and handed
   back, Augusto telling Mauro to put the bottle away — which is how the culprit gets the poison
   on stage — Giuseppe closing the door on Rosalia at the toast, and a third part for scene 1 that
-  ends the evening. Of 53 spoken lines, 17 are not Gervasio's.
-- ***Il racconto dell'olio* is the user's rewrite**, 28 August 2026: nine lines instead of six,
-  Augusto and Roberto hand the explanation back and forth, and "Adoro l'Olo" became "Adoro
-  l'Olio". Its "Indizi di gioco" block was dropped with it, and the `indizi`
+  ends the evening. On 2 September seven more lines comparing organic, integrated and conventional
+  crop protection entered scene 1, and four lines on Ogliarola, Cellina di Nardò and Coratina
+  entered the toast immediately before the accident, and on the same day the user rewrote that
+  first exchange himself: Mauro argues for organic, Roberto answers that it is a good road and not
+  the only one, and Giuseppe asks what the others are. Of 67 spoken lines, 31 are not Gervasio's
+  — nearly half.
+- ***Il racconto dell'olio* is the user's rewrite**, first rewritten on 28 August 2026 and
+  fact-checked again on 2 September: nine lines instead of six, with the real sequence — prompt
+  processing after harvest, cleaning, crushing, malaxation, centrifugal separation, optional
+  filtration — followed by chemical and sensory quality and protection from light, air and heat.
+  Augusto and Roberto hand the explanation back and forth. Its "Indizi di gioco" block was
+  dropped with it, and the `indizi`
   field no longer exists on any scene.
+- **The agricultural lines have institutional anchors.** Production and sensory claims follow
+  CREA Oleario and EU Regulation 2022/2104; organic prevention and authorised inputs follow EU
+  Regulation 2018/848; monitoring, thresholds and preference for non-chemical methods follow
+  Directive 2009/128/EC and Puglia's integrated-production rules. The cultivar profiles follow
+  Regione Puglia/CREA material for *Collina di Brindisi*: Ogliarola is delicate with leaf, grass
+  and artichoke notes; Cellina di Nardò contributes tomato and berry notes; Coratina is the more
+  intense, bitter and pungent comparison. Keep these as accessible dialogue, not application
+  instructions, doses or a claim that "organic" means untreated.
 - **The quiz is ours from 30 August 2026.** Gervasio's four questions had every right answer in
   slot A and distractors nobody would pick (*I Marinai*, *I Musicisti*). Six now, and every one
   offers **the four suspects** — `SOSPETTI`, in that order — so a question has no `opzioni` of
@@ -573,8 +593,11 @@ not the same one twice.
 **The solution is asked for twice**, from 2 September 2026. From the verdict, `Vedi la soluzione`
 opens *Sei sicuro di voler vedere la soluzione?* and, if you say yes, *Sei veramente sicuro…* —
 the same two buttons each time, `Ritenta` and `Vedi la soluzione`, and only the second yes turns
-the page. After a score the temptation is strong and reading it ends the game; `Ritenta` sends
-you back to the sheet, not to the previous screen. `chiediEAvanza()` is where both this and the
+the page. After a score the temptation is strong and reading it ends the game. `Ritenta` is **not** a
+change of mind, it is a new game: it opens a third question, *Vuoi ricominciare da capo?*, and
+its yes empties `state.risposte`, rebuilds `state.indagine` and goes to slide 0 — the reset that
+used to need a page reload. That is what `conferma()`'s sixth argument is for: give the way out a
+callback and it stops being a plain `data-close`. `chiediEAvanza()` is where both this and the
 clue table's confirmation hang, so a screen that must ask before leaving belongs there and
 nowhere else.
 
@@ -646,9 +669,8 @@ verdetto* went with the redesign: the screen says ten out of ten, which needs no
 own mark made the story look like a marked exercise; the button between them says `Vedi la
 soluzione`, so finding out is a choice. Landing on the verdict without having answered is only
 reachable by jumping with the developer panel, and the page says so rather than coming up blank.
-There is no *Ricomincia* any more either — a second
-performance means reloading the page, which is also the only thing that resets the investigation
-and the answers. Scene 1's third part exists for one reason: without it
+*Ricomincia* came back on 2 September 2026, but only as `Ritenta` on the way to the solution:
+it is the one path that resets the investigation and the answers without a page reload. Scene 1's third part exists for one reason: without it
 the biglietto plate and the foglio plate sat back to back, and two clue plates in a row read as
 one screen that changed picture.
 

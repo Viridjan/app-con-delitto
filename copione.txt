@@ -18,26 +18,36 @@ Mauro Damiani - Nuovo adepto degli Oliviani. Marito di Rosalia. È molto serio, 
 
 Roberto: «Benvenuti nella prima casa degli Oliviani!»
 Augusto: «Questa sera celebriamo l’ulivo, simbolo di pace e rinascita.»
+Mauro: «Io punterei ad una rinascita molto più improntata al biologico: meno prodotti di sintesi e più equilibrio naturale nell’oliveto.»
+Roberto: «È una strada valida, ma non è l’unica.»
+Giuseppe: «Quali altre possibilitá ci sono?»
+Mauro: «Biologico, integrato, convenzionale. Ma il biologico é il migliore, secondo me.»
+Roberto: «Il convenzionale offre più strumenti autorizzati quando un’infestazione minaccia il raccolto; l’integrato unisce prevenzione e monitoraggio a interventi mirati, evitando quelli non necessari.»
+Giuseppe: «Quindi nessun metodo significa trattare alla cieca.»
+Roberto: «Nel biologico si previene con varietà adatte, equilibrio del campo e metodi fisici o naturali. Se non basta, si usano soltanto sostanze autorizzate per il biologico.»
+Augusto: «La difesa integrata parte dal monitoraggio: si osservano il campo e le trappole, e si interviene solo quando serve.»
+Roberto: «Anche il convenzionale deve seguire questi principi. Può usare una gamma diversa di prodotti autorizzati, sempre secondo l’etichetta e in sicurezza.»
+Giuseppe: «Interessante!»
 Giuseppe: «Sono felice di essere qui. Questa comunità merita fiducia.»
 Rosalia, a bassa voce: «Zio Giuseppe… spero che tu sia davvero sicuro.»
-Mauro, alla moglie: «Tuo zio ascolta soltanto se stesso.»   [aggiunta, non di Gervasio]
-Rosalia, piano: «Parla piano, Mauro. Qui siamo ospiti.»   [aggiunta, non di Gervasio]
-Mauro, osservando Giuseppe: «Certe ricchezze non diventano pulite solo perché vengono donate.»   [aggiunta, non di Gervasio]
+Mauro, alla moglie: «Tuo zio ascolta soltanto se stesso.»
+Rosalia, piano: «Parla piano, Mauro. Qui siamo ospiti.»
+Mauro, osservando Giuseppe: «Certe ricchezze non diventano pulite solo perché vengono donate.»
 
 — SCENA 1, seconda parte: L’inaugurazione degli Oliviani —
 
-Mauro, raccogliendo un foglietto da terra: «Qualcuno ha perso questo.»   [aggiunta, non di Gervasio]
-Rosalia: «È mio. L’avevo scritto per mio zio.»   [aggiunta, non di Gervasio]
-Mauro, leggendo: «“Zio, ti prego: non fare la donazione. Quei beni fanno parte della nostra eredità.”»   [aggiunta, non di Gervasio]
-Rosalia: «È una questione di famiglia. Ridammelo, per favore.»   [aggiunta, non di Gervasio]
-Mauro, restituendole il foglio: «Tienilo. Ma quello che c’è scritto non lo dimentico.»   [aggiunta, non di Gervasio]
+Mauro, raccogliendo un foglietto da terra: «Qualcuno ha perso questo.»
+Rosalia: «È mio. L’avevo scritto per mio zio.»
+Mauro, leggendo: «“Zio, ti prego: non fare la donazione. Quei beni fanno parte della nostra eredità.”»
+Rosalia: «È una questione di famiglia. Ridammelo, per favore.»
+Mauro, restituendole il foglio: «Tienilo. Ma quello che c’è scritto non lo dimentico.»
 
 — SCENA 1, terza parte: L’inaugurazione degli Oliviani —
 
-Roberto: «La serata volge al termine, signor Giuseppe. Le è piaciuta la nostra casa?»   [aggiunta, non di Gervasio]
-Giuseppe: «Molto. Più di quanto immaginassi.»   [aggiunta, non di Gervasio]
-Rosalia, a Mauro, piano: «Di quel foglio non dire niente a nessuno.»   [aggiunta, non di Gervasio]
-Mauro: «Non serve che lo dica io.»   [aggiunta, non di Gervasio]
+Roberto: «La serata volge al termine, signor Giuseppe. Le è piaciuta la nostra casa?»
+Giuseppe: «Molto. Più di quanto immaginassi.»
+Rosalia, a Mauro, piano: «Di quel foglio non dire niente a nessuno.»
+Mauro: «Non serve che lo dica io.»
 
 — SCENA 2, prima parte: La donazione —
 
@@ -46,27 +56,27 @@ Roberto: «È un gesto generoso. Con il suo aiuto potremo crescere.»
 
 — SCENA 2, seconda parte: La donazione —
 
-Giuseppe: «Gli ulivi durano secoli. Vorrei che anche questa casa durasse così a lungo.»   [aggiunta, non di Gervasio]
-Roberto: «Allora il suo nome resterà fra queste mura, signor Giuseppe.»   [aggiunta, non di Gervasio]
+Giuseppe: «Gli ulivi durano secoli. Vorrei che anche questa casa durasse così a lungo.»
+Roberto: «Allora il suo nome resterà fra queste mura, signor Giuseppe.»
 
 — SCENA 2, terza parte: Il racconto dell’olio —
 
-Giuseppe, guardando la bottiglia d’olio: «Adoro l’Olio. Ditemi una cosa Augusto, come nasce davvero?»
-Augusto: «Prima si raccolgono le olive.»
-Augusto: «Poi c’è la frangitura.»
-Roberto: «Ovvero quando vengono pulite e schiacciate. Questa fase si chiama frangitura.»
-Augusto: «Grazie Roberto, vuoi spiegare anche la gramolatura?»
-Roberto: «Certo, la pasta di olive viene quindi mescolata lentamente.»
-Augusto: «Infine l’olio viene filtrato.»
-Giuseppe: «Quindi l’olio buono nasce da tanti passaggi.»
-Augusto: «Esatto. E nasce meglio da olive sane.»
+Giuseppe, guardando la bottiglia d’olio: «Adoro l’olio. Ditemi una cosa, Augusto: come nasce davvero?»
+Augusto: «La qualità comincia dalla raccolta: servono olive sane, al giusto grado di maturazione, portate presto al frantoio.»
+Roberto: «Prima si eliminano foglie e terra e si lavano le olive.»
+Augusto: «Poi arriva la frangitura: polpa e nocciolo vengono schiacciati e diventano una pasta.»
+Roberto: «Con la gramolatura la pasta viene mescolata lentamente, così le piccole gocce d’olio si uniscono.»
+Augusto: «Infine la centrifugazione separa l’olio dall’acqua e dalla sansa. Poi può essere filtrato.»
+Giuseppe: «E quando possiamo chiamarlo extravergine?»
+Roberto: «Quando supera sia le analisi sia l’assaggio: nessun difetto, profumo fruttato e acidità entro i limiti. L’acidità da sola non basta.»
+Augusto: «E anche l’olio migliore va protetto da luce, aria e calore.»
 
 — SCENA 2, quarta parte: La tensione —
 
 Mauro, piano: «E per avere olive sane… qualcuno usa sostanze pericolose.»
 Roberto: «Prodotti controllati, Mauro. Solo se usati nel modo giusto.»
-Augusto: «Rimetti quella bottiglietta nell’armadietto, Mauro. Non deve stare vicino al rinfresco.»   [aggiunta, non di Gervasio]
-Mauro: «Certo. Ci penso io.»   [aggiunta, non di Gervasio]
+Augusto: «Rimetti quella bottiglietta nell’armadietto, Mauro. Non deve stare vicino al rinfresco.»
+Mauro: «Certo. Ci penso io.»
 
 — SCENA 3, prima parte: Il brindisi —
 
@@ -74,7 +84,11 @@ Mauro: «Signor Giuseppe, un brindisi per questo nuovo inizio.»
 Giuseppe: «Volentieri. Alla vostra comunità.»
 Roberto, sullo sfondo: «Un buon olio racconta il territorio da cui nasce.»
 Augusto: «E racconta anche il lavoro di chi cura gli ulivi.»
-Giuseppe: «Ho già firmato tutto, Rosalia. Non cambierò idea.»   [aggiunta, non di Gervasio]
+Giuseppe: «E quali olive danno carattere agli oli pugliesi?»
+Roberto: «Qui nel Brindisino l’Ogliarola dà oli delicati, con note di foglia, erba e carciofo.»
+Augusto: «La Cellina di Nardò ricorda il pomodoro e i frutti di bosco; la Coratina è più intensa, amara e piccante.»
+Giuseppe: «Tre olive, tre voci diverse della stessa terra.»
+Giuseppe: «Ho già firmato tutto, Rosalia. Non cambierò idea.»
 Rosalia, tra sé: «Vorrei fermare tutto… ma ormai è tardi.»
 Mauro, tra sé: «Il male va fermato prima che cresca.»
 

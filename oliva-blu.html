@@ -603,11 +603,21 @@ const STORY = {
       battute:[
         {c:"Roberto", t:"Benvenuti nella prima casa degli Oliviani!"},
         {c:"Augusto", t:"Questa sera celebriamo l’ulivo, simbolo di pace e rinascita."},
+        {c:"Mauro", t:"Io punterei ad una rinascita molto più improntata al biologico: meno prodotti di sintesi e più equilibrio naturale nell’oliveto."},
+        {c:"Roberto", t:"È una strada valida, ma non è l’unica."},
+        {c:"Giuseppe", t:"Quali altre possibilitá ci sono?"},
+        {c:"Mauro", t:"Biologico, integrato, convenzionale. Ma il biologico é il migliore, secondo me."},
+        {c:"Roberto", t:"Il convenzionale offre più strumenti autorizzati quando un’infestazione minaccia il raccolto; l’integrato unisce prevenzione e monitoraggio a interventi mirati, evitando quelli non necessari."},
+        {c:"Giuseppe", t:"Quindi nessun metodo significa trattare alla cieca."},
+        {c:"Roberto", t:"Nel biologico si previene con varietà adatte, equilibrio del campo e metodi fisici o naturali. Se non basta, si usano soltanto sostanze autorizzate per il biologico."},
+        {c:"Augusto", t:"La difesa integrata parte dal monitoraggio: si osservano il campo e le trappole, e si interviene solo quando serve."},
+        {c:"Roberto", t:"Anche il convenzionale deve seguire questi principi. Può usare una gamma diversa di prodotti autorizzati, sempre secondo l’etichetta e in sicurezza."},
+        {c:"Giuseppe", t:"Interessante!"},
         {c:"Giuseppe", t:"Sono felice di essere qui. Questa comunità merita fiducia."},
         {c:"Rosalia", m:"a bassa voce", t:"Zio Giuseppe… spero che tu sia davvero sicuro."},
-        {c:"Mauro", m:"alla moglie", nuova:true, t:"Tuo zio ascolta soltanto se stesso."},
-        {c:"Rosalia", m:"piano", nuova:true, t:"Parla piano, Mauro. Qui siamo ospiti."},
-        {c:"Mauro", m:"osservando Giuseppe", nuova:true, t:"Certe ricchezze non diventano pulite solo perché vengono donate."}
+        {c:"Mauro", m:"alla moglie", t:"Tuo zio ascolta soltanto se stesso."},
+        {c:"Rosalia", m:"piano", t:"Parla piano, Mauro. Qui siamo ospiti."},
+        {c:"Mauro", m:"osservando Giuseppe", t:"Certe ricchezze non diventano pulite solo perché vengono donate."}
       ],
     },
     {
@@ -616,11 +626,11 @@ const STORY = {
       /* il biglietto e il pensiero di Mauro: nessuno in scena, l'oggetto parla da solo */
       cast:[],
       battute:[
-        {c:"Mauro", m:"raccogliendo un foglietto da terra", nuova:true, t:"Qualcuno ha perso questo."},
-        {c:"Rosalia", nuova:true, t:"È mio. L’avevo scritto per mio zio."},
-        {c:"Mauro", m:"leggendo", nuova:true, t:"“Zio, ti prego: non fare la donazione. Quei beni fanno parte della nostra eredità.”"},
-        {c:"Rosalia", nuova:true, t:"È una questione di famiglia. Ridammelo, per favore."},
-        {c:"Mauro", m:"restituendole il foglio", nuova:true, t:"Tienilo. Ma quello che c’è scritto non lo dimentico."}
+        {c:"Mauro", m:"raccogliendo un foglietto da terra", t:"Qualcuno ha perso questo."},
+        {c:"Rosalia", t:"È mio. L’avevo scritto per mio zio."},
+        {c:"Mauro", m:"leggendo", t:"“Zio, ti prego: non fare la donazione. Quei beni fanno parte della nostra eredità.”"},
+        {c:"Rosalia", t:"È una questione di famiglia. Ridammelo, per favore."},
+        {c:"Mauro", m:"restituendole il foglio", t:"Tienilo. Ma quello che c’è scritto non lo dimentico."}
       ],
     },
     {
@@ -629,10 +639,10 @@ const STORY = {
       cast:[{c:"Mauro",x:82.2,b:30.6,h:42},{c:"Augusto",x:32.4,b:20.8,h:55},{c:"Giuseppe",x:13.7,b:18.5,h:59},{c:"Rosalia",x:69,b:30.7,h:41},{c:"Roberto",x:48.9,b:-5.5,h:74,z:6}],
       primo:[{lato:"sx",x:19.4,b:8.4,h:44},{lato:"dx",x:96.5,b:-32.7,h:76,z:7}],
       battute:[
-        {c:"Roberto", nuova:true, t:"La serata volge al termine, signor Giuseppe. Le è piaciuta la nostra casa?"},
-        {c:"Giuseppe", nuova:true, t:"Molto. Più di quanto immaginassi."},
-        {c:"Rosalia", m:"a Mauro, piano", nuova:true, t:"Di quel foglio non dire niente a nessuno."},
-        {c:"Mauro", nuova:true, t:"Non serve che lo dica io."}
+        {c:"Roberto", t:"La serata volge al termine, signor Giuseppe. Le è piaciuta la nostra casa?"},
+        {c:"Giuseppe", t:"Molto. Più di quanto immaginassi."},
+        {c:"Rosalia", m:"a Mauro, piano", t:"Di quel foglio non dire niente a nessuno."},
+        {c:"Mauro", t:"Non serve che lo dica io."}
       ],
     },
     {
@@ -650,8 +660,8 @@ const STORY = {
       img:null, slot:"scena2", n:2, parte:"seconda parte",
       cast:[{c:"Roberto",x:65.2,b:17.1,h:58},{c:"Giuseppe",x:38.2,b:-10.1,h:87}],
       battute:[
-        {c:"Giuseppe", nuova:true, t:"Gli ulivi durano secoli. Vorrei che anche questa casa durasse così a lungo."},
-        {c:"Roberto", nuova:true, t:"Allora il suo nome resterà fra queste mura, signor Giuseppe."}
+        {c:"Giuseppe", t:"Gli ulivi durano secoli. Vorrei che anche questa casa durasse così a lungo."},
+        {c:"Roberto", t:"Allora il suo nome resterà fra queste mura, signor Giuseppe."}
       ],
     },
     {
@@ -659,15 +669,15 @@ const STORY = {
       img:null, slot:"scena2", n:2, parte:"terza parte",
       cast:[{c:"Roberto",x:65.2,b:17.1,h:55},{c:"Augusto",x:90.3,b:-5.6,h:83},{c:"Giuseppe",x:38.2,b:-10.1,h:87}],
       battute:[
-        {c:"Giuseppe", m:"guardando la bottiglia d’olio", t:"Adoro l’Olio. Ditemi una cosa Augusto, come nasce davvero?"},
-        {c:"Augusto", t:"Prima si raccolgono le olive."},
-        {c:"Augusto", t:"Poi c’è la frangitura."},
-        {c:"Roberto", t:"Ovvero quando vengono pulite e schiacciate. Questa fase si chiama frangitura."},
-        {c:"Augusto", t:"Grazie Roberto, vuoi spiegare anche la gramolatura?"},
-        {c:"Roberto", t:"Certo, la pasta di olive viene quindi mescolata lentamente."},
-        {c:"Augusto", t:"Infine l’olio viene filtrato."},
-        {c:"Giuseppe", t:"Quindi l’olio buono nasce da tanti passaggi."},
-        {c:"Augusto", t:"Esatto. E nasce meglio da olive sane."}
+        {c:"Giuseppe", m:"guardando la bottiglia d’olio", t:"Adoro l’olio. Ditemi una cosa, Augusto: come nasce davvero?"},
+        {c:"Augusto", t:"La qualità comincia dalla raccolta: servono olive sane, al giusto grado di maturazione, portate presto al frantoio."},
+        {c:"Roberto", t:"Prima si eliminano foglie e terra e si lavano le olive."},
+        {c:"Augusto", t:"Poi arriva la frangitura: polpa e nocciolo vengono schiacciati e diventano una pasta."},
+        {c:"Roberto", t:"Con la gramolatura la pasta viene mescolata lentamente, così le piccole gocce d’olio si uniscono."},
+        {c:"Augusto", t:"Infine la centrifugazione separa l’olio dall’acqua e dalla sansa. Poi può essere filtrato."},
+        {c:"Giuseppe", t:"E quando possiamo chiamarlo extravergine?"},
+        {c:"Roberto", t:"Quando supera sia le analisi sia l’assaggio: nessun difetto, profumo fruttato e acidità entro i limiti. L’acidità da sola non basta."},
+        {c:"Augusto", t:"E anche l’olio migliore va protetto da luce, aria e calore."}
       ],
     },
     {
@@ -678,8 +688,8 @@ const STORY = {
       battute:[
         {c:"Mauro", m:"piano", t:"E per avere olive sane… qualcuno usa sostanze pericolose."},
         {c:"Roberto", t:"Prodotti controllati, Mauro. Solo se usati nel modo giusto."},
-        {c:"Augusto", nuova:true, t:"Rimetti quella bottiglietta nell’armadietto, Mauro. Non deve stare vicino al rinfresco."},
-        {c:"Mauro", nuova:true, t:"Certo. Ci penso io."}
+        {c:"Augusto", t:"Rimetti quella bottiglietta nell’armadietto, Mauro. Non deve stare vicino al rinfresco."},
+        {c:"Mauro", t:"Certo. Ci penso io."}
       ],
     },
     {
@@ -693,7 +703,11 @@ const STORY = {
         {c:"Giuseppe", t:"Volentieri. Alla vostra comunità."},
         {c:"Roberto", m:"sullo sfondo", t:"Un buon olio racconta il territorio da cui nasce."},
         {c:"Augusto", t:"E racconta anche il lavoro di chi cura gli ulivi."},
-        {c:"Giuseppe", nuova:true, t:"Ho già firmato tutto, Rosalia. Non cambierò idea."},
+        {c:"Giuseppe", t:"E quali olive danno carattere agli oli pugliesi?"},
+        {c:"Roberto", t:"Qui nel Brindisino l’Ogliarola dà oli delicati, con note di foglia, erba e carciofo."},
+        {c:"Augusto", t:"La Cellina di Nardò ricorda il pomodoro e i frutti di bosco; la Coratina è più intensa, amara e piccante."},
+        {c:"Giuseppe", t:"Tre olive, tre voci diverse della stessa terra."},
+        {c:"Giuseppe", t:"Ho già firmato tutto, Rosalia. Non cambierò idea."},
         {c:"Rosalia", m:"tra sé", t:"Vorrei fermare tutto… ma ormai è tardi."},
         {c:"Mauro", m:"tra sé", t:"Il male va fermato prima che cresca."}
       ],
@@ -1476,15 +1490,27 @@ function pulsanteAvanti() {
 
 /* Chiudere l'indagine a meta' non e' un passo qualunque: prima si chiede.
    Parla l'investigatore, non il regolamento — degli indizi non fa parola. */
+/* `Ritenta` non e' un ripensamento, e' una partita nuova: riporta alla
+   copertina e azzera quello che il ricaricamento azzerava prima — le risposte
+   della scheda e l'indagine. Anche questo si chiede, perche' e' irreversibile. */
+function ricomincia() {
+  conferma("Vuoi ricominciare da capo?",
+    "Torni alla copertina, e le risposte della scheda e l’indagine si azzerano.",
+    "Ricomincia", () => {
+      state.risposte = [];
+      state.indagine = nuovaIndagine();
+      vai(0);
+    }, "Resta qui");
+}
+
 /* La soluzione si chiede due volte: dopo il verdetto la tentazione e' forte,
-   e leggerla chiude la partita. `Ritenta` riporta alla scheda, non alla
-   schermata precedente. */
+   e leggerla chiude la partita. */
 function chiediLaSoluzione() {
   conferma("Sei sicuro di voler vedere la soluzione?", "",
     "Vedi la soluzione", () =>
       conferma("Sei veramente sicuro di voler vedere la soluzione?", "",
-        "Vedi la soluzione", avanti, "Ritenta"),
-    "Ritenta");
+        "Vedi la soluzione", avanti, "Ritenta", ricomincia),
+    "Ritenta", ricomincia);
 }
 
 function chiediEAvanza() {
@@ -1990,18 +2016,20 @@ function apri() { ovHelp(); mostraOverlay(overlayEl.innerHTML, "Comandi dell’i
 /* Ogni conferma si apre con l'investigatore che riflette: e' lui che sta
    chiedendo, e la figura lo dice prima delle parole. `indietro` nomina la via
    d'uscita, perche' non e' la stessa in tutte le domande. */
-function conferma(domanda, spiega, avanza, poi, indietro = "Torna indietro") {
+function conferma(domanda, spiega, avanza, poi, indietro = "Torna indietro", poiIndietro = null) {
   mostraOverlay(`<div class="ov conferma">
       ${guida("detective-riflessione.png", "L’investigatore riflette")}
       <h2>${esc(domanda)}</h2>
       ${spiega ? `<p class="nota">${esc(spiega)}</p>` : ""}
       <div class="azioni">
-        <button class="btn" data-close>${esc(indietro)}</button>
+        <button class="btn"${poiIndietro ? ` id="ov-no"` : " data-close"}>${esc(indietro)}</button>
         <button class="btn primaria" id="ov-si">${esc(avanza)}</button>
       </div>
     </div>`, domanda);
   slots(overlayEl);
   overlayEl.querySelector("#ov-si").onclick = () => { chiudi(); poi(); };
+  const no = overlayEl.querySelector("#ov-no");
+  if (no) no.onclick = poiIndietro;   // non chiude: apre la domanda seguente
 }
 function chiudi() { state.overlay = false; overlayEl.hidden = true; stage.focus(); }
 overlayEl.addEventListener("click", e => { if (e.target === overlayEl || e.target.closest("[data-close]")) chiudi(); });

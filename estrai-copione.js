@@ -20,7 +20,7 @@ S.scene.forEach((s, i) => {
   riga("");
   riga(`— SCENA ${s.n || i + 1}${s.parte ? `, ${s.parte}` : ""}: ${s.titolo} —`);
   riga("");
-  s.battute.forEach(b => riga(`${b.c}${b.m ? `, ${b.m}` : ""}: «${b.t}»${b.nuova ? "   [aggiunta, non di Gervasio]" : ""}`));
+  s.battute.forEach(b => riga(`${b.c}${b.m ? `, ${b.m}` : ""}: «${b.t}»`));
 });
 riga("");
 riga("— FRASE FINALE DELL’INVESTIGATORE —");
