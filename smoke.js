@@ -3,7 +3,7 @@
 const fs = require("fs"), assert = require("assert");
 const { apri } = require("./stub-dom");
 
-const CODA = "{state,SLIDES,STORY,vai,avanti,scopri,etichettaAvanti,restaDaScoprire,pulsanteAvanti,indagineCompleta,POSA_VERDETTO,render,regia,sviluppo,apriIndizio,SCELTE_MAX,PERSONE_MAX,SOSPETTI,REGIA_OK,DEV_OK,TITOLI_OK,attesi,ATTORE}";
+const CODA = "{state,SLIDES,STORY,vai,avanti,scopri,etichettaAvanti,restaDaScoprire,pulsanteAvanti,indagineCompleta,POSA_VERDETTO,render,regia,sviluppo,apriIndizio,SCELTE_MAX,PERSONE_MAX,SOSPETTI,REGIA_OK,DEV_OK,TITOLI_OK,attesi,ATTORE,ASSETS,demo,SCENE_IMG,velo:()=>VELO}";
 const { app, stage } = apri(CODA);
 
 // ogni schermata si disegna e produce contenuto
@@ -89,6 +89,26 @@ app.STORY.scene.forEach((sc, i) => (sc.cast || []).forEach(x => {
 }));
 assert.deepStrictEqual(senzaImmagine, [],
   `figure senza ritaglio incorporato: ${senzaImmagine.join(", ")}`);
+
+/* La demo copre sfondi e pose, e non tocca `ASSETS`: e' un velo davanti, non
+   una sostituzione. Spegnerla non deve rimettere a posto niente, perche' non
+   c'e' niente da rimettere — e questo controllo se ne accerta. */
+const scenaConPosa = 0; // scena 1: Mauro usa la posa `guardingo`
+const posaPrima = app.ATTORE("Mauro", scenaConPosa);
+const assetPrima = JSON.stringify(app.ASSETS);
+assert.strictEqual(app.velo(), null, "le sagome demo vengono costruite gia' all'avvio");
+app.demo();
+assert.ok(app.velo(), "il primo avvio della demo non costruisce le sagome");
+assert.notStrictEqual(app.ATTORE("Mauro", scenaConPosa), posaPrima, "la demo non copre una posa di Mauro");
+assert.ok(app.ATTORE("Mauro", scenaConPosa).startsWith("data:image/svg+xml"), "la posa demo non e' una sagoma");
+assert.ok(app.SCENE_IMG(scenaConPosa).startsWith("data:image/svg+xml"), "la demo non copre lo sfondo");
+assert.strictEqual(JSON.stringify(app.ASSETS), assetPrima, "la demo ha modificato ASSETS invece di velarlo");
+app.demo();
+assert.strictEqual(app.ATTORE("Mauro", scenaConPosa), posaPrima, "spegnendo la demo la posa non torna originale");
+assert.strictEqual(JSON.stringify(app.ASSETS), assetPrima, "spegnendo la demo ASSETS non e' quello di prima");
+
+const inventarioPrima = app.attesi();
+assert.strictEqual(app.attesi(), inventarioPrima, "l'inventario statico degli asset viene ricostruito");
 
 /* i cinque esiti, e nessun punteggio senza verdetto: senza i tre punti del
    colpevole non si supera il sette, quindi le fasce coprono tutto */

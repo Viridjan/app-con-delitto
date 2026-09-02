@@ -1,5 +1,5 @@
-# scarti delle generazioni: 109MB di versioni bocciate, restano sul disco
-assets/images/bocciate/
+# scarti delle generazioni e vecchi documenti: restano sul disco
+trash/
 
 # copie web derivate: le rigenera sync-assets.py
 assets/web/

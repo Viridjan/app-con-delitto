@@ -150,11 +150,12 @@ Aprire l'app e premere `p` per controllare le caselle collegate.
 
 ## Regola di selezione delle versioni
 
-La cartella `assets/images/bocciate/` contiene immagini scartate e va sempre esclusa dalla
-selezione dei file di partenza. Per ogni nuova revisione, lavorare sull'ultima versione numerica
-presente in `assets/images/` **al di fuori di `bocciate/`** (per esempio, tra `-v2` e `-v4` usare
-`-v4`). Un numero di versione più alto dentro `bocciate/` non rende quell'immagine attiva e non
+La cartella `trash/immagini/` contiene immagini scartate e va sempre esclusa dalla selezione dei
+file di partenza. Per ogni nuova revisione, lavorare sull'ultima versione numerica presente in
+`assets/images/` (per esempio, tra `-v2` e `-v4` usare `-v4`). Un numero di versione più alto
+dentro `trash/immagini/` non rende quell'immagine attiva e non
 deve mai essere usato come riferimento. Una revisione dello stesso soggetto va versionata senza
 sovrascrivere file esistenti; il suffisso deve restare progressivo e non riutilizzare numeri già
 presenti, compresi quelli delle immagini bocciate. Una nuova posa può invece ricevere un nome
-semantico univoco. In entrambi i casi, non usare mai come riferimento un file in `bocciate/`.
+semantico univoco. In entrambi i casi, non usare mai come riferimento un file in
+`trash/immagini/`.

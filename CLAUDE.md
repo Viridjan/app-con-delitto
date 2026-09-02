@@ -45,8 +45,9 @@ isolare un caso si commenta il resto.
 - `sync-assets.py` — hooks Codex's deliveries into the app. Run after every delivery.
 - `smoke.js` — walks every screen, checks the quiz maths, and guards what nothing else can:
   the copione, the investigation's budget, the clue table's hand-written quotes, the public
-  build's gates, and the voice profiles shared with `voci.html`. Run it after touching the
-  script block.
+  build's gates, the voice profiles shared with `voci.html`, both directions of the stage's
+  `data-*` contract, that every figure of every scene resolves to an embedded image, and that
+  `d` leaves `ASSETS` untouched. Run it after touching the script block.
 - `stub-dom.js` — the fake DOM the three node scripts share. Not run on its own.
 - `dom.js` — writes the markup of every screen to a file. Run it before and after a refactor:
   with `class` and `style` stripped, the diff must be empty.
@@ -63,8 +64,11 @@ isolare un caso si commenta il resto.
   iframe and the result is read out of it.
 - `img/ART.md` — the illustration brief Codex works from.
 - `assets/images/` — Codex's deliveries, named by subject (`sala2`, `sala1-scena2`, `brindisi`,
-  `malore`, the `indizio-*` plates), mapped to slots in `SCELTE`. Rejects go to
-  `assets/images/bocciate/`; that folder and `assets/web/` are gitignored.
+  `malore`, the `indizio-*` plates), mapped to slots in `SCELTE`.
+- `trash/` — local, gitignored archive, divided by file type: rejected PNG files go in
+  `trash/immagini/`, superseded working texts in `trash/documenti/`. It currently contains the
+  former `copione-v2.txt` and everything previously kept in `assets/images/bocciate/`. Nothing
+  in this folder is read by the app or its build scripts.
 
 ## Rules that matter
 
@@ -140,10 +144,26 @@ gate leaks.
 **Images must be optional.** Every slot falls back to a typographic placeholder via `slots()` on
 `error`. The app must look finished with `assets/images/` empty.
 
+**`d` is a veil, not a substitution.** `VELO` holds one silhouette per slot the demo covers —
+every background, every neutral cutout, every pose — and `src()` reads it first while
+`state.demo` is on. It is deliberately lazy: `creaVelo()` runs only on the first `d`, not during
+normal startup, and reuses one encoded SVG per character across all that character's poses.
+`ASSETS` is never touched, so turning the demo off restores
+nothing because nothing was taken. It used to write into `ASSETS` and, on the way out, `delete`
+the keys: pressing `d` twice **destroyed the real embedded images** until the page was reloaded.
+Codex found that and fixed it with a backup map on 2 September 2026; the veil removes the whole
+class instead. One consequence to know: `src()` now reads `state`, so anything calling it at load
+time must be lazy — `COVER_IMG` became a function for exactly that reason.
+
+**Static inventories are cached.** `attesi()` derives its list only from immutable `STORY`,
+`POSE_SCENA`, `SOSPETTI` and `OGGETTO_ID`; it stores the deduplicated result in `ATTESI` on first
+use. Do not invalidate or rebuild it during `render()`. If any of those sources ever becomes
+editable at runtime, remove the cache or give that editor an explicit invalidation step.
+
 **Image revisions must always be versioned.** Never overwrite an existing image, including
 newly generated assets that have not been committed yet. Keep the original filename unchanged
 and save every revision with the next available numeric suffix (`-v2`, `-v3`, …). Version
-numbers already used anywhere, including `assets/images/bocciate/`, must not be reused. A new
+numbers already used anywhere, including rejected files in `trash/immagini/`, must not be reused. A new
 semantic pose may start with a new descriptive filename, but later changes to that pose must
 still use numeric version suffixes.
 
@@ -205,7 +225,7 @@ Normalised on 29 August 2026; keep it this way rather than adding a fourth way t
   of it, because both scenes borrow scene 1's hall through `sfondoDa`. `sync-assets.py` keeps a
   `MAI_DISEGNATI` set for exactly this. `attore-rosalia.png` and `attore-mauro.png` followed,
   another 144KB: those two have a pose in every scene, so their neutral cutout was never asked
-  for — and unlike the two rooms, the files went to `bocciate/`. That is a bet on `POSE_SCENA`,
+  for — and unlike the two rooms, the files went to `trash/immagini/`. That is a bet on `POSE_SCENA`,
   so `smoke.js` now resolves every figure of every scene through `ATTORE()` and fails unless it
   lands on an embedded image; proven by taking Mauro's pose out of scene 1 and watching it name
   both parts. Giuseppe, Roberto and Augusto keep their neutral cutouts, because those three do
@@ -363,7 +383,7 @@ that edit:
   Roberto's added line. The surname survives only in the cast list.
 - **17 lines added**, every one flagged `nuova:true` and marked `[aggiunta, non di Gervasio]` in
   the txt. Two in *La donazione* (28 August); then on 29 August a whole revision the user drafted
-  as `copione-v2.txt`: Mauro's judgement of Giuseppe, the note found and read aloud and handed
+  as `trash/documenti/copione-v2.txt`: Mauro's judgement of Giuseppe, the note found and read aloud and handed
   back, Augusto telling Mauro to put the bottle away — which is how the culprit gets the poison
   on stage — Giuseppe closing the door on Rosalia at the toast, and a third part for scene 1 that
   ends the evening. Of 53 spoken lines, 17 are not Gervasio's.
@@ -577,7 +597,7 @@ a service body instead of a narrated one, and text ranged left, because a paragr
 centred reads as a poem. The text itself is untouched, so `copione.txt` does not move: it comes
 from `STORY.disclaimer` either way. `detective-scoperta`, finger raised, carries the **last
 screen**; all five are hooked, and `sync-assets.py` reports nothing unused. Two files that were
-left over went to `bocciate/`: `attore-augusto-spiegazione`, a good pose nobody ever put in
+left over went to `trash/immagini/`: `attore-augusto-spiegazione`, a good pose nobody ever put in
 `POSE_SCENA`, and `quadro-oliva`, the still the animated cover replaced. They are on disk, out of
 git — bring the pose back if scene 2 ever wants it.
 
@@ -737,6 +757,12 @@ or the cache hands back the old cut.
 Already-converted files are reused from `assets/web/` when the copy is newer than the source —
 without that, every run re-encoded the cover's 21 frames. Stills are saved with `method=4`: `6`
 exhausted memory on the square RGBA clue plates and buys nothing at these sizes.
+
+`LARGH["scena"]` is **1200**, down from 1600 the same day: at 1920×1080 the stage is a square of
+about 390 CSS px, so 1600 was four times what any screen asks for. 1200 keeps 3× of headroom
+there and is still 1:1 on a 4K panel; measured across the whole stage the difference is 3.75 of
+765. The other widths are already right — the card portrait can reach ~600px on a 1080 screen,
+which at 2× is more than the 900 it is generated at.
 
 Their quality is **80**, lowered from 86 on 2 September 2026: on a portrait crop at 1:1 the mean
 difference is 9 of 765 and the largest 64 — invisible on this kind of painted art — and it took

@@ -96,8 +96,9 @@ casella (`scena1.png ← scena3-sala2`), mentre la versione (`-v4`, `-v5`) la sc
 tenendo la più alta. Lo script dice anche cosa manca ancora. **Ogni casella vuota mostra il brief al posto
 dell'immagine**, quindi l'app resta presentabile anche a consegna incompleta.
 
-Premendo `d` dentro l'app compaiono sagome di prova al posto delle illustrazioni mancanti, utili
-per giudicare posizioni e ritmo prima che l'arte sia pronta.
+Premendo `d` dentro l'app tutte le illustrazioni diventano sagome colorate — sfondi, ritagli e
+pose — utili per giudicare posizioni e ritmo senza farsi distrarre dal disegno. È un velo: le
+immagini vere restano dove sono, e ripremendo `d` tornano.
 
 ## L'indagine
 
@@ -151,7 +152,7 @@ restano al plurale dove lo erano.
 | `←` / `↑` | niente: la storia non torna indietro (sui personaggi risfoglia le schede) |
 | pulsante «Prosegui» | l'unico modo di cambiare schermata |
 | `1`–`4` | apre un indizio sul tavolo (ne restano due, poi si chiudono) |
-| `d` | sagome di prova al posto delle illustrazioni mancanti |
+| `d` | sagome colorate al posto delle illustrazioni |
 | `r` | regia: sposta e ridimensiona personaggi e oggetti sulla scena (non sul sito pubblico) |
 | `[` `]` | in regia: porta il selezionato in secondo o in primo piano, oggetti compresi |
 | `v` | sviluppo: stato, immagini mancanti, salto a una schermata (non sul sito pubblico) |
