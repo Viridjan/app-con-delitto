@@ -6,7 +6,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 A presenter webapp for *Il mistero dell'oliva blu*, an Italian "cena con delitto" script by
 Carlo Maria Gervasio (`ullgi_L-inaugurazione_COSTA_rev.pdf`), used with the author's permission.
-A narrator drives it live in front of a table of players. The rights to the text stay his: the
+The investigator drives it live in front of a table of players: the meeple on screen and the
+person holding the remote are one character, so there is one word for both. The rights to the text stay his: the
 permission covers this app, not reuse anywhere else, so never publish the copione or lift lines
 out of it into another place.
 
@@ -37,8 +38,9 @@ isolare un caso si commenta il resto.
 
 ## Files
 
-- `oliva-blu.html` — the whole app. One self-contained file: `<style>`, `const STORY`, `<script>`.
-  No build, no dependencies, no server. Images are embedded as data URIs.
+- `oliva-blu.html` — the whole app. One self-contained, standards-mode HTML document: explicit
+  doctype, `lang="it"`, UTF-8 charset and device-width viewport, then `<style>`, `const STORY`
+  and `<script>`. No build, no dependencies, no server. Images are embedded as data URIs.
 - `index.html` — redirect for Pages, which serves `index.html` at the root.
 - `sync-assets.py` — hooks Codex's deliveries into the app. Run after every delivery.
 - `smoke.js` — walks every screen, checks the quiz maths, and guards what nothing else can:
@@ -102,12 +104,12 @@ left-edge click, no `←`, no stepping back through a scene's lines. A line reve
 revealed, and nobody watching ever sees the story rewind. `vai(n)` therefore always starts a
 screen at its beginning — `step 0` everywhere, and `step 1` on a scene, because from
 1 September 2026 a scene opens with its **first line already revealed** and its voice already
-spoken: opening on an empty column cost the narrator a gesture to make someone already on stage
+spoken: opening on an empty column cost the investigator a gesture to make someone already on stage
 say the first word. `#app` is a single-row grid — do not put the bar or the backwards path
-back. The cost is real and deliberate: a narrator who overshoots cannot step back, and on the
+back. The cost is real and deliberate: an investigator who overshoots cannot step back, and on the
 public site the only remedy is reloading. Where the author works, the developer panel's `↑`
-still pages freely — that is not the performance. A click that lands on `[data-clue|chiedi|indagine|opt|go]`, or anywhere inside an open
-`.detail`, does its own job and never advances; staging mode (`r`) suppresses the advance too, so
+still pages freely — that is not the performance. A click that lands on `[data-clue]`, `[data-chiedi]`, `[data-avanti]` or `[data-opt]` — the list
+in the stage's handler — or anywhere inside an open `.detail`, does its own job and never advances; staging mode (`r`) suppresses the advance too, so
 a drag is not a click. Any new interactive element needs its `data-` attribute in that list, or
 touching it will also turn the page.
 
@@ -149,6 +151,13 @@ still use numeric version suffixes.
 
 Normalised on 29 August 2026; keep it this way rather than adding a fourth way to do each thing.
 
+- **The document shell is not optional.** Since 2 September 2026 `oliva-blu.html` is a complete
+  standards-mode document with `<!doctype html>`, `<html lang="it">`, an explicit `<head>` and
+  `<body>`, `<meta charset="utf-8">`, and `<meta name="viewport"
+  content="width=device-width, initial-scale=1">`. The viewport declaration is what makes the
+  640/700px phone rules run on a real device instead of a browser's roughly 980px virtual
+  layout viewport. Do not turn the file back into an HTML fragment; `index.html`'s metadata is
+  not inherited after its redirect.
 - **Type is tokenised** like colour: `--serif`, `--sans`, `--mono` on `:root`. Nine literal font
   stacks in three different spellings were collapsed into these. Never write a family list again.
 - **Size is tokenised too**, from 2 September 2026, and there are **six steps**, no more:
@@ -191,6 +200,16 @@ Normalised on 29 August 2026; keep it this way rather than adding a fourth way t
   each — and being arrows rather than declarations, they must stay above `VISTE`, which holds
   their value, not their name. `punteggio()` and `preso()` sit next to them for the same reason: the score and
   "was the culprit named" were each computed in two places.
+- **Nothing embedded that nobody draws.** The app carries its images as data URIs, so a slot the
+  pipeline fills but no screen requests is pure weight: `scena3.png` and `scena4.png` were 772KB
+  of it, because both scenes borrow scene 1's hall through `sfondoDa`. `sync-assets.py` keeps a
+  `MAI_DISEGNATI` set for exactly this. `attore-rosalia.png` and `attore-mauro.png` followed,
+  another 144KB: those two have a pose in every scene, so their neutral cutout was never asked
+  for — and unlike the two rooms, the files went to `bocciate/`. That is a bet on `POSE_SCENA`,
+  so `smoke.js` now resolves every figure of every scene through `ATTORE()` and fails unless it
+  lands on an embedded image; proven by taking Mauro's pose out of scene 1 and watching it name
+  both parts. Giuseppe, Roberto and Augusto keep their neutral cutouts, because those three do
+  fall back. Six megabytes became five.
 - **`document.querySelector` is not used anywhere.** Inside the stage nothing needs it — the
   markup is rewritten every render; outside it, the two panels are held by reference. If a new
   one appears, ask what it is standing in for.
@@ -199,7 +218,7 @@ Normalised on 29 August 2026; keep it this way rather than adding a fourth way t
   background's `alt` (it announced "Scena 12" on the screen titled *Scena 4 · terza parte*) and
   into `demo()`, which filled slots named `scena7.png` that nothing draws.
 
-- **Four things live outside `#stage`**, and they are the ones that need care: `#k-muto` and
+- **Four things live outside `#stage`**, and they are the ones that need care: `.volume` and
   `#overlay` from the static markup, and `.regia-pan`, `.dev-pan` appended to `document.body` at
   runtime. The advance button was a fifth until 1 September 2026, and that is exactly why it drew
   itself and did nothing for one publish: the stage's delegated handler cannot see outside. `render()` wipes the stage with `stage.innerHTML = …`, so anything
@@ -318,7 +337,7 @@ it found and what was done:
   under `@media (pointer:coarse),(max-width:700px)` — the width clause is there because
   `pointer:coarse` cannot be exercised in headless while a narrow window can.
 - **Then every button grew 30%**, 1 September 2026, and this one is **not** phone-only: `.btn`
-  and `.aiuto` are bigger everywhere, projector included — type, padding and the touch floor,
+  and the volume control are bigger everywhere, projector included — type, padding and the touch floor,
   which went from 44px to 57. Growing them broke something that had held until then: `Chiudi
   l'indagine →` and `Scopri la soluzione →` came out wider than a 390px phone and were clipped on
   the left, because the narrow query pinned `.btn` to `white-space:nowrap`. That clause is gone;
@@ -384,7 +403,7 @@ that edit:
   every string of the app's own. Giuseppe's «Alla vostra comunità» stays plural: he is speaking
   to Roberto and Augusto, not to whoever is playing. That is the test for any future line — who
   is being addressed, a character or the room.
-- **The narrator's recap is ours now**, 31 August 2026. Gervasio's five lines listed the clues —
+- **The investigator's recap is ours now**, 31 August 2026. Gervasio's five lines listed the clues —
   «Mauro ha portato il bicchiere», «Nel bicchiere c'era un prodotto pericoloso» — which handed
   over the culprit and the poison one screen before the sheet asks for them. Three lines replace
   them: the evening summed up, no clue named, no name accused. His «Ora tocca a te risolvere il
@@ -408,7 +427,7 @@ that edit:
   bene!" included. `STORY.oggetti` and the clue table are untouched: they never lived in the txt.
   `smoke.js` fails if a clue card quotes a line nobody says any more: those `refs` are written by
   hand and drift on their own.
-- Nothing else is missing. Labels, the clue captions, the narrator's recap, the solution and the
+- Nothing else is missing. Labels, the clue captions, the investigator's recap, the solution and the
   closing message are all still there — they live outside `battute`, so a dialogue-only check
   will not see them.
 
@@ -456,7 +475,7 @@ copione**: each is information the scene did not give. They are the culprit's pr
 «non me lo ricordo» about the bottle and «andava fermata» about the note only convict him
 together, so only the right pair of objects gets both. Under each answer the detail also lists
 what that person had already said in the scenes (`o.refs`), which is what keeps `refs` alive and
-gives the narrator the link. What was not asked stays unread — that is the point, so never add a
+gives the investigator the link. What was not asked stays unread — that is the point, so never add a
 way to peek.
 
 **A click reveals; a button turns the page.** From 31 August 2026 the two are separate verbs:
@@ -464,7 +483,7 @@ way to peek.
 card, and the step from one part of a scene to the next, because parts are a cut of staging and
 not a new chapter. It returns false only when the next move leaves the scene; that is the
 button's job, and nothing else calls `avanti()`. The button sits in the flow, right-aligned: **above the newest line** on a
-scene, at the head of the dialogue column, because that is where the narrator is already looking
+scene, at the head of the dialogue column, because that is where the investigator is already looking
 and the column scrolls back there on every line; and at the foot of the sheet everywhere else.
 On a scene the button is **outside the scrolling**: `.dialoghi` is a plain flex column, and it is
 `.bubbles` that scrolls, so the scrollbar starts under the button instead of running past it —
@@ -537,7 +556,7 @@ copertina · avviso · personaggi
 2  La donazione                     il foglio + sala + Il racconto dell'olio + La tensione
 3  Il brindisi                      sala + Il malore dell'oliva blu
 4  Gli indizi sul tavolo            la bottiglietta + il bicchiere + sala
-tavolo degli indizi · narratore · scheda finale · verdetto · soluzione e congedo
+tavolo degli indizi · investigatore · scheda finale · verdetto · soluzione e congedo
 ```
 
 Twenty screens, twelve of them scenes. Codex delivered five meeple-detective poses on
@@ -550,7 +569,7 @@ same day: 76vh on the recap, 72 on the avviso, 64 on the other two, each with th
 doubled to match. At 1280×800 that costs the fold — the stage scrolls by 30 to 78px and the
 button sits just under it. The trade was asked for with the figures on the table; the smaller
 caps are one number each if it is ever wanted back. The `v` panel's row for the recap reads
-**Il detective**, not *Il narratore*: the narrator is the person holding the remote. `detective-osservazione`, lens in hand, opens the clue table beside its title. `detective-presentazione` carries the **avviso**, the screen added on
+**Il detective**, the same name the audience sees. `detective-osservazione`, lens in hand, opens the clue table beside its title. `detective-presentazione` carries the **avviso**, the screen added on
 1 September 2026 between the cover and the cast: the disclaimer used to sit under the cover
 image, where nobody read it, and now it has a page of its own with the investigator above it —
 the same `.narr-fine` column as the recap, plus an `.avviso` class carrying its two differences:
@@ -616,8 +635,9 @@ is why `primo` follows `SFONDO()`. Both parts of scene 3 borrow that hall: it is
 they can share the two foreground tables, which exist solely as `scena1-sx/dx`. `sfondoDa` also
 takes a plain file stem, which is how four screens show a clue plate instead of a room.
 
-The cost: `scena3.png` and `scena4.png` are still embedded while nothing draws them, about 580KB,
-kept because the art is still moving.
+Neither `scena3.png` nor `scena4.png` is embedded any more: nothing draws them, so
+`sync-assets.py` skips them — see `MAI_DISEGNATI`. The `.png` stay in `assets/images/`, so
+giving a scene its own room again costs one line and a re-sync.
 
 ## Poses
 
@@ -685,8 +705,8 @@ drift across the line, lowpass cutoff and its own `vol` — so they are told apa
 only pitch. Square and sawtooth carry far more energy than sine at the same number, which is
 what the per-voice volume is for. Muted with `m` or the pill next to `?`.
 
-The narrator has no profile at all, and `suona()` returns early without one — that early return
-is the whole implementation of "il narratore non ha voce". Only `avanti()` speaks, so stepping
+The investigator has no profile at all, and `suona()` returns early without one — that early return
+is the whole implementation of "l'investigatore non ha voce". Only `avanti()` speaks, so stepping
 back through a scene is silent on purpose.
 
 The audio context starts suspended and `resume()` is async: schedule the blips **after** it has
@@ -717,6 +737,12 @@ or the cache hands back the old cut.
 Already-converted files are reused from `assets/web/` when the copy is newer than the source —
 without that, every run re-encoded the cover's 21 frames. Stills are saved with `method=4`: `6`
 exhausted memory on the square RGBA clue plates and buys nothing at these sizes.
+
+Their quality is **80**, lowered from 86 on 2 September 2026: on a portrait crop at 1:1 the mean
+difference is 9 of 765 and the largest 64 — invisible on this kind of painted art — and it took
+the app from 4.98MB to 4.10MB. Do not go lower without looking: at 74 the saving is another
+20% and the brush texture starts to flatten. The cache in `assets/web/` is keyed by mtime, so
+**delete it before re-syncing** when the quality changes, or the old encodes come straight back.
 
 ## Deliberate omissions
 

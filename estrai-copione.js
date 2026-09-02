@@ -23,8 +23,8 @@ S.scene.forEach((s, i) => {
   s.battute.forEach(b => riga(`${b.c}${b.m ? `, ${b.m}` : ""}: «${b.t}»${b.nuova ? "   [aggiunta, non di Gervasio]" : ""}`));
 });
 riga("");
-riga("— FRASE FINALE DEL NARRATORE —");
-S.narratoreFinale.forEach(r => riga(r));
+riga("— FRASE FINALE DELL’INVESTIGATORE —");
+S.investigatoreFinale.forEach(r => riga(r));
 riga("");
 riga("— SCHEDA FINALE —");
 S.quiz.forEach((q, i) => {

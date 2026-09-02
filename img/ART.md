@@ -52,8 +52,6 @@ Regole di continuità:
 
 - Il simbolo degli Oliviani — una **grande oliva stilizzata** — ricorre in ogni scena.
 - Gli stessi cinque personaggi, stessi vestiti e stessi colori, dalla scena 1 alla scena 5.
-- Il **Narratore** non compare nelle scene: esiste solo come ritratto, una mascotte, per
-  esempio un meeple investigatore.
 
 ## Come è fatta una scena
 
@@ -134,8 +132,7 @@ Il personaggio appartiene al dipinto: testa, busto, braccia, mani e ogni altro e
 rimanere completamente dentro l'apertura interna, dietro il piano della cornice, senza toccarla
 o sovrapporsi agli intagli. Nessun effetto «fuori dal quadro».
 Le cornici devono essere anche cromaticamente distinguibili: Giuseppe argento anticato,
-Rosalia legno naturale caldo, Roberto verde oliva, Augusto oro/ocra, Mauro petrolio quasi nero,
-Narratore salvia con dettagli dorati.
+Rosalia legno naturale caldo, Roberto verde oliva, Augusto oro/ocra, Mauro petrolio quasi nero.
 
 | File | Personaggio |
 |---|---|
@@ -144,7 +141,6 @@ Narratore salvia con dettagli dorati.
 | `ritratto-roberto.png` | Roberto Vispero — fondatore degli Oliviani, conosce ulivi e prodotti agricoli. |
 | `ritratto-augusto.png` | Augusto De Virgilis — fondatore degli Oliviani, parla della produzione dell'olio. |
 | `ritratto-mauro.png` | Mauro Damiani — nuovo adepto, molto serio, rigido, sospettoso. |
-| `ritratto-narratore.png` | Il Narratore — mascotte guida, un meeple investigatore. |
 
 Consegna: PNG dentro `assets/images/`. **È obbligatorio versionare ogni revisione: non
 sovrascrivere mai un'immagine esistente, anche se non è ancora stata committata**. Per una

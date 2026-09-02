@@ -13,8 +13,8 @@ from PIL import Image
 SRC, WEB, HTML = Path("assets/images"), Path("assets/web"), Path("oliva-blu.html")
 LARGH = {"ritratto": 900, "attore": 700, "scena": 1600, "indizio": 512, "copertina": 560,
          "volto": 420, "detective": 520}
-# Il Narratore e' uscito dall'elenco dei personaggi il 29 agosto 2026: nessuna
-# schermata disegna piu' il suo ritratto, quindi non lo si incorpora (erano 200KB).
+# Il vecchio Narratore non e' un personaggio della storia: non e' in `personaggi`, non ha
+# un ritratto, e la mascotte che lo sostituiva ora sono le pose dell'investigatore.
 ALIAS = {}
 # Codex consegna varianti con nomi suoi: qui si dice quale riempie quale casella.
 # La versione (-vN) la sceglie comunque lo script, tenendo la piu' alta.
@@ -33,6 +33,14 @@ POSE = ["giuseppe-malore", "giuseppe-presentazione", "giuseppe-brindisi",
         "augusto-sorpreso", "augusto-brindisi", "mauro-nervoso", "mauro-guardingo",
         "mauro-brindisi"]
 OGGETTI = ["bicchiere", "bottiglietta", "foglio", "biglietto"]
+# Le scene 3 e 4 giocano nella sala della scena 1 (`sfondoDa:"scena1"`), quindi
+# i loro sfondi non li disegna nessuno: incorporarli costava 772KB di file.
+# Se una di quelle scene torna ad avere una sala sua, togli il nome da qui e
+# rilancia: i .png sono sempre in assets/images/.
+# Rosalia e Mauro hanno una posa in ogni scena, quindi il loro ritaglio neutro
+# non lo chiede nessuno: i .png sono in bocciate/. Se una scena futura li lascia
+# senza posa, `smoke.js` fallisce prima che la figura sparisca dal palco.
+MAI_DISEGNATI = {"scena3.png", "scena4.png", "attore-rosalia.png", "attore-mauro.png"}
 # solo le caselle che l'app sa mostrare: le varianti e le prove restano fuori dal file
 ATTESI = ({"copertina.png", "detective-riflessione.png", "detective-osservazione.png",
            "detective-presentazione.png", "detective-scoperta.png",
@@ -43,7 +51,7 @@ ATTESI = ({"copertina.png", "detective-riflessione.png", "detective-osservazione
           | {f"attore-{n}.png" for n in POSE}
           | {f"ritratto-{n}.png" for n in PERSONE}
           | {f"volto-{n}.png" for n in PERSONE if n != "giuseppe"}   # i quattro sospetti
-          | {f"indizio-{n}.png" for n in OGGETTI})
+          | {f"indizio-{n}.png" for n in OGGETTI}) - MAI_DISEGNATI
 
 def _blocco(medie, minimo=2):
     """Estremi del gruppo di righe (o colonne) piu' pieno, saltando il resto."""
@@ -146,7 +154,7 @@ def main():
                 im = im.resize((largh, round(im.height * largh / im.width)), Image.LANCZOS)
         # method=6 arrivava a saturare la memoria con le tavole quadrate RGBA
         # degli indizi; 4 mantiene una resa indistinguibile alle dimensioni web.
-        im.save(out, "WEBP", quality=86, method=4)
+        im.save(out, "WEBP", quality=80, method=4)
         # L'artifact pubblicato non puo' leggere file locali (niente capability assets),
         # quindi le immagini viaggiano dentro l'HTML come data URI.
         b64 = base64.b64encode(out.read_bytes()).decode()
