@@ -11,7 +11,9 @@ from pathlib import Path
 from PIL import Image
 
 SRC, WEB, HTML = Path("assets/images"), Path("assets/web"), Path("oliva-blu.html")
-LARGH = {"ritratto": 900, "attore": 700, "scena": 1600, "indizio": 512, "copertina": 560,
+# `scena` a 1600 era quattro volte quello che serve: a 1920x1080 il palco e' un
+# quadrato da ~390px, e 1200 tiene 3x di margine e resta 1:1 su uno schermo 4K.
+LARGH = {"ritratto": 900, "attore": 700, "scena": 1200, "indizio": 512, "copertina": 560,
          "volto": 420, "detective": 520}
 # Il vecchio Narratore non e' un personaggio della storia: non e' in `personaggi`, non ha
 # un ritratto, e la mascotte che lo sostituiva ora sono le pose dell'investigatore.
@@ -38,7 +40,7 @@ OGGETTI = ["bicchiere", "bottiglietta", "foglio", "biglietto"]
 # Se una di quelle scene torna ad avere una sala sua, togli il nome da qui e
 # rilancia: i .png sono sempre in assets/images/.
 # Rosalia e Mauro hanno una posa in ogni scena, quindi il loro ritaglio neutro
-# non lo chiede nessuno: i .png sono in bocciate/. Se una scena futura li lascia
+# non lo chiede nessuno: i .png sono in trash/immagini/. Se una scena futura li lascia
 # senza posa, `smoke.js` fallisce prima che la figura sparisca dal palco.
 MAI_DISEGNATI = {"scena3.png", "scena4.png", "attore-rosalia.png", "attore-mauro.png"}
 # solo le caselle che l'app sa mostrare: le varianti e le prove restano fuori dal file
@@ -101,7 +103,7 @@ def main():
         scelto.setdefault(sorgente + ".png", []).append(casella)
     migliori = {}                                # nome logico -> (versione, file)
     for f in sorted(SRC.iterdir()):
-        if not f.is_file(): continue             # salta bocciate/
+        if not f.is_file(): continue             # salta le sottocartelle e gli scarti
         key, ver = logico(f.name)
         if not key: continue
         for casella in scelto.get(key, [key]):   # variante promossa a una o piu' caselle
