@@ -1,9 +1,9 @@
-/* node smoke.js — percorre l'app come farebbe il narratore, senza browser.
+/* node smoke.js — percorre l'app come farebbe l'investigatore, senza browser.
    Fallisce se una schermata non si disegna o se il conteggio del quiz sbaglia. */
 const fs = require("fs"), assert = require("assert");
 const { apri } = require("./stub-dom");
 
-const CODA = "{state,SLIDES,STORY,vai,avanti,scopri,etichettaAvanti,restaDaScoprire,pulsanteAvanti,indagineCompleta,POSA_VERDETTO,render,regia,sviluppo,apriIndizio,SCELTE_MAX,PERSONE_MAX,SOSPETTI,REGIA_OK,DEV_OK,TITOLI_OK,attesi}";
+const CODA = "{state,SLIDES,STORY,vai,avanti,scopri,etichettaAvanti,restaDaScoprire,pulsanteAvanti,indagineCompleta,POSA_VERDETTO,render,regia,sviluppo,apriIndizio,SCELTE_MAX,PERSONE_MAX,SOSPETTI,REGIA_OK,DEV_OK,TITOLI_OK,attesi,ATTORE}";
 const { app, stage } = apri(CODA);
 
 // ogni schermata si disegna e produce contenuto
@@ -79,6 +79,17 @@ const punteggio = risposte => app.STORY.quiz.reduce((n, q, i) => n + (risposte[i
 assert.ok(mostra(app.STORY.quiz.map(q => q.giusta)).includes(`class="score">${totali} `), "il pieno non fa 10");
 assert.ok(mostra(app.STORY.quiz.map(sbagliata)).includes('class="score">0 '), "sbagliando tutto non fa 0");
 
+/* Nessuna figura senza immagine. I ritagli neutri di Rosalia e Mauro non sono
+   piu' incorporati, perche' ogni scena da' loro una posa: se una scena futura
+   li lasciasse scoperti, la figura sparirebbe dal palco senza un rumore. */
+const senzaImmagine = [];
+app.STORY.scene.forEach((sc, i) => (sc.cast || []).forEach(x => {
+  if (!/^data:/.test(app.ATTORE(x.c, i)))
+    senzaImmagine.push(`scena ${sc.n}${sc.parte ? " " + sc.parte : ""} · ${x.c}`);
+}));
+assert.deepStrictEqual(senzaImmagine, [],
+  `figure senza ritaglio incorporato: ${senzaImmagine.join(", ")}`);
+
 /* i cinque esiti, e nessun punteggio senza verdetto: senza i tre punti del
    colpevole non si supera il sette, quindi le fasce coprono tutto */
 const casi = [
@@ -137,7 +148,7 @@ app.state.risposte = [];
 const scenaBlu = app.STORY.scene.find(s => s.blu);
 assert.ok(scenaBlu, "nessuna scena col flag blu");
 assert.strictEqual(scenaBlu.slot || "", "scena4", "il blu non e' sulla scena del malore");
-assert.ok(quizN > 0 && app.SLIDES[quizN - 1].t === "narr", "la frase del narratore deve precedere il quiz");
+assert.ok(quizN > 0 && app.SLIDES[quizN - 1].t === "narr", "la frase dell'investigatore deve precedere il quiz");
 
 // il copione approvato e' copione.txt: ogni battuta fra virgolette basse deve
 // comparire identica nell'app. E' il controllo che protegge il testo dalle

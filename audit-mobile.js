@@ -10,7 +10,7 @@ const testo = el => (el.textContent || "").replace(/\s+/g, " ").trim().slice(0, 
 
 const out = { larghezza: innerWidth, overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth, testi: [], tocchi: [] };
 const visto = new Set();
-document.querySelectorAll("#stage *, .avanza, .aiuto").forEach(el => {
+document.querySelectorAll("#stage *, .avanza, .volume input").forEach(el => {
   const r = el.getBoundingClientRect();
   if (!r.width || !r.height) return;
   const diretto = [...el.childNodes].some(n => n.nodeType === 3 && n.textContent.trim());

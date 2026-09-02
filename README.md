@@ -1,8 +1,8 @@
 # Il mistero dell'oliva blu
 
-App per il narratore di una "cena con delitto": quattro scene illustrate divise in dodici
+App per l'investigatore di una "cena con delitto": quattro scene illustrate divise in dodici
 schermate (venti in tutto), un tavolo di indizi da
-esaminare in ordine libero, la scheda finale e la soluzione. Il narratore la guida davanti al
+esaminare in ordine libero, la scheda finale e la soluzione. L'investigatore la guida davanti al
 tavolo dei giocatori — da proiettore, da tablet o da telefono.
 
 Tratta dal copione **_Il mistero dell'oliva blu_** di **Carlo Maria Gervasio**
@@ -44,8 +44,8 @@ scurito. Le posizioni stanno in `STORY.scene[i].cast` e `.primo`.
 
 Scoprendo una battuta la pagina sintetizza qualche bip con la Web Audio API — nessun file audio.
 Ogni personaggio ha la sua altezza (Mauro cupo e con onda quadra, Rosalia acuta), e la battuta
-più lunga fa più bip, fino a un tetto di quattordici. Si zittisce con `m` o con la pastiglia
-accanto al `?`; riaccendendola si sente una prova.
+più lunga fa più bip, fino a un tetto di quattordici. Il volume si regola con la **barra in alto a destra** — l'altoparlante accanto dice il livello —
+e lasciandola si sente una prova. `m` azzera, e ripremuto rimette l'ultimo livello scelto.
 
 Il contesto audio nasce sospeso finché non c'è un gesto dell'utente e `resume()` è asincrono:
 i bip vanno programmati **dopo** che è partito, altrimenti finiscono a un istante già passato e
@@ -142,7 +142,7 @@ si chiude con la parola *Fine*.
 L'app dà del **tu a una persona sola**, non a un gruppo: le battute dei personaggi fra loro
 restano al plurale dove lo erano.
 
-## Comandi del narratore
+## Comandi dell'investigatore
 
 | Tasto | Cosa fa |
 |---|---|
@@ -156,7 +156,7 @@ restano al plurale dove lo erano.
 | `[` `]` | in regia: porta il selezionato in secondo o in primo piano, oggetti compresi |
 | `v` | sviluppo: stato, immagini mancanti, salto a una schermata (non sul sito pubblico) |
 | `↑` `↓` | col pannello sviluppo aperto: sfoglia le schermate |
-| `m` | zittisce la voce dei personaggi |
+| `m` | azzera il volume delle voci, o rimette l'ultimo |
 | `f` | schermo intero |
 | `?` | tutti i comandi (non c'è più un pulsante: solo il tasto) |
 
