@@ -394,7 +394,8 @@ kbd{font:inherit; font-size:.78em; border:1px solid var(--line); border-bottom-w
 /* la finestra di conferma: una domanda, due strade */
 .conferma{max-width:34rem; margin:auto; text-align:center; align-items:center}
 .conferma .guida{margin-bottom:.4rem}
-.conferma .guida img{max-height:26vh; max-width:min(100%,14rem)}
+/* la stessa misura dell'avviso: nelle finestre l'investigatore non rimpicciolisce */
+.conferma .guida img{max-height:72vh; max-width:min(100%,44rem)}
 .conferma .nota{margin-inline:auto}
 .conferma .azioni{justify-content:center}
 .conferma h2{font-size:var(--t-voce)}
@@ -464,7 +465,8 @@ kbd{font:inherit; font-size:.78em; border:1px solid var(--line); border-bottom-w
   max-width:min(94vw,44rem); margin-inline:auto; font-size:.8rem}
 .pannello .riga{display:flex; align-items:center; gap:.5rem; flex-wrap:wrap}
 .pannello b{color:var(--gold); font-weight:700}
-.dev-pan{top:.7rem; bottom:auto; left:auto; right:6.4rem; width:min(34rem,80vw);
+/* semitrasparente: si tiene aperto mentre si prova, e sotto si vede la scena */
+.dev-pan{opacity:.6; top:.7rem; bottom:auto; left:auto; right:6.4rem; width:min(34rem,80vw);
   margin-inline:0; font-size:.86rem; gap:.45rem}
 /* l'elenco: una schermata per riga, si legge in colonna */
 .dev-pan .salti{display:flex; flex-direction:column; gap:1px; max-height:70vh; overflow:auto}
@@ -1663,7 +1665,8 @@ function pannelloDev() {
     p = panDev = document.body.appendChild(el(
       `<div class="pannello dev-pan carta">
          <div class="riga"><b>Sviluppo</b><span id="dev-dove"></span>
-           <span class="spacer"></span><span><kbd>↑</kbd><kbd>↓</kbd> sfoglia · <kbd>v</kbd> esce</span></div>
+           <span class="spacer"></span><span><kbd>↑</kbd><kbd>↓</kbd> l’elenco ·
+           <kbd>←</kbd><kbd>→</kbd> la storia · <kbd>v</kbd> esce</span></div>
          <div class="salti" id="dev-salti"></div>
          <div class="riga" id="dev-img"></div>
        </div>`, true));
@@ -1688,10 +1691,11 @@ function pannelloDev() {
     + (sc ? ` · ${CASELLA(s.i)} · scena ${NUM(sc, s.i)}${sc.parte ? " " + sc.parte : ""}`
           + ` · battuta ${state.step}/${sc.battute.length}` : "")
     + ` · voce ${Math.round(volume * 100)}%${state.demo ? " · sagome di prova" : ""}`;
-  const tutti = attesi(), persi = tutti.filter(k => !ASSETS[k]);
+  /* quando non manca niente la riga tace: e' il caso normale, e dirlo occupava
+     una riga per non dire nulla */
+  const persi = attesi().filter(k => !ASSETS[k]);
   p.querySelector("#dev-img").textContent = persi.length
-    ? `${persi.length} di ${tutti.length} immagini non incorporate: ${persi.join("  ")}`
-    : `${tutti.length} immagini, tutte incorporate`;
+    ? `${persi.length} immagini non incorporate: ${persi.join("  ")}` : "";
   return p;
 }
 
@@ -1953,7 +1957,8 @@ function ovHelp() {
       ["[  ]", "in regia: porta chi è selezionato in secondo o in primo piano"]] : []),
     ...(DEV_OK ? [
       ["v", "sviluppo: stato, immagini mancanti, salto a una schermata"],
-      ["↑ ↓", "col pannello sviluppo aperto: schermata precedente o successiva"]] : []),
+      ["↑ ↓", "col pannello sviluppo aperto: sfoglia l’elenco delle schermate"],
+      ["← →", "col pannello sviluppo aperto: percorre la storia, cambiando pagina a fine scena"]] : []),
     ["m", "azzera il volume delle voci, o rimette l’ultimo"],
     ["f", "schermo intero"],
     ["esc", "chiude questa finestra"]
@@ -2023,7 +2028,11 @@ document.addEventListener("keydown", e => {
          selezionato lo spazio scopriva una battuta e cambiava chi e' in luce
          proprio mentre si sistemano le figure */
       else if (state.regia) break;
+      /* col pannello aperto le verticali sfogliano l'elenco e le orizzontali
+         percorrono la storia fino in fondo, cambiando pagina a fine scena:
+         si prova tutto senza staccare la mano dalle frecce */
       else if (state.sviluppo && e.key === "ArrowDown") vai(state.n + 1);
+      else if (state.sviluppo && e.key === "ArrowRight") avanti();
       else scopri();                  // la tastiera scopre: la pagina la cambia il pulsante
       break;
     case "ArrowLeft": case "ArrowUp": case "PageUp":
@@ -2031,7 +2040,7 @@ document.addEventListener("keydown", e => {
       if (state.regia && sel && e.key === "ArrowLeft") sposta(-1, 0, e.shiftKey);
       else if (state.regia && sel && e.key === "ArrowUp") sposta(0, 1, e.shiftKey);
       else if (state.regia) break;
-      else if (state.sviluppo && e.key === "ArrowUp") vai(state.n - 1);
+      else if (state.sviluppo) vai(state.n - 1);   // su e sinistra: indietro e' d'autore
       else if (SLIDES[state.n].t === "cast") scorriScheda(-1);   // le schede si risfogliano: non e' la storia
       break;
     case "d": case "D": demo(); break;

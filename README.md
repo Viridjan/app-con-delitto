@@ -79,7 +79,9 @@ Regia e sviluppo **non esistono sul sito pubblico**: `r` e `v` rispondono solo a
 da disco o nell'artefatto privato. La **modalità sviluppo** (`v`) mostra a che schermata e a che battuta siamo, quali immagini attese non sono
 incorporate, ed elenca le schermate — una per riga, dalla copertina al messaggio finale, con
 accesa quella in cui ci si trova — per andare dove serve in un clic invece che un passo alla
-volta.
+volta. È semitrasparente, così si tiene aperto mentre si prova: sotto si vede la scena. Con
+il pannello aperto le frecce si dividono il lavoro — su e giù sfogliano l'elenco, destra e
+sinistra percorrono la storia — e si prova tutto senza staccare la mano.
 
 ## Immagini
 
@@ -160,7 +162,8 @@ restano al plurale dove lo erano.
 | `r` | regia: sposta e ridimensiona personaggi e oggetti sulla scena (non sul sito pubblico) |
 | `[` `]` | in regia: porta il selezionato in secondo o in primo piano, oggetti compresi |
 | `v` | sviluppo: stato, immagini mancanti, salto a una schermata (non sul sito pubblico) |
-| `↑` `↓` | col pannello sviluppo aperto: sfoglia le schermate |
+| `↑` `↓` | col pannello sviluppo aperto: sfoglia l'elenco delle schermate |
+| `←` `→` | col pannello sviluppo aperto: percorre la storia, cambiando pagina a fine scena |
 | `m` | azzera il volume delle voci, o rimette l'ultimo |
 | `f` | schermo intero |
 | `?` | tutti i comandi (non c'è più un pulsante: solo il tasto) |
