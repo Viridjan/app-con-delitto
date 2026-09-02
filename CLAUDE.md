@@ -132,7 +132,12 @@ gives the stage the height the header was using.
 **Author tools stay off the public site.** `PUBBLICO` near `const state` is true on
 `*.github.io`, and `REGIA_OK`, `DEV_OK` and `TITOLI_OK` are all its negation. `r` opens staging;
 `v` opens the developer panel — current screen and line, expected images that are not embedded,
-and the screens listed one per row to jump anywhere in one click. It had a
+and the screens listed one per row to jump anywhere in one click. It is
+**semi-transparent** (`opacity:.6`) so it can stay open while you work — the scene reads through
+it — and while it is open the four arrows split the work: `↑` `↓` walk the list of screens, `→`
+walks the story — a line at a time, and on to the next screen when the scene runs out — and `←`
+steps back a screen, which only an author may do. The image line stays **empty when nothing is
+missing**, instead of spending a row to say so. It had a
 `Tutte le battute` button too, gone on 1 September 2026 with `battuteTutte()`: a scene now opens
 with its first line already revealed, and the rest is one keypress each. Both panels work from
 the local file and from the artifact, and do nothing on Pages. Gating the developer panel to `file:` alone was wrong — the artifact is where the user
@@ -531,9 +536,11 @@ screen.
 
 **Two gestures, two keys each.** Forward is `spazio`, `→` or `↓`; back is `←` or `↑`, and in the
 story back does nothing at all — every one of them goes through `scopri()`, never `avanti()`, so
-the button stays the only way to change screen. The arrows carry two author meanings that come
-first: in staging they nudge the selected figure, and with the developer panel open the verticals
-page through the screens.
+the button stays the only way to change screen. Two author modes come first. In staging the arrows nudge the
+selected figure, and with nothing selected they do nothing, because while you are placing figures
+the story must hold still — the same reason a drag is not a click. With the developer panel open
+the verticals belong to its list and the horizontals to the story, `→` changing screen at the end
+of a scene and `←` stepping back one: the whole app can be walked without leaving the arrows.
 
 The cast page is the one place where back does something: `←` / `↑` call `scorriScheda(-1)` and
 page back through the portraits. Leafing through a cast list is not rewinding the story — nothing
@@ -558,7 +565,9 @@ itself into view.
 indietro)` puts `detective-riflessione` above the question — he is the one asking, and the pose
 says so before the words do — then calls `slots(overlayEl)`, because the overlay lives outside
 `#stage` and `render()`'s own `slots()` never reaches it. `spiega` is optional now: two of the
-three confirmations are one line and a choice. The way out is named per question, since it is
+three confirmations are one line and a choice. The figure is the avviso's size — `72vh`, capped
+at `44rem` — because it should not shrink just for being in a window; on a phone that pushes the
+second button 46px under the fold and the overlay scrolls to it, which is the trade. The way out is named per question, since it is
 not the same one twice.
 
 **The solution is asked for twice**, from 2 September 2026. From the verdict, `Vedi la soluzione`
