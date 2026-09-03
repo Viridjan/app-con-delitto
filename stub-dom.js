@@ -7,11 +7,17 @@ const nodo = () => ({
   _html: "", set innerHTML(v) { this._html = v; }, get innerHTML() { return this._html; },
   textContent: "", disabled: false, hidden: false, dataset: {}, style: {}, value: "",
   classList: { toggle() {}, add() {}, remove() {}, contains: () => false },
-  addEventListener() {}, focus() {}, scrollIntoView() {}, scrollTo() {}, remove() {},
+  addEventListener() {}, setAttribute() {}, focus() { this.focused = true; },
+  scrollIntoView() {}, scrollTo() {}, remove() {},
   insertAdjacentHTML(dove, html) { this._html += html; },
   getBoundingClientRect: () => ({ left: 0, top: 0, width: 100, height: 100 }),
   get firstElementChild() { return nodo(); },
-  querySelector: () => nodo(), querySelectorAll: () => [],
+  querySelector(selettore) {
+    const trovato = nodo();
+    trovato.focus = () => { this.focusedSelector = selettore; trovato.focused = true; };
+    return trovato;
+  },
+  querySelectorAll: () => [],
 });
 
 const DA_DISCO = { protocol: "file:", hostname: "" };
@@ -32,6 +38,9 @@ function apri(coda, loc = DA_DISCO) {
   const ctx = {
     document: doc, Image: class { set src(_) {} }, matchMedia: () => ({ matches: false }),
     addEventListener() {}, requestAnimationFrame: fn => fn(), console, location: loc,
+    /* il ritmo delle sillabe usa i timer: qui non deve scattare niente, ma le
+       due funzioni devono esistere */
+    setTimeout: () => 0, clearTimeout() {},
   };
   return { app: vm.runInNewContext(`${js};(${coda})`, ctx), stage };
 }

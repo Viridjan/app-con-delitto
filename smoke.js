@@ -3,8 +3,14 @@
 const fs = require("fs"), assert = require("assert");
 const { apri } = require("./stub-dom");
 
-const CODA = "{state,SLIDES,STORY,vai,avanti,scopri,etichettaAvanti,restaDaScoprire,pulsanteAvanti,indagineCompleta,POSA_VERDETTO,render,regia,sviluppo,apriIndizio,SCELTE_MAX,PERSONE_MAX,SOSPETTI,REGIA_OK,DEV_OK,TITOLI_OK,attesi,ATTORE,ASSETS,demo,SCENE_IMG,velo:()=>VELO}";
+const CODA = "{state,SLIDES,STORY,vai,avanti,scopri,etichettaAvanti,restaDaScoprire,pulsanteAvanti,indagineCompleta,POSA_VERDETTO,render,regia,sviluppo,apriIndizio,chiediLaSoluzione,overlayEl,SCELTE_MAX,PERSONE_MAX,SOSPETTI,REGIA_OK,DEV_OK,TITOLI_OK,attesi,ATTORE,ASSETS,demo,SCENE_IMG,velo:()=>VELO,spezza,VOCE}";
 const { app, stage } = apri(CODA);
+
+// File fisici e chiavi ASSETS condividono la convenzione underscore-only.
+// La pipeline blocca i sorgenti sbagliati; questo protegge anche il contratto HTML.
+const assetConTrattino = Object.keys(app.ASSETS).filter(k => k.includes("-"));
+assert.deepStrictEqual(assetConTrattino, [],
+  `chiavi ASSETS con trattini: ${assetConTrattino.join(", ")}`);
 
 // ogni schermata si disegna e produce contenuto
 for (let i = 0; i < app.SLIDES.length; i++) {
@@ -110,6 +116,17 @@ assert.strictEqual(JSON.stringify(app.ASSETS), assetPrima, "spegnendo la demo AS
 const inventarioPrima = app.attesi();
 assert.strictEqual(app.attesi(), inventarioPrima, "l'inventario statico degli asset viene ricostruito");
 
+/* Il ritmo delle sillabe taglia la battuta in pezzi: rimessi insieme devono
+   ridare la battuta esatta, spazi compresi, o quello che si legge in pagina
+   non sarebbe piu' il copione. */
+app.STORY.scene.forEach(sc => sc.battute.forEach(b => {
+  const v = app.VOCE[b.c];
+  if (!v) return;
+  const n = Math.max(3, Math.min(16, Math.round(b.t.length / v.den)));
+  assert.strictEqual(app.spezza(b.t, n).join(""), b.t,
+    `il ritmo perde qualcosa della battuta: «${b.t}»`);
+}));
+
 /* i cinque esiti, e nessun punteggio senza verdetto: senza i tre punti del
    colpevole non si supera il sette, quindi le fasce coprono tutto */
 const casi = [
@@ -127,11 +144,11 @@ for (const [r, punti, atteso] of casi) {
 /* la posa dice l'esito prima delle parole: il pieno, il nome giusto con la
    ricostruzione in piedi, e tutto il resto */
 const pose = [
-  [casi[0][0], "detective-soluzione.png"],
-  [casi[1][0], "detective-osservazione.png"],
-  [casi[2][0], "detective-riflessione.png"],
-  [casi[3][0], "detective-riflessione.png"],
-  [casi[4][0], "detective-riflessione.png"],
+  [casi[0][0], "detective_soluzione.png"],
+  [casi[1][0], "detective_osservazione.png"],
+  [casi[2][0], "detective_riflessione.png"],
+  [casi[3][0], "detective_riflessione.png"],
+  [casi[4][0], "detective_riflessione.png"],
 ];
 for (const [r, atteso] of pose) {
   app.state.risposte = r;
@@ -139,7 +156,7 @@ for (const [r, atteso] of pose) {
   assert.strictEqual(p, atteso, `con ${punteggio(r)} punti la posa e' ${p}`);
 }
 app.state.risposte = [];
-assert.strictEqual(app.POSA_VERDETTO(0, 0), "detective-riflessione.png", "scheda in bianco, posa sbagliata");
+assert.strictEqual(app.POSA_VERDETTO(0, 0), "detective_riflessione.png", "scheda in bianco, posa sbagliata");
 
 // la risposta giusta non deve stare sempre nella stessa posizione, e ogni domanda
 // deve offrire tutti e quattro i sospetti: si sceglie una persona, non una frase
@@ -167,7 +184,9 @@ app.state.risposte = [];
 // dividere una scena non deve far fallire il controllo
 const scenaBlu = app.STORY.scene.find(s => s.blu);
 assert.ok(scenaBlu, "nessuna scena col flag blu");
-assert.strictEqual(scenaBlu.slot || "", "scena4", "il blu non e' sulla scena del malore");
+assert.strictEqual(scenaBlu.slot || "", "scena3_malore", "il blu non e' sulla scena del malore");
+for (const slot of ["scena3_brindisi", "scena3_malore", "indagine"])
+  assert.ok(app.STORY.scene.some(s => s.slot === slot), `manca lo slot semantico ${slot}`);
 assert.ok(quizN > 0 && app.SLIDES[quizN - 1].t === "narr", "la frase dell'investigatore deve precedere il quiz");
 
 // il copione approvato e' copione.txt: ogni battuta fra virgolette basse deve
@@ -284,6 +303,24 @@ const alBanco = profili(fs.readFileSync("voci.html", "utf8"));
 const inScena = profili(fs.readFileSync("oliva-blu.html", "utf8"));   // non `html`: li' gli a capo sono gia' stati schiacciati
 assert.strictEqual(Object.keys(inScena).length, 5, `nell'app trovo ${Object.keys(inScena).length} profili di voce, non 5`);
 assert.deepStrictEqual(alBanco, inScena, "i profili di voce di voci.html e oliva-blu.html sono diversi");
+
+// Nelle conferme con un'azione alternativa ("Ritenta") non esiste data-close:
+// deve prendere il focus proprio quel pulsante, non l'azione distruttiva.
+app.chiediLaSoluzione();
+assert.strictEqual(app.overlayEl.focusedSelector, "[data-close],#ov-no",
+  "la conferma della soluzione non mette il focus su Ritenta");
+
+// Chi parla adesso zittisce chi parlava prima: `suona()` chiude l'uscita della
+// battuta precedente, e a volume zero tace anche chi e' gia' in corso.
+for (const frammento of ["taci();", "if (!volume) taci();"])
+  assert.ok(fs.readFileSync("oliva-blu.html", "utf8").includes(frammento),
+    `manca il silenziatore: ${frammento}`);
+
+// Ogni battuta crea un filtro audio: l'ultimo oscillatore deve liberarlo in
+// entrambe le copie deliberate del motore, o i nodi restano accumulati.
+for (const file of ["oliva-blu.html", "voci.html"])
+  assert.ok(fs.readFileSync(file, "utf8").includes('filtro.disconnect()'),
+    `${file}: il filtro audio non viene liberato`);
 
 console.log(`copione: ${dette.length} battute verificate`);
 console.log(`ok — ${app.SLIDES.length} schermate, ${battute} battute, quiz verificato`);

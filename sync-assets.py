@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Aggancia le immagini consegnate da Codex all'app.
 
-Codex consegna in assets/images/ con suffissi di versione (-v2, -v5, ...).
+Codex consegna in assets/images/ con suffissi di versione (_v2, _v5, ...).
 Questo script tiene la versione piu' alta di ogni personaggio, ne fa una copia
 web leggera in assets/web/, e riscrive la mappa ASSETS dentro oliva-blu.html.
 Da rilanciare a ogni consegna: python3 sync-assets.py
@@ -19,21 +19,18 @@ LARGH = {"ritratto": 900, "attore": 700, "scena": 1200, "indizio": 512, "coperti
 # un ritratto, e la mascotte che lo sostituiva ora sono le pose dell'investigatore.
 ALIAS = {}
 # Codex consegna varianti con nomi suoi: qui si dice quale riempie quale casella.
-# La versione (-vN) la sceglie comunque lo script, tenendo la piu' alta.
-SCELTE = {"copertina.png": "quadro-oliva-animato",
-          "scena1.png": "sala2",
-          "scena1-sx.png": "sala2-oggettoSX",
-          "scena1-dx.png": "sala2-oggettoDX",
-          "scena2.png": "sala1-scena2",
-          "scena3.png": "brindisi",
-          "scena4.png": "malore",
-          "scena5.png": "indagine"}
+# La versione (_vN) la sceglie comunque lo script, tenendo la piu' alta.
+SCELTE = {"copertina.png": "copertina_quadro_oliva_animato",
+          "scena1.png": "scena1_back_sala2",
+          "scena1_sx.png": "scena1_foreground_sala2_oggettoSX",
+          "scena1_dx.png": "scena1_foreground_sala2_oggettoDX",
+          "scena2.png": "scena2_back_sala1_scena2"}
 PERSONE = ["giuseppe", "rosalia", "roberto", "augusto", "mauro"]
-POSE = ["giuseppe-malore", "giuseppe-presentazione", "giuseppe-brindisi",
-        "rosalia-allarmata", "rosalia-pensierosa", "rosalia-brindisi",
-        "roberto-preoccupato", "roberto-accoglienza", "roberto-brindisi",
-        "augusto-sorpreso", "augusto-brindisi", "mauro-nervoso", "mauro-guardingo",
-        "mauro-brindisi"]
+POSE = ["giuseppe_malore", "giuseppe_presentazione", "giuseppe_brindisi",
+        "rosalia_allarmata", "rosalia_pensierosa", "rosalia_brindisi",
+        "roberto_preoccupato", "roberto_accoglienza", "roberto_brindisi",
+        "augusto_sorpreso", "augusto_brindisi", "mauro_nervoso", "mauro_guardingo",
+        "mauro_brindisi"]
 OGGETTI = ["bicchiere", "bottiglietta", "foglio", "biglietto"]
 # Le scene 3 e 4 giocano nella sala della scena 1 (`sfondoDa:"scena1"`), quindi
 # i loro sfondi non li disegna nessuno: incorporarli costava 772KB di file.
@@ -42,18 +39,18 @@ OGGETTI = ["bicchiere", "bottiglietta", "foglio", "biglietto"]
 # Rosalia e Mauro hanno una posa in ogni scena, quindi il loro ritaglio neutro
 # non lo chiede nessuno: i .png sono in trash/immagini/. Se una scena futura li lascia
 # senza posa, `smoke.js` fallisce prima che la figura sparisca dal palco.
-MAI_DISEGNATI = {"scena3.png", "scena4.png", "attore-rosalia.png", "attore-mauro.png"}
+MAI_DISEGNATI = {"scena3_back_brindisi.png", "scena3_back_malore.png",
+                 "attore_rosalia.png", "attore_mauro.png"}
 # solo le caselle che l'app sa mostrare: le varianti e le prove restano fuori dal file
-ATTESI = ({"copertina.png", "detective-riflessione.png", "detective-osservazione.png",
-           "detective-presentazione.png", "detective-scoperta.png",
-           "detective-soluzione.png"}
-          | {f"scena{i}.png" for i in range(1, 6)}
-          | {f"scena{i}-{lato}.png" for i in range(1, 6) for lato in ("sx", "dx")}
-          | {f"attore-{n}.png" for n in PERSONE}
-          | {f"attore-{n}.png" for n in POSE}
-          | {f"ritratto-{n}.png" for n in PERSONE}
-          | {f"volto-{n}.png" for n in PERSONE if n != "giuseppe"}   # i quattro sospetti
-          | {f"indizio-{n}.png" for n in OGGETTI}) - MAI_DISEGNATI
+ATTESI = (set(SCELTE)
+          | {"detective_riflessione.png", "detective_osservazione.png",
+           "detective_presentazione.png", "detective_scoperta.png",
+           "detective_soluzione.png"}
+          | {f"attore_{n}.png" for n in PERSONE}
+          | {f"attore_{n}.png" for n in POSE}
+          | {f"ritratto_{n}.png" for n in PERSONE}
+          | {f"volto_{n}.png" for n in PERSONE if n != "giuseppe"}   # i quattro sospetti
+          | {f"indizio_{n}.png" for n in OGGETTI}) - MAI_DISEGNATI
 
 def _blocco(medie, minimo=2):
     """Estremi del gruppo di righe (o colonne) piu' pieno, saltando il resto."""
@@ -84,12 +81,12 @@ def bbox_pulito(im):
     return (x[0], y[0], x[1], y[1])
 
 def famiglia(key):
-    """copertina.png -> copertina · scena1-sx.png -> scena · attore-mauro.png -> attore"""
+    """copertina.png -> copertina · scena1_sx.png -> scena · attore_mauro.png -> attore"""
     return re.match(r"[a-z]+", Path(key).stem).group(0)
 
 def logico(nome):
-    """ritratto-roberto-v5.png -> ('ritratto-roberto.png', 5)"""
-    m = re.fullmatch(r"(.+?)(?:-v(\d+))?\.(png|jpg|jpeg|webp)", nome, re.I)
+    """ritratto_roberto_v5.png -> ('ritratto_roberto.png', 5)."""
+    m = re.fullmatch(r"(.+?)(?:_v(\d+))?\.(png|jpg|jpeg|webp)", nome, re.I)
     if not m: return None, 0
     base, ver = m.group(1), int(m.group(2) or 0)
     for a, b in ALIAS.items():
@@ -104,14 +101,18 @@ def main():
     migliori = {}                                # nome logico -> (versione, file)
     for f in sorted(SRC.iterdir()):
         if not f.is_file(): continue             # salta le sottocartelle e gli scarti
+        if "-" in f.name:
+            sys.exit(f"nome immagine non valido (usa _): {f.name}")
         key, ver = logico(f.name)
         if not key: continue
-        for casella in scelto.get(key, [key]):   # variante promossa a una o piu' caselle
+        for casella in scelto.get(key, [key]):
             if ver >= migliori.get(casella, (-1, None))[0]:
                 migliori[casella] = (ver, f)
 
     WEB.mkdir(parents=True, exist_ok=True)
-    scartati = sorted(k for k in migliori if k not in ATTESI)
+    # Gli asset esclusi consapevolmente non sono anomalie: restano nei sorgenti
+    # per un eventuale riuso, ma non devono sporcare il report a ogni sync.
+    scartati = sorted(k for k in migliori if k not in ATTESI and k not in MAI_DISEGNATI)
     mappa = {}
     for key, (_, f) in sorted(migliori.items()):
         if key not in ATTESI: continue
@@ -141,7 +142,7 @@ def main():
             mappa[key] = f"data:image/webp;base64,{b64}"
             print(f"{f.name:32} -> {out.name:28} {out.stat().st_size // 1024:4}KB  {im.n_frames} fotogrammi")
             continue
-        ritaglia = key.startswith("attore-") or key[:-4].endswith(("-sx", "-dx"))
+        ritaglia = key.startswith("attore_") or key[:-4].endswith(("_sx", "_dx"))
         if ritaglia and im.mode in ("RGBA", "LA"):
             # i ritagli arrivano dentro un quadrato con molto vuoto attorno:
             # senza togliere il vuoto la figura sul palco resta minuscola
@@ -171,7 +172,7 @@ def main():
     HTML.write_text(nuovo, encoding="utf-8")
     if scartati:
         print("\nfuori dalle caselle previste, non agganciate: " + ", ".join(scartati))
-    mancanti = sorted(k for k in ATTESI - set(mappa) if not k[:-4].endswith(("-sx", "-dx")))
+    mancanti = sorted(k for k in ATTESI - set(mappa) if not k[:-4].endswith(("_sx", "_dx")))
     if mancanti:
         print("ancora da consegnare: " + ", ".join(mancanti))
     print(f"\n{len(mappa)} immagini agganciate · oliva-blu.html ora pesa "

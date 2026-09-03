@@ -58,13 +58,18 @@ isolare un caso si commenta il resto.
 - `estrai-copione.js` — writes `copione.txt` out of `STORY`, so the two can never drift.
 - `censimento.js` — inject it into the page and it reports how many text sizes and how many
   distinct text styles actually reach the screen, and which texts carry no rule of their own.
-  The count is a contract: six sizes on a big screen, four on a phone.
+  The count is a contract: six sizes, on a big screen and on a phone alike.
 - `audit-mobile.js` + `telaio-390.html` — the phone readability audit. The frame exists because
   headless Chromium will not give a script a window under 500px, so the app runs inside a 390px
   iframe and the result is read out of it.
 - `img/ART.md` — the illustration brief Codex works from.
-- `assets/images/` — Codex's deliveries, named by subject (`sala2`, `sala1-scena2`, `brindisi`,
-  `malore`, the `indizio-*` plates), mapped to slots in `SCELTE`.
+- `assets/images/` — Codex's deliveries, named by subject; backgrounds follow
+  `scenaX_back_nome` (`scena1_back_sala2`, `scena2_back_sala1_scena2`,
+  `scena3_back_brindisi`, `scena3_back_malore`). Scene-bound foreground layers follow
+  `scenaX_foreground_nome`, and the cover follows `copertina_nome`; actors and the
+  `indizio_*` plates keep their own family prefixes. Source filenames use underscores only and
+  are mapped to the app's stable underscore-only logical slots in `SCELTE`. Physical files in both
+  `assets/images/` and generated `assets/web/` use underscores only.
 - `trash/` — local, gitignored archive, divided by file type: rejected PNG files go in
   `trash/immagini/`, superseded working texts in `trash/documenti/`. It currently contains the
   former `copione-v2.txt` and everything previously kept in `assets/images/bocciate/`. Nothing
@@ -124,8 +129,10 @@ whoever is speaking. Keep both ends bright; the gap
 between them is what does the work, not the depth of the shadow.
 
 **Scene titles stay off the public site.** `TITOLI_OK` is `!PUBBLICO` like the other gates:
-`vScene` emits the `.scene-head` — number, "Scena N di M · parte", title — only where the author
-works. A title tells the story before it happens; *Il malore dell'oliva blu* announces the murder
+`vScene` emits the `.scene-head` — the title, and nothing else since 3 September 2026 — only
+where the author works. The big gold numeral and the «Scena N di M · parte» eyebrow above it went
+that day: they cost 64px of header on a 1280×900 screen, and the stage took every one of them —
+301px square before, 365 after. A title tells the story before it happens; *Il malore dell'oliva blu* announces the murder
 to a table that is still toasting. On Pages the scene opens on the picture alone, which also
 gives the stage the height the header was using.
 
@@ -226,15 +233,27 @@ Normalised on 29 August 2026; keep it this way rather than adding a fourth way t
   their value, not their name. `punteggio()` and `preso()` sit next to them for the same reason: the score and
   "was the culprit named" were each computed in two places.
 - **Nothing embedded that nobody draws.** The app carries its images as data URIs, so a slot the
-  pipeline fills but no screen requests is pure weight: `scena3.png` and `scena4.png` were 772KB
-  of it, because both scenes borrow scene 1's hall through `sfondoDa`. `sync-assets.py` keeps a
-  `MAI_DISEGNATI` set for exactly this. `attore-rosalia.png` and `attore-mauro.png` followed,
+  pipeline fills but no screen requests is pure weight: the two rooms drawn for scene 3 were
+  772KB of it, because both its parts borrow scene 1's hall through `sfondoDa`. They keep their
+  source names, `scena3_back_brindisi.png` and `scena3_back_malore.png`, and no longer correspond
+  to any slot. `sync-assets.py` keeps a
+  `MAI_DISEGNATI` set for exactly this. `attore_rosalia.png` and `attore_mauro.png` followed,
   another 144KB: those two have a pose in every scene, so their neutral cutout was never asked
   for — and unlike the two rooms, the files went to `trash/immagini/`. That is a bet on `POSE_SCENA`,
   so `smoke.js` now resolves every figure of every scene through `ATTORE()` and fails unless it
   lands on an embedded image; proven by taking Mauro's pose out of scene 1 and watching it name
   both parts. Giuseppe, Roberto and Augusto keep their neutral cutouts, because those three do
   fall back. Six megabytes became five.
+- **One name, one shape: underscores, everywhere.** Source files, `ASSETS` keys, `SCELTE`,
+  `POSE_SCENA`, `attesi()` and the `assets/web/` cache all use `nome_con_underscore`; hyphens are
+  gone from the whole chain. `smoke.js` fails on the first `ASSETS` key that contains one, which
+  is what keeps the two halves of the pipeline from drifting apart again.
+- **Slots are named for what they show**, not for a number: `scena3_brindisi`, `scena3_malore`,
+  `indagine`. They used to be `scena3`, `scena4`, `scena5`, which meant a `POSE_SCENA` key looked
+  exactly like a background filename that nobody delivered — `scena5.png` sat on the pipeline's
+  missing list for days because of it. `smoke.js` asserts the three semantic slots exist.
+- **`attesi()` is built once** and kept: it is derived from `STORY`, which does not change while
+  the page is open, and the developer panel asks for it on every render.
 - **`document.querySelector` is not used anywhere.** Inside the stage nothing needs it — the
   markup is rewritten every render; outside it, the two panels are held by reference. If a new
   one appears, ask what it is standing in for.
@@ -282,9 +301,10 @@ change styling hooks only.
 
 ## The scene screen
 
-Two declared regions: the top holds scene number, title and the stage, and never moves; the
-bottom scrolls on its own. The bottom is split `32% 1fr` — the speaker's **actor cutout**
-(`attore-*.png`, not the portrait) in a 3:4 frame cropped from the top, head to waist, faded out
+Two declared regions: the top holds the title and the stage, and never moves; the
+bottom scrolls on its own. Nothing draws the line between them — a hairline ran along it until
+3 September 2026 and the gap does the job on its own. The bottom is split `32% 1fr` — the speaker's **actor cutout**
+(`attore_*.png`, not the portrait) in a 3:4 frame cropped from the top, head to waist, faded out
 at the bottom — and the dialogue column. Use `1fr`, not a second percentage: two fixed
 percentages plus a gap overflow and produce a horizontal scrollbar.
 
@@ -299,12 +319,23 @@ The inciso under a speaker's name — *piano*, *tra sé* — is the same size as
 2 September 2026. `.who small` styled it italic and grey but never sized it, so it fell to the
 browser's own `small`: 0.75em of 0.9em, the only measure in the app nobody had chosen, and on a
 phone the smallest text anywhere. Italic, weight and colour separate it now; the size does not.
-A census across all twenty screens counts the sizes that reach the screen — six on a big screen,
-four on a phone — and every one of them is a decision; see *Type and the phone*.
+A census across all twenty screens counts the sizes that reach the screen — six either way — and
+every one of them is a decision; see *Type and the phone*.
 
 Consecutive lines by the same speaker share one bubble — `raggruppa()` collapses the run and
 `bolla()` renders one `<p>` per line inside a single `.said`. A different `m` breaks the run: a
 line said out loud and one said "tra sé" are two moments, not one speech.
+
+**A line arrives at the speed of the voice.** `suona()` schedules its blips every `passo`
+seconds; `ritma()` wraps each piece in a `.sillaba` and reveals them on the same beats, one per blip,
+cutting between words —
+as close to a syllable as you get without a dictionary. The pieces are all in the paragraph from
+the first instant, invisible rather than absent, so the bubble does not grow under the reader's
+eye and `smoke.js` still finds the whole line in the markup. **The rhythm does not depend on the volume**: at zero the character still speaks, you only see
+it. It is the line's timing, not an ornament of the sound — and it is what keeps a silent
+performance from turning into a wall of text that lands all at once. `smoke.js` also reassembles every line through `spezza()`
+and fails if a single space is lost — what is read must stay the copione. The stub needed
+`setTimeout`/`clearTimeout` to exist for this, doing nothing.
 
 Newest line on **top**, older ones below and dimmed to 40%; the column scrolls back to the top
 on each new line. Keep the entrance animation on `:first-child` only — its final frame sets
@@ -346,8 +377,13 @@ it found and what was done:
   — and all of it measured inside the 390px iframe while the document had **no `<meta viewport>`**,
   so on a real phone those rules never applied at all. Once the viewport landed the text came out
   enormous, the user said so, and the pile of literals went. At 390px the six steps read
-  46.6 / 42.6 / 28.7 / 24.6 / 20 / 15.7, against 88 / 54 / 38 / 27.2 / 22 / 14 on a big screen.
+  46.6 / 42.6 / 28.7 / 24.6 / 20 / 15.7, against 88 / 54 / 38 / 27.2 / 22 / 14 on a big screen:
+  the same six steps, a little closer together.
   Measure on the device, not only in the frame: the frame cannot tell you the meta is missing.
+- **Where you choose, two columns.** `.clues` and `.opts` are `repeat(2, minmax(0,1fr))` inside
+  that query: four clue cards and four suspects sit under the thumb instead of stretching over
+  four screenfuls of scrolling. On a big screen both keep `auto-fit`, which puts all four in a
+  row.
 - **Every button was 33px tall and the mute pill 35px**, under the 44px touch minimum. Fixed
   under `@media (pointer:coarse),(max-width:700px)` — the width clause is there because
   `pointer:coarse` cannot be exercised in headless while a narrow window can.
@@ -376,7 +412,7 @@ that edit:
   malore's art brief follows. She names the victim.
 - **"signor De Robertis" became "signor Giuseppe"**, 29 August 2026, in Mauro's toast and in
   Roberto's added line. The surname survives only in the cast list.
-- **31 lines added.** They used to carry `nuova:true` in `STORY` and print
+- **34 lines added.** They used to carry `nuova:true` in `STORY` and print
   `[aggiunta, non di Gervasio]` beside themselves in the txt; both went on 2 September 2026, at
   the user's word, when the added lines had grown to half the script and the marker had stopped
   telling anyone anything. `copione.txt` is now the text and nothing else. What follows is the
@@ -389,7 +425,9 @@ that edit:
   crop protection entered scene 1, and four lines on Ogliarola, Cellina di Nardò and Coratina
   entered the toast immediately before the accident, and on the same day the user rewrote that
   first exchange himself: Mauro argues for organic, Roberto answers that it is a good road and not
-  the only one, and Giuseppe asks what the others are. Of 67 spoken lines, 31 are not Gervasio's
+  the only one, and Giuseppe asks what the others are. On 3 September three lines in scene 4
+  made the hand-off inferable without stating it: Rosalia places Mauro by the glasses, Mauro
+  admits helping distribute them, and Roberto says he had already served everyone. Of 70 spoken lines, 34 are not Gervasio's
   — nearly half.
 - ***Il racconto dell'olio* is the user's rewrite**, first rewritten on 28 August 2026 and
   fact-checked again on 2 September: nine lines instead of six, with the real sequence — prompt
@@ -421,7 +459,7 @@ that edit:
   accused. The next question opens beneath it. Only the open question renders options, which is why the
   click handler can write `state.risposte[domandaCorrente()]` without the buttons carrying an
   index. `Scopri la soluzione →` appears only when nothing is left open. Each option carries the
-  suspect's face (`volto-<nome>.png`, four of them, delivered 31 August 2026) under the name, so
+  suspect's face (`volto_<nome>.png`, four of them, delivered 31 August 2026) under the name, so
   the sheet reads as a line-up; the card is a `.slot`, so a missing face falls back to the
   monogram like every other image.
 - **Ten points, five verdicts**, 31 August 2026. `punti` weights the questions — 2, 1, 1, 2, 1
@@ -472,8 +510,8 @@ Splitting on sentence ends lets a short line like "Zio…" pass by accident.
 **The malore is scene 3's second part.** On 29 August 2026 the *Il malore dell'oliva blu* screen
 was folded into scene 3 (`n:3, parte:"seconda parte"`) with the brindisi's staging, and *Gli
 indizi sul tavolo* moved up to `n:4` — the story now runs 1, 2 (three parts), 3 (two parts), 4.
-Its `slot` is still `scena4`, and so is its `POSE_SCENA` key: slots are named for the artwork,
-not for the number on screen, which is exactly why renumbering a scene costs nothing here. What
+Its `slot` and `POSE_SCENA` key are both `scena3_malore`, not a second scene number;
+that is exactly why renumbering a scene costs nothing here. What
 it does cost: `STORY.oggetti[].refs` carry a hand-written `s:` number, and renumbering left them
 pointing at the wrong scene. `smoke.js` now checks each ref against the scene that actually holds
 that line.
@@ -485,13 +523,35 @@ phone query can raise it once instead of listing selectors again. Seven sizes ha
 there. Two things to know: the rule has to sit **after** the section's own rules, and `.src` and
 `.tag` must be named explicitly, because `.risposta .src` (0,2,0) outranks `.indagine p` (0,1,1)
 and quietly won. The page's `h2` stays larger — it opens the screen, it is not part of the list;
-so does the plain `.btn`, which keeps the button size everyone else has. The faces are `volto-<nome>.png`: on each answer's header
+so does the plain `.btn`, which keeps the button size everyone else has. The faces are `volto_<nome>.png`: on each answer's header
 in a round `1.8em` frame — sized in `em`, so it follows the text — and on the people you can ask,
 which from the same day are **the sheet's own cards**, `.opt.carta.slot` in an `.opts` grid, so
 choosing whom to question looks like naming a suspect. They carry a state the sheet's do not:
 `.opt.voce.fatto` keeps whoever answered lit in their own colour, and the two you can no longer
 question go to `opacity:.35`. No letter before the name — `1`–`4` open clues, not people. Each is a `.slot`, so a missing face
 falls back to the monogram.
+
+**The clue cards are named for the thing, not for a phrase**, from 3 September 2026: *Bicchiere*,
+*Bottiglietta*, *Donazione*, *Biglietto*. They were «Il bicchiere di Giuseppe», «Il foglio della
+donazione» and so on, which wrapped to two lines in the two-column grid on a phone and read as
+sentences where the card wanted a label. The `tag` under each still carries the phrase.
+
+**Open text questions, for the user, not for me.** Three inconsistencies survive a reading of
+`copione.txt` and are *not* to be fixed on my own — cutting or rewording is a product decision:
+
+1. **The note has two texts.** Mauro reads «Zio, ti prego: non fare la donazione. Quei beni fanno
+   parte della nostra eredità» in scene 1, but the clue card's `tag` quotes «Fermate Giuseppe
+   prima che doni tutto» — plural, addressed to a room, and it makes Rosalia sound like she is
+   organising something.
+2. **Quiz 5 asks about the glass, the scene answers about the bottle.** «Chi ha riconosciuto che
+   nel bicchiere non c'era una bevanda?» expects Roberto, whose line — «Questa non è una bevanda.
+   È un prodotto per le piante» — is said over the *bottiglietta* plate.
+3. **Scene 1's exchange concludes before it explains.** Giuseppe says «Quindi nessun metodo
+   significa trattare alla cieca» and only then do Roberto and Augusto describe the three methods,
+   after which he adds «Interessante!». The conclusion and the explanations are inverted.
+
+Two spelling slips were fixed under the standing exception, in both files at once: `possibilitá`
+→ `possibilità` and `é` → `è`.
 
 ## The investigation has a price
 
@@ -562,6 +622,11 @@ taller than a screen. Taking "the last card starting above the edge" broke next:
 sits a few pixels below it, because there is no scroll left to bring it up, so the page never
 declared itself finished and the button stopped working. Nearest survives both.
 
+**A new screen starts at the top.** `vai()` sets `stage.scrollTop = 0` and scrolls the document
+too. Replacing the markup usually resets it by itself, which is why this went unnoticed for
+weeks — but not always: the cast page's scroll-snap re-anchors on its own, and on a phone the
+whole document can sit below the address bar. The overlay gets the same treatment when it opens.
+
 **A screen that asks for a choice cannot be left by clicking.** Everywhere else the stage is the
 remote, but on the clue table a stray tap would end the investigation with a question unspent,
 and on a quiz card it would skip the question. `SENZA_CLIC` names those two screen types and the
@@ -571,8 +636,14 @@ asks for a decision and its type belongs in that set.
 With the developer panel open the verticals page through the screens, and the lit row scrolls
 itself into view.
 
+**The focus never lands on the destructive button.** `mostraOverlay()` focuses
+`[data-close],#ov-no` — the way out, whichever it is. The solution's confirmations have no
+`data-close` at all, because `Ritenta` does something rather than just closing; without `#ov-no`
+in that selector the focus fell through to *Vedi la soluzione*, and a stray Enter ended the game.
+The stub had to learn `focus()` to let `smoke.js` see which button got it.
+
 **Every confirmation opens with the investigator.** `conferma(domanda, spiega, avanza, poi,
-indietro)` puts `detective-riflessione` above the question — he is the one asking, and the pose
+indietro)` puts `detective_riflessione` above the question — he is the one asking, and the pose
 says so before the words do — then calls `slots(overlayEl)`, because the overlay lives outside
 `#stage` and `render()`'s own `slots()` never reaches it. `spiega` is optional now: two of the
 three confirmations are one line and a choice. The figure is the avviso's size — `72vh`, capped
@@ -589,7 +660,9 @@ its yes empties `state.risposte`, rebuilds `state.indagine` and goes to slide 0 
 used to need a page reload. That is what `conferma()`'s sixth argument is for: give the way out a
 callback and it stops being a plain `data-close`. `chiediEAvanza()` is where both this and the
 clue table's confirmation hang, so a screen that must ask before leaving belongs there and
-nowhere else.
+nowhere else. Because that callback removes `data-close`, `mostraOverlay()` focuses
+`[data-close],#ov-no`: selecting only the former left both solution confirmations without an
+initial keyboard focus. `smoke.js` exercises this exception through `chiediLaSoluzione()`.
 
 **Closing the investigation early asks first.** While `indagineCompleta()` is false — both
 objects chosen and every one of them questioned to the limit — `Chiudi l'indagine` opens a
@@ -617,7 +690,7 @@ tavolo degli indizi · investigatore · scheda finale · verdetto · soluzione e
 ```
 
 Twenty screens, twelve of them scenes. Codex delivered five meeple-detective poses on
-31 August 2026; `detective-riflessione` stands **above** the recap, the pose where he
+31 August 2026; `detective_riflessione` stands **above** the recap, the pose where he
 holds his chin while the case is handed over. He was beside it past 62rem until 1 September 2026,
 which fitted six large lines but left the button hanging at mid height, far from the text it
 follows; the column puts figure, text and button in that order at every width. On the four
@@ -626,16 +699,16 @@ same day: 76vh on the recap, 72 on the avviso, 64 on the other two, each with th
 doubled to match. At 1280×800 that costs the fold — the stage scrolls by 30 to 78px and the
 button sits just under it. The trade was asked for with the figures on the table; the smaller
 caps are one number each if it is ever wanted back. The `v` panel's row for the recap reads
-**Il detective**, the same name the audience sees. `detective-osservazione`, lens in hand, opens the clue table beside its title. `detective-presentazione` carries the **avviso**, the screen added on
+**Il detective**, the same name the audience sees. `detective_osservazione`, lens in hand, opens the clue table beside its title. `detective_presentazione` carries the **avviso**, the screen added on
 1 September 2026 between the cover and the cast: the disclaimer used to sit under the cover
 image, where nobody read it, and now it has a page of its own with the investigator above it —
 the same `.narr-fine` column as the recap, plus an `.avviso` class carrying its two differences:
 a service body instead of a narrated one, and text ranged left, because a paragraph of six lines
 centred reads as a poem. The text itself is untouched, so `copione.txt` does not move: it comes
-from `STORY.disclaimer` either way. `detective-scoperta`, finger raised, carries the **last
+from `STORY.disclaimer` either way. `detective_scoperta`, finger raised, carries the **last
 screen**; all five are hooked, and `sync-assets.py` reports nothing unused. Two files that were
-left over went to `trash/immagini/`: `attore-augusto-spiegazione`, a good pose nobody ever put in
-`POSE_SCENA`, and `quadro-oliva`, the still the animated cover replaced. They are on disk, out of
+left over went to `trash/immagini/`: `attore_augusto_spiegazione.png`, a good pose nobody ever
+put in `POSE_SCENA`, and `quadro_oliva.png`, the still the animated cover replaced. They are on disk, out of
 git — bring the pose back if scene 2 ever wants it.
 
 The ending is two screens again from 1 September 2026: **`sol` is the verdict alone** — the score
@@ -652,8 +725,8 @@ four-screens override there gives the score a size of its own again; and `.giudi
 carry a weight, or it beats the shared rule on specificity and the band's name comes out bold
 among four regular lines. On the verdict the
 **pose is half the verdict**, and `POSA_VERDETTO()` picks it before a word is read —
-`detective-soluzione` for the full ten, `detective-osservazione` when the name is right and the
-reconstruction stands (6-9), `detective-riflessione` for everything else, the blank sheet
+`detective_soluzione` for the full ten, `detective_osservazione` when the name is right and the
+reconstruction stands (6-9), `detective_riflessione` for everything else, the blank sheet
 included. `smoke.js` checks all five bands map to the pose they claim. The eyebrow reading *Il
 verdetto* went with the redesign: the screen says ten out of ten, which needs no label. They had been merged on 31 August, but reading how it went beside your
 own mark made the story look like a marked exercise; the button between them says `Vedi la
@@ -665,9 +738,13 @@ the biglietto plate and the foglio plate sat back to back, and two clue plates i
 one screen that changed picture.
 
 Four screens show a clue plate instead of a room: `sfondoDa` takes any file stem, so
-`sfondoDa:"indizio-foglio"` puts the 1:1 plate on the square stage with `cast:[]`. That is also
-how *Gli indizi sul tavolo* has any artwork at all: its own plate was rejected and never
-redelivered, so `scena5.png` is still on the pipeline's missing list.
+`sfondoDa:"indizio_foglio"` puts the 1:1 plate on the square stage with `cast:[]`. That is also
+how *Gli indizi sul tavolo* gets its artwork: its first two parts use the isolated bottiglietta
+and bicchiere plates, and its last part deliberately returns to `scena2`. The rejected aggregate
+`scena5.png` is not an asset slot any more and must not appear in `SCELTE` or `ATTESI`. The pose
+key is the semantic `slot:"indagine"`; the preceding parts use `scena3_brindisi` and
+`scena3_malore`,
+so no pose key masquerades as an unused background filename.
 
 ## Screens vs scenes
 
@@ -685,40 +762,40 @@ Three fields decide what a screen shows, and they are deliberately independent:
 | `sfondoDa` | the room: background **and** its `primo` props | `SFONDO(i)` |
 | `sfondo:{scala,fx,fy}` | the zoom and focus of that background | inline transform |
 
-*Il brindisi* is `slot:"scena3"` — so the `-brindisi` cutouts apply — with `sfondoDa:"scena1"`,
+*Il brindisi* is `slot:"scena3_brindisi"` — so the `-brindisi` cutouts apply — with `sfondoDa:"scena1"`,
 so it plays in the opening scene's hall. A table belongs to a room, not to a scene number, which
 is why `primo` follows `SFONDO()`. Both parts of scene 3 borrow that hall: it is the only way
-they can share the two foreground tables, which exist solely as `scena1-sx/dx`. `sfondoDa` also
+they can share the two foreground tables, which exist solely as `scena1_sx/dx`. `sfondoDa` also
 takes a plain file stem, which is how four screens show a clue plate instead of a room.
 
-Neither `scena3.png` nor `scena4.png` is embedded any more: nothing draws them, so
+Neither `scena3_back_brindisi.png` nor `scena3_back_malore.png` is embedded: nothing draws them, so
 `sync-assets.py` skips them — see `MAI_DISEGNATI`. The `.png` stay in `assets/images/`, so
 giving a scene its own room again costs one line and a re-sync.
 
 ## Poses
 
 `POSE_SCENA` maps slot → character → pose, and `ATTORE(c, scena)` builds
-`attore-<nome>-<posa>.png`. Names are semantic, never versions: `giuseppe-malore`,
-`rosalia-allarmata`, `mauro-guardingo`, `roberto-accoglienza`, `giuseppe-presentazione`. A new
+`attore_<nome>_<posa>.png`. Names are semantic, never versions: `giuseppe_malore`,
+`rosalia_allarmata`, `mauro_guardingo`, `roberto_accoglienza`, `giuseppe_presentazione`. A new
 pose needs two edits: the entry in `POSE_SCENA` **and** the name in `sync-assets.py`'s `POSE`
 list, or the file Codex delivered is skipped and the scene quietly falls back to the neutral
 cutout. A character with no pose for that scene falls back to the
 neutral cutout, and a missing file falls back like any other image — so a half-delivered set
-never breaks a scene. The malore — scene 3's second part, casella `scena4` — is where they earn
+never breaks a scene. The malore — scene 3's second part, casella `scena3_malore` — is where they earn
 their keep: the whole cast reacts at once.
 
 ## How a scene is composed
 
 Three layers inside `.palco`, all positioned in percentages of the frame:
 
-1. `scenaN.png` — background, foreground deliberately left clear. `brindisi-v2` once arrived
+1. `scenaN.png` — background, foreground deliberately left clear. `brindisi_v2` once arrived
    with all five characters painted in, which showed everyone twice; the fix was a clean
    redelivery, not code. If a background comes back populated, say so and ask for the empty
    room.
-2. `attore-*.png` — one transparent cutout per character, from `STORY.scene[i].cast`:
+2. `attore_*.png` — one transparent cutout per character, from `STORY.scene[i].cast`:
    `x` (centre), `b` (height above the floor), `h` (figure height). **Height carries the depth** —
    never width. Array order is the stacking order: farthest first.
-3. `scenaN-sx.png` / `scenaN-dx.png` — foreground props, from `STORY.scene[i].primo`. Optional.
+3. `scenaN_sx.png` / `scenaN_dx.png` — foreground props, from `STORY.scene[i].primo`. Optional.
 
 Actors and props sit on **one** stacking scale, not two: actors default to `z-index:1` and props
 to `5`, and an optional `z` on either entry overrides that. Scene 1 uses all three levels: the
@@ -731,14 +808,15 @@ This is the only `z-index` anyone may set on the stage; `.attivo` still must not
 drag to move, wheel or `+`/`-` to resize, arrows for fine steps. The panel prints the `cast:` and
 `primo:` lines to paste back into `STORY`. Changes live only in the open page.
 
-**The stage is clipped 10% top and bottom**, from 1 September 2026: ceiling above the figures,
-empty floor below. Do not cut it by moving the *background*: drawing it taller and pushing it up
+**The stage is clipped 10% top and bottom, on every screen**: ceiling above the figures, empty
+floor below. It was made phone-only for one afternoon on 3 September 2026 and put back the same
+day — the scene is framed the way it is framed, and it must not change shot with the device. Do not cut it by moving the *background*: drawing it taller and pushing it up
 zooms the picture and eats the sides, and was rejected on sight. It is the **frame** that
 shrinks, not the image. `.palco` keeps `aspect-ratio:1` and every coordinate keeps its meaning; `clip-path:inset(10% 0
 10% 0)` simply hides the two bands. No zoom, no lost sides, and the staging that was already
 decided stays valid to the millimetre. What the bottom band costs is real: a figure standing at
 `b:0` loses its feet, and so do the foreground tables, which are anchored to the bottom corners.
-The staging badge moved down 10%, or the clip would have swallowed it.
+The staging badge moves down by the same 10%, or the clip would swallow it.
 
 **Every stage is square.** Scene 2's three parts carried `formato:"16 / 9"` and read as a strip
 next to the others; the field and the `--formato` variable were removed on 28 August 2026 and
@@ -746,8 +824,10 @@ next to the others; the field and the `--formato` variable were removed on 28 Au
 `object-fit:cover`, so a wide plate loses its edges — that is the trade, and the answer is to
 re-stage the figures with `r`, never to give one screen its own shape.
 
-**Never size the stage in `vh`.** The rows are declared (`54% / 46%`) and the stage takes the
-height left under the title, so it is the largest square that fits. Sized in `vh` it grew past
+**Never size the stage in `vh`.** The rows are declared — `54% / 46%`, and `64% / 36%` past
+701px, because a big screen can spare it and a phone cannot — and the stage takes the height left
+under the title, so it is the largest square that fits. That is why the header losing 64px gave
+the stage 64px, and why raising the row is the only way to enlarge the picture. Sized in `vh` it grew past
 its own half on phones, got clipped, and read as if the picture were zoomed in — that bug came
 back once already.
 
@@ -765,19 +845,39 @@ The investigator has no profile at all, and `suona()` returns early without one 
 is the whole implementation of "l'investigatore non ha voce". Only `avanti()` speaks, so stepping
 back through a scene is silent on purpose.
 
+**Whoever speaks now silences whoever spoke before.** A line's blips are all scheduled up front,
+so stopping is not a matter of not making more: each line goes through a gain node of its own —
+`bocca` — and `suona()` closes the previous one before opening its. The oscillators keep running
+to their scheduled end, but disconnected they are silent. Stopping them instead would mean
+calling `stop()` on nodes that may not have started, which throws. Setting the volume to zero
+closes it too, otherwise a line already in flight kept talking after the silence.
+
 The audio context starts suspended and `resume()` is async: schedule the blips **after** it has
-started, or they land in the past and nothing plays.
+started, or they land in the past and nothing plays. The two unlock listeners are `{once: true}`
+— one gesture is all they are for — and every line builds its own lowpass filter, so the last
+oscillator disconnects it on `ended` or the graph grows a node per line for the whole evening.
+`smoke.js` checks that `filtro.disconnect()` is present in **both** copies of the engine, this
+file and `voci.html`. The pointer and keyboard unlock listeners
+are one-shot: after the first gesture, checking the context on every interaction is dead work.
+Each line shares one low-pass filter, and the last oscillator disconnects it on `ended`; leaving
+that filter connected to `audio.destination` retained an audio node for every spoken line. Keep
+the same cleanup in the deliberately duplicated engine in `voci.html`.
 
 ## Images pipeline
 
 `python3 sync-assets.py` then `node smoke.js`, in that order, after every delivery: the sync
-keeps the newest `-vN` per slot, makes a web-sized WebP of it and rewrites the `ASSETS` map.
+keeps the newest `_vN` per slot, makes a web-sized WebP of it and rewrites the `ASSETS` map.
 
-Codex names files its own way **and renames them between deliveries** — `scena3-sala2-*` became
-`sala2-*` mid-project. `SCELTE` declares which file fills which slot (`copertina.png ←
-quadro-oliva-animato`); when a scene silently falls back to its text brief, that map is the first
+All source filenames use underscores, including the `_vN` version suffix. Backgrounds follow `scenaX_back_nome`; scene-bound foregrounds use
+`scenaX_foreground_nome`, and the cover uses `copertina_nome`. Actors and clue plates keep their
+reusable family prefix. `SCELTE` declares which source fills which slot (`scena1.png ←
+scena1_back_sala2`, `copertina.png ← copertina_quadro_oliva_animato`); when a scene silently falls back to its text brief, that map is the first
 thing to check. Anything outside the expected slots is skipped, and the script prints what is
 still missing.
+
+`ATTESI` starts from `set(SCELTE)`, not from a numeric range of hypothetical scene layers: only
+slots the app maps can be embedded. `sync-assets.py` exits immediately if a source filename
+contains `-`, so the underscore-only contract cannot regress silently.
 
 Animated files (the cover is a 21-frame WebP) are resized frame by frame and re-saved with
 `save_all`; a plain re-encode keeps one frame and silently kills the animation.
@@ -802,7 +902,7 @@ which at 2× is more than the 900 it is generated at.
 
 Their quality is **80**, lowered from 86 on 2 September 2026: on a portrait crop at 1:1 the mean
 difference is 9 of 765 and the largest 64 — invisible on this kind of painted art — and it took
-the app from 4.98MB to 4.10MB. Do not go lower without looking: at 74 the saving is another
+the app from 4.98MB to 4.10MB, and it sits just under 4MB today. Do not go lower without looking: at 74 the saving is another
 20% and the brush texture starts to flatten. The cache in `assets/web/` is keyed by mtime, so
 **delete it before re-syncing** when the quality changes, or the old encodes come straight back.
 
