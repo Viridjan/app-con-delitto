@@ -20,8 +20,8 @@ Roberto: «Benvenuti nella prima casa degli Oliviani!»
 Augusto: «Questa sera celebriamo l’ulivo, simbolo di pace e rinascita.»
 Mauro: «Io punterei ad una rinascita molto più improntata al biologico: meno prodotti di sintesi e più equilibrio naturale nell’oliveto.»
 Roberto: «È una strada valida, ma non è l’unica.»
-Giuseppe: «Quali altre possibilitá ci sono?»
-Mauro: «Biologico, integrato, convenzionale. Ma il biologico é il migliore, secondo me.»
+Giuseppe: «Quali altre possibilità ci sono?»
+Mauro: «Biologico, integrato, convenzionale. Ma il biologico è il migliore, secondo me.»
 Roberto: «Il convenzionale offre più strumenti autorizzati quando un’infestazione minaccia il raccolto; l’integrato unisce prevenzione e monitoraggio a interventi mirati, evitando quelli non necessari.»
 Giuseppe: «Quindi nessun metodo significa trattare alla cieca.»
 Roberto: «Nel biologico si previene con varietà adatte, equilibrio del campo e metodi fisici o naturali. Se non basta, si usano soltanto sostanze autorizzate per il biologico.»
@@ -113,6 +113,9 @@ Roberto: «Qualcuno ha visto il bicchiere da cui ha bevuto?»
 — SCENA 4, terza parte: Gli indizi sul tavolo —
 
 Rosalia: «…»
+Rosalia: «Ora che ci penso… prima del brindisi Mauro era vicino al tavolo dei bicchieri.»
+Mauro: «C’era confusione. Ho solo aiutato a distribuirli.»
+Roberto: «Strano. Io avevo già servito tutti dalla stessa caraffa.»
 Rosalia: «Io volevo solo che mio zio Giuseppe si fermasse…»
 Mauro, agitato: «Lui stava sbagliando! Andava fermato!»
 Rosalia: «Mauro… non era quello che intendevo…»

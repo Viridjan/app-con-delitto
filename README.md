@@ -6,8 +6,9 @@ esaminare in ordine libero, la scheda finale e la soluzione. L'investigatore la 
 tavolo dei giocatori — da proiettore, da tablet o da telefono.
 
 Tratta dal copione **_Il mistero dell'oliva blu_** di **Carlo Maria Gervasio**
-(`ullgi_L-inaugurazione_COSTA_rev.pdf`), usato con la sua autorizzazione. Il testo nell'app è
-quello originale, parola per parola.
+(`ullgi_L-inaugurazione_COSTA_rev.pdf`), usato con la sua autorizzazione. Il testo di Gervasio
+nell'app è quello originale, parola per parola; accanto ad esso il copione è cresciuto di battute
+scritte dall'autore dell'app — oggi sono circa la metà delle settanta.
 
 ## Com'è fatta
 
@@ -34,7 +35,7 @@ Ogni scena è composta al volo, su tre livelli:
 1. lo **sfondo**, disegnato con il primo piano sgombro;
 2. i **personaggi ritagliati**, posizionati in percentuali — `x` orizzontale, `b` altezza da
    terra, `h` altezza della figura: è l'altezza a dare la distanza, mai la larghezza;
-3. gli **oggetti in primo piano** (`scenaN-sx.png`, `scenaN-dx.png`), che stanno davanti a tutti,
+3. gli **oggetti in primo piano** (`scenaN_sx.png`, `scenaN_dx.png`), che stanno davanti a tutti,
    ancorati agli angoli bassi e tagliati dal bordo. Facoltativi.
 
 Quando qualcuno parla, l'app lo porta avanti — si alza, cresce, prende un'ombra. Nessuno viene
@@ -42,7 +43,10 @@ scurito. Le posizioni stanno in `STORY.scene[i].cast` e `.primo`.
 
 ## La voce dei personaggi
 
-Scoprendo una battuta la pagina sintetizza qualche bip con la Web Audio API — nessun file audio.
+Scoprendo una battuta la pagina sintetizza qualche bip con la Web Audio API — nessun file audio —
+e **il testo compare al ritmo di quei bip**, un pezzo alla volta, come se il personaggio stesse
+parlando davvero. Il ritmo resta anche col volume a zero: il personaggio parla lo stesso, si vede
+soltanto.
 Ogni personaggio ha la sua altezza (Mauro cupo e con onda quadra, Rosalia acuta), e la battuta
 più lunga fa più bip, fino a un tetto di quattordici. Il volume si regola con la **barra in alto a destra** — l'altoparlante accanto dice il livello —
 e lasciandola si sente una prova. `m` azzera, e ripremuto rimette l'ultimo livello scelto.
@@ -50,6 +54,10 @@ e lasciandola si sente una prova. `m` azzera, e ripremuto rimette l'ultimo livel
 Il contesto audio nasce sospeso finché non c'è un gesto dell'utente e `resume()` è asincrono:
 i bip vanno programmati **dopo** che è partito, altrimenti finiscono a un istante già passato e
 non si sente nulla.
+
+Ogni battuta si costruisce il suo filtro audio, e l'ultimo bip lo libera quando finisce: senza,
+il grafo audio accumulerebbe un nodo per battuta per tutta la serata. E chi parla adesso zittisce
+chi parlava prima: proseguendo a metà di una battuta, la voce si interrompe e parte quella nuova.
 
 Le voci si regolano a orecchio in **[`voci.html`](voci.html)** — il banco: una scheda per
 personaggio, sette manopole (altezza, ritmo, durata, andamento, timbro, lettere per bip,
@@ -86,16 +94,19 @@ sinistra percorrono la storia — e si prova tutto senza staccare la mano.
 ## Immagini
 
 Le illustrazioni le genera Codex e vanno in `assets/images/`, con i nomi elencati in
-[`img/ART.md`](img/ART.md). I file arrivano con suffissi di versione (`-v4`, `-v5`):
+[`img/ART.md`](img/ART.md). I file arrivano con suffissi di versione (`_v4`, `_v5`):
 
 ```sh
 python3 sync-assets.py     # tiene la versione più alta di ogni file, ne fa copie web
                            # leggere e le incorpora in oliva-blu.html
 ```
 
-Codex usa nomi suoi: la mappa `SCELTE` dentro lo script dichiara quale file riempie quale
-casella (`scena1.png ← scena3-sala2`), mentre la versione (`-v4`, `-v5`) la sceglie da solo
-tenendo la più alta. Lo script dice anche cosa manca ancora. **Ogni casella vuota mostra il brief al posto
+I fondali sorgente seguono `scenaX_back_nome`, gli elementi davanti al fondale
+`scenaX_foreground_nome`, e la copertina `copertina_nome`. La mappa `SCELTE` dichiara quale file
+riempie quale casella (`scena1.png ← scena1_back_sala2`), mentre la versione (`_v4`, `_v5`) la sceglie da solo
+tenendo la più alta. **Tutta la catena usa gli underscore** — file sorgente, chiavi interne,
+copie web — e `smoke.js` fallisce alla prima chiave che contenga un trattino: è quello che
+impedisce alle due metà della pipeline di divergere. Lo script dice anche cosa manca ancora. **Ogni casella vuota mostra il brief al posto
 dell'immagine**, quindi l'app resta presentabile anche a consegna incompleta.
 
 Premendo `d` dentro l'app tutte le illustrazioni diventano sagome colorate — sfondi, ritagli e
@@ -119,6 +130,9 @@ pagina, dove porta al successivo, e in fondo alla pagina altrove. Nelle scene si
 anche a metà: scopre la battuta seguente come il clic, e cambia schermata solo quando non resta
 altro. Dove invece c'è una scelta aperta — una domanda della scheda, un indizio aperto — resta
 spento, perché premerlo costerebbe una domanda o una risposta.
+
+Da telefono le due schermate in cui si sceglie — gli indizi e le domande della scheda — mettono
+le quattro carte su **due colonne**, e ogni cambio di schermata riparte dall'alto.
 
 **La storia va in una direzione sola**: non si torna indietro né di una battuta né di una
 schermata. Quello che è stato scoperto resta scoperto, e chi guarda non vede mai riavvolgere. Per
@@ -202,7 +216,9 @@ di una dozzina di metodi. Non si lancia da solo. Prima ne esistevano tre copie s
 avevano già cominciato a divergere.
 
 Il copione approvato è **[`copione.txt`](copione.txt)**: è quello che l'app deve mostrare, parola
-per parola, refusi dell'originale compresi. Il controllo verifica che ogni battuta fra «virgolette
+per parola. L'unica correzione ammessa è ortografica — accenti sbagliati, apostrofi dritti, punti
+mancanti — e va fatta nel txt **e** nell'app nello stesso passaggio, o i due divergono in
+silenzio. Il controllo verifica che ogni battuta fra «virgolette
 basse» compaia identica nell'HTML, e se cambia dice quale. Il PDF resta l'originale da cui il
 copione è tratto.
 
