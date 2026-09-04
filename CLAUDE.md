@@ -82,9 +82,18 @@ isolare un caso si commenta il resto.
   are mapped to the app's stable underscore-only logical slots in `SLOT_SOURCES`. Physical files in both
   `assets/images/` and generated `assets/web/` use underscores only.
 - `trash/` — local, gitignored archive, divided by file type: rejected PNG files go in
-  `trash/immagini/`, superseded working texts in `trash/documenti/`. It currently contains the
-  former `copione-v2.txt` and everything previously kept in `assets/images/bocciate/`. Nothing
-  in this folder is read by the app or its build scripts.
+  `trash/immagini/`, superseded working texts in `trash/documenti/`. It holds the former
+  `copione-v2.txt`, everything previously kept in `assets/images/bocciate/`, and — since
+  4 September 2026 — every **superseded delivery**: once Codex ships `_v2`, the `_v1` is dead
+  weight, because `sync-assets.py` only ever picks the highest version per slot. Twenty-two of
+  them went that day, 23MB, taking `assets/images/` from 99MB to 77MB with the generated
+  `assets.js` byte-for-byte unchanged. Trash it, never delete it: the version numbers must stay
+  spoken for, and a rejected `_v3` is what stops the next one being called `_v3` too. Nothing in
+  this folder is read by the app or its build scripts.
+  Watch one name collision when trashing: a slot's first delivery is called after the slot itself
+  (`attore_mauro_guardingo.png` fills `attore_mauro_guardingo.png`), so it reads like the live
+  file when it is only version one. `img/ART.md` names slots, not deliveries, so moving a v1 does
+  not stale the brief.
 
 ## Rules that matter
 
