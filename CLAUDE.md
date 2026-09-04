@@ -43,8 +43,11 @@ isolare un caso si commenta il resto.
   self-contained file: it loads the generated image map from `assets/assets.js`. It still needs
   no server or third-party dependency and opens directly from disk — **with that file beside it**.
 - `assets/assets.js` — generated `ASSETS` map containing the image data URIs. It is **tracked and
-  committed**: Pages serves it next to the HTML, and without it the site has no pictures. Never
-  edit it by hand.
+  committed**: Pages serves it next to the HTML, and without it the site has no pictures. The
+  `<script src>` carries a `?v=` fingerprint of the file's contents, stamped by `sync-assets.py`
+  on every run: the filename never changes, so without it a browser that has already fetched
+  `assets.js` keeps serving the old images — or, if it once saw them missing, keeps serving their
+  absence. That is what happened on Pages on 4 September 2026. Never edit the file by hand.
 - `asset-inventory.js` — evaluates `STORY` through the shared DOM stub and emits the characters,
   poses and clue IDs consumed by the image pipeline. This avoids parsing JavaScript with regexes.
 - `index.html` — redirect for Pages, which serves `index.html` at the root.

@@ -31,7 +31,9 @@ const LOCAL_LOCATION = { protocol: "file:", hostname: "" };
 function openApp(exportsExpression, locationOverride = LOCAL_LOCATION, globals = {}, soloInline = false) {
   const html = fs.readFileSync("oliva-blu.html", "utf8");
   const js = [...html.matchAll(/<script(?: src="([^"]+)")?>([\s\S]*?)<\/script>/g)]
-    .map(m => m[1] ? (soloInline ? "" : fs.readFileSync(m[1], "utf8")) : m[2]).join("\n");
+    /* `src` porta l'impronta del contenuto (`?v=…`) perche' il browser non
+       serva la versione vecchia: sul disco quel pezzo non esiste. */
+    .map(m => m[1] ? (soloInline ? "" : fs.readFileSync(m[1].split("?")[0], "utf8")) : m[2]).join("\n");
   const stage = createNode();
   const doc = {
     createElement: createNode, addEventListener() {},
