@@ -29,10 +29,10 @@ Roberto: «È una strada valida, ma non è l’unica.»
 Giuseppe: «Quali altre possibilità ci sono?»
 Mauro: «Biologico, integrato, convenzionale. Ma il biologico è il migliore, secondo me.»
 Roberto: «Il convenzionale offre più strumenti autorizzati quando un’infestazione minaccia il raccolto; l’integrato unisce prevenzione e monitoraggio a interventi mirati, evitando quelli non necessari.»
-Giuseppe: «Quindi nessun metodo significa trattare alla cieca.»
 Roberto: «Nel biologico si previene con varietà adatte, equilibrio del campo e metodi fisici o naturali. Se non basta, si usano soltanto sostanze autorizzate per il biologico.»
 Augusto: «La difesa integrata parte dal monitoraggio: si osservano il campo e le trappole, e si interviene solo quando serve.»
 Roberto: «Anche il convenzionale deve seguire questi principi. Può usare una gamma diversa di prodotti autorizzati, sempre secondo l’etichetta e in sicurezza.»
+Giuseppe: «Quindi nessun metodo significa trattare alla cieca.»
 Giuseppe: «Interessante!»
 Giuseppe: «Sono felice di essere qui. Questa comunità merita fiducia.»
 Rosalia, a bassa voce: «Zio Giuseppe… spero che tu sia davvero sicuro.»
@@ -152,7 +152,7 @@ Aiutami a risolvere il caso!
    B. Roberto
    C. Augusto   ← giusta
    D. Mauro
-5. Chi ha riconosciuto che nel bicchiere non c’era una bevanda?   [1 punto]
+5. Chi ha riconosciuto che nella bottiglietta non c’era una bevanda?   [1 punto]
    A. Rosalia
    B. Roberto   ← giusta
    C. Augusto

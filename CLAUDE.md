@@ -584,19 +584,26 @@ falls back to the monogram.
 donazione» and so on, which wrapped to two lines in the two-column grid on a phone and read as
 sentences where the card wanted a label. The `tag` under each still carries the phrase.
 
-**Open text questions, for the user, not for me.** Three inconsistencies survive a reading of
-`copione.txt` and are *not* to be fixed on my own — cutting or rewording is a product decision:
+**The three inconsistencies are resolved**, 4 September 2026, on the user's «risolvi tutto».
+They had stood as open questions because cutting or rewording is a product decision; the decision
+was given, and none of the three touched a line of Gervasio's — the quiz is ours from 30 August,
+the agronomy exchange ours from 2 September, and a clue card's `tag` was never in the txt at all.
 
-1. **The note has two texts.** Mauro reads «Zio, ti prego: non fare la donazione. Quei beni fanno
-   parte della nostra eredità» in scene 1, but the clue card's `tag` quotes «Fermate Giuseppe
-   prima che doni tutto» — plural, addressed to a room, and it makes Rosalia sound like she is
-   organising something.
-2. **Quiz 5 asks about the glass, the scene answers about the bottle.** «Chi ha riconosciuto che
-   nel bicchiere non c'era una bevanda?» expects Roberto, whose line — «Questa non è una bevanda.
-   È un prodotto per le piante» — is said over the *bottiglietta* plate.
-3. **Scene 1's exchange concludes before it explains.** Giuseppe says «Quindi nessun metodo
-   significa trattare alla cieca» and only then do Roberto and Augusto describe the three methods,
-   after which he adds «Interessante!». The conclusion and the explanations are inverted.
+1. **The note had two texts.** Mauro reads «Zio, ti prego: non fare la donazione. Quei beni fanno
+   parte della nostra eredità», while the biglietto card quoted «Fermate Giuseppe prima che doni
+   tutto» — plural, addressed to a room, and it made Rosalia sound like she was organising
+   something. The card now quotes the note Mauro actually reads: «Zio, ti prego: non fare la
+   donazione». One text, one note.
+2. **Quiz 5 asked about the glass and the scene answered about the bottle.** Roberto's «Questa non
+   è una bevanda. È un prodotto per le piante» is said over the *bottiglietta* plate, so the
+   question now asks «Chi ha riconosciuto che nella **bottiglietta** non c'era una bevanda?». The
+   answer, the weight and the column are unchanged. The quiz lives in `copione.txt`, so this one
+   moved in both files — `estrai-copione.js` after the edit, not before.
+3. **Scene 1 concluded before it explained.** Giuseppe's «Quindi nessun metodo significa trattare
+   alla cieca» sat above the three descriptions instead of below them. It moved after Roberto's
+   line on conventional growing, so the exchange now runs: the three methods named, each one
+   described, then Giuseppe drawing the conclusion and «Interessante!». Those three Giuseppe lines
+   are consecutive and collapse into one bubble, which is what `groupLines()` is for.
 
 Two spelling slips were fixed under the standing exception, in both files at once: `possibilitá`
 → `possibilità` and `é` → `è`.
