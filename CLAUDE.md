@@ -139,7 +139,7 @@ of what replaced it: the cast read too dim on a projector. `brightness(.88)` at 
 whoever is speaking. Keep both ends bright; the gap
 between them is what does the work, not the depth of the shadow.
 
-**Scene titles stay off every served copy.** `TITLES_ENABLED` is true only with the `file:` protocol:
+**Scene titles stay off public copies.** `TITLES_ENABLED` is true only on an author surface:
 `renderScene` emits the `.scene-head` — the title, and nothing else since 3 September 2026 — only
 where the author works. The big gold numeral and the «Scena N di M · parte» eyebrow above it went
 that day: they cost 64px of header on a 1280×900 screen, and the stage took every one of them —
@@ -168,28 +168,28 @@ lived in its header until 4 September 2026 and it is what `?` is for. Two rows e
 where you are, and the list — and the image line stays **empty when nothing is missing**. It had a
 `Tutte le battute` button too, gone on 1 September 2026 with `battuteTutte()`: a scene now opens
 with its first line already revealed, and the rest is one keypress each. Both panels work from
-the local file and stay disabled on every HTTP or HTTPS deployment.
+the local file and the allow-listed Claude artifact hosts; they stay disabled on public hosts.
 The help overlay lists only the keys that actually work where it is running. `smoke.js` runs the
-app as a local file, on GitHub Pages and on a custom HTTPS domain, and fails if a gate leaks.
+app as a local file, on both artifact host families, on GitHub Pages and on a custom HTTPS domain,
+and fails if a gate leaks.
 
 **Images must be optional.** Every slot falls back to a typographic placeholder via `setupImageSlots()` on
 `error`. The app must look finished with `assets/images/` empty.
 
 **`d` is a veil, not a substitution.** `DEMO_LAYER` holds one silhouette per slot the demo covers —
-every background, every neutral cutout, every pose — and `src()` reads it first while
+every background, every foreground prop, every neutral cutout, every pose — and `assetSource()` reads it first while
 `state.demo` is on. It is deliberately lazy: `createDemoLayer()` runs only on the first `d`, not during
 normal startup, and reuses one encoded SVG per character across all that character's poses.
 `ASSETS` is never touched, so turning the demo off restores
 nothing because nothing was taken. It used to write into `ASSETS` and, on the way out, `delete`
 the keys: pressing `d` twice **destroyed the real embedded images** until the page was reloaded.
 Codex found that and fixed it with a backup map on 2 September 2026; the veil removes the whole
-class instead. One consequence to know: `src()` now reads `state`, so anything calling it at load
-time must be lazy — `coverImage` became a function for exactly that reason.
-
-**Static inventories are cached.** `expectedAssets()` derives its list only from immutable `STORY` and
-`SUSPECTS`; poses live on `scene[].cast[]` and clue IDs on `oggetti[]`. It stores the result in `EXPECTED_ASSETS` on first
-use. Do not invalidate or rebuild it during `render()`. If any of those sources ever becomes
-editable at runtime, remove the cache or give that editor an explicit invalidation step.
+class instead. One consequence to know: `assetSource()` now reads `state`, so anything calling it at load
+time must be lazy — `coverImage` became a function for exactly that reason. The props joined the
+veil on 4 September 2026: scene 1's two painted tables stayed in front of the silhouettes, and
+they are the thing that covers the most — judging positions with those on top was pointless.
+`smoke.js` now walks every scene with the demo on and fails on the first `src` that is not an
+SVG silhouette.
 
 **Image revisions must always be versioned.** Never overwrite an existing image, including
 newly generated assets that have not been committed yet. Keep the original filename unchanged
@@ -276,20 +276,25 @@ Normalised on 29 August 2026; keep it this way rather than adding a fourth way t
   both parts. Giuseppe, Roberto and Augusto keep their neutral cutouts, because those three do
   fall back. Six megabytes became five.
 - **One name, one shape: underscores, everywhere.** Source files, `ASSETS` keys, `SLOT_SOURCES`,
-  pose fields, `expectedAssets()` and the `assets/web/` cache all use `nome_con_underscore`; hyphens are
+  pose fields, the generated asset inventory and the `assets/web/` cache all use `nome_con_underscore`; hyphens are
   gone from the whole chain. `smoke.js` fails on the first `ASSETS` key that contains one, which
   is what keeps the two halves of the pipeline from drifting apart again.
 - **Slots are named for what they show**, not for a number: `scena3_brindisi`, `scena3_malore`,
   `indagine`. They used to be `scena3`, `scena4`, `scena5`, which meant a semantic slot looked
   exactly like a background filename that nobody delivered — `scena5.png` sat on the pipeline's
   missing list for days because of it. `smoke.js` asserts the three semantic slots exist.
-- **`expectedAssets()` is built once** and kept: it is derived from `STORY`, which does not change while
-  the page is open, and the developer panel asks for it on every render.
 - **`document.querySelector` is not used anywhere.** Inside the stage nothing needs it — the
   markup is rewritten every render; outside it, the two panels are held by reference. If a new
   one appears, ask what it is standing in for.
-- **Nothing is derived from the array index.** `NUM(sc, k)` gives the number the audience reads,
-  `CASELLA(i)` the artwork slot, `SFONDO(i)` the room. Index-derived names had leaked into the
+- **A rename is not a search and replace.** The English-naming pass turned `src` into
+  `assetSource` everywhere it appeared — including `im.src = ripiego`, the line that actually
+  loads a fallback image, which became a JS property nothing reads: the cover's fall back to
+  scene 1's hall silently stopped working. Codex found it on 4 September 2026 and `smoke.js` now
+  drives `setupImageSlots()` with a fake image through both failures, the fallback and the give-up.
+  The same pass also left English words inside Italian comments (`viaggiano start l'HTML`).
+  After a rename, read the diff — the compiler cannot tell a property from a prose word.
+- **Nothing semantic is derived from the array index.** `sceneNumber(sc, k)` gives the number the audience reads,
+  `sceneSlot(i)` the artwork slot, `backgroundSlot(i)` the room. Index-derived names had leaked into the
   background's `alt` (it announced "Scena 12" on the screen titled *Scena 4 · terza parte*) and
   into `demo()`, which filled slots named `scena7.png` that nothing draws.
 
@@ -800,8 +805,8 @@ Three fields decide what a screen shows, and they are deliberately independent:
 
 | field | what it moves | resolved by |
 |---|---|---|
-| `slot` | the poses, and the casella name | `CASELLA(i)` |
-| `sfondoDa` | the room: background **and** its `primo` props | `SFONDO(i)` |
+| `slot` | the poses, and the casella name | `sceneSlot(i)` |
+| `sfondoDa` | the room: background **and** its `primo` props | `backgroundSlot(i)` |
 | `sfondo:{scala,fx,fy}` | the zoom and focus of that background | inline transform |
 
 *Il brindisi* is `slot:"scena3_brindisi"` — so the `-brindisi` cutouts apply — with `sfondoDa:"scena1"`,
@@ -945,11 +950,12 @@ densest band of rows and columns. The `-brindisi` set arrived with a two-pixel g
 the right edge of the canvas — opaque enough that no alpha threshold could tell it from the
 drawing — and `getbbox()` dutifully kept the whole canvas, so the figures came out small and
 off-centre with a visible dashed edge. The trade: an element genuinely detached from the figure
-would be dropped. Delete the stale `assets/web/*.webp` before re-syncing when the crop changes,
-or the cache hands back the old cut.
+would be dropped. When this algorithm changes, increase `CACHE_VERSION`; the next sync then
+rebuilds every derived image.
 
-Already-converted files are reused from `assets/web/` when the copy is newer than the source —
-without that, every run re-encoded the cover's 21 frames. Stills are saved with `method=4`: `6`
+Already-converted files are reused from `assets/web/` only when the cache manifest matches the
+selected source name, timestamp, size and pipeline version — without that, every run re-encoded
+the cover's 21 frames. Stills are saved with `method=4`: `6`
 exhausted memory on the square RGBA clue plates and buys nothing at these sizes.
 
 `IMAGE_WIDTHS["scena"]` is **1200**, down from 1600 the same day: at 1920×1080 the stage is a square of
@@ -962,8 +968,8 @@ Their quality is **80**, lowered from 86 on 2 September 2026: on a portrait crop
 difference is 9 of 765 and the largest 64 — invisible on this kind of painted art. The combined
 HTML plus generated asset payload remains just under 4MB, while the HTML shell itself is about
 110KB. Do not go lower without looking: at 74 the saving is another
-20% and the brush texture starts to flatten. The cache in `assets/web/` is keyed by mtime, so
-**delete it before re-syncing** when the quality changes, or the old encodes come straight back.
+20% and the brush texture starts to flatten. Increase `CACHE_VERSION` when quality or other
+encoding parameters change.
 
 ## Deliberate omissions
 
@@ -974,7 +980,8 @@ only generation step; there is no application bundler.
 
 The cross-file audit removed eight drift points:
 
-- author gates now use the `file:` protocol, so every HTTP/HTTPS host is public;
+- author gates use an explicit allow-list for local files and Claude artifact hosts, so an
+  unknown HTTP/HTTPS host remains public;
 - `voci.html` now interrupts the previous utterance and routes each line through the same
   per-utterance gain and filter cleanup used by the app;
 - `smoke.js` compares the ordered dialogue arrays from `STORY` and `copione.txt` in both
@@ -1029,3 +1036,21 @@ posed silhouettes before filling the layer.
 The accepted baseline is `/tmp/oliva_blu_before_refactor.txt` during the refactor session. A fresh
 `node dom.js` output compared byte-for-byte equal after modularisation and renaming; future work
 must create its own baseline because files under `/tmp` are not persistent.
+
+## Audit after the Claude fixes — 4 September 2026
+
+The image fallback now assigns the replacement URL to the real `img.src`; the accidental
+`img.assetSource` property never started a second load. `smoke.js` exercises that failure path so
+the cover-to-scene fallback cannot silently regress.
+
+`ACTOR_POSES` is assembled in one pass by scene number and then overlaid with the current screen,
+preserving the rule that the current part wins while removing the previous repeated full scan of
+`STORY.scene`. It uses the canonical `sceneNumber()` resolver, so screens without an explicit `n`
+do not collapse into one shared `undefined` pose group.
+
+The derived-image cache no longer trusts output timestamps. `sync-assets.py` stores the selected
+source name, modification time, size and `CACHE_VERSION` in ignored
+`assets/web/.sources.json`; changing or removing the highest `_vN` therefore rebuilds the correct
+WebP. Missing, malformed or structurally invalid cache metadata is treated as an empty cache and
+rebuilt. Increase `CACHE_VERSION` whenever encoding or cropping rules change. Generated JS, HTML
+and cache metadata are written only when their content changes, avoiding needless watcher reloads.

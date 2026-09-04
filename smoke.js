@@ -5,8 +5,32 @@ const { openApp } = require("./stub-dom");
 const appHtml = fs.readFileSync("oliva-blu.html", "utf8");
 const voiceBenchHtml = fs.readFileSync("voci.html", "utf8");
 
-const CODA = "{state,SLIDES,STORY,goTo,advance,reveal,advanceLabel,hasMoreToReveal,advanceButton,investigationComplete,verdictPose,render,toggleDirector,toggleDevelopment,openClue,askForSolution,overlayElement,MAX_CLUES,MAX_PEOPLE,SUSPECTS,DIRECTOR_ENABLED,DEV_ENABLED,TITLES_ENABLED,actorImage,clueImage,ASSETS,demo,sceneImage,demoLayer:()=>DEMO_LAYER,splitText,VOICE}";
+const CODA = "{state,SLIDES,STORY,goTo,advance,reveal,advanceLabel,hasMoreToReveal,advanceButton,investigationComplete,verdictPose,render,toggleDirector,toggleDevelopment,openClue,askForSolution,overlayElement,MAX_CLUES,MAX_PEOPLE,SUSPECTS,DIRECTOR_ENABLED,DEV_ENABLED,TITLES_ENABLED,actorImage,clueImage,setupImageSlots,sceneNumber,ASSETS,demo,sceneImage,demoLayer:()=>DEMO_LAYER,splitText,VOICE}";
 const { app, stage } = openApp(CODA);
+assert.deepStrictEqual(Array.from(app.STORY.scene, app.sceneNumber),
+  Array.from(app.STORY.scene, (scene, index) => scene.n || index + 1),
+  "la numerazione di ripiego delle scene non e' coerente");
+
+// Se la copertina manca deve provare lo sfondo alternativo. Un refactor aveva
+// scritto una proprieta' JS arbitraria invece del vero attributo `src`.
+{
+  let onError;
+  let removed = false, empty = false;
+  const image = {
+    dataset: { fallback: "scena1.png" },
+    classList: { contains: () => false },
+    addEventListener: (event, callback) => { if (event === "error") onError = callback; },
+    closest: () => ({ classList: { add: () => { empty = true; } } }),
+    remove: () => { removed = true; },
+    complete: false
+  };
+  app.setupImageSlots({ querySelectorAll: () => [image] });
+  onError();
+  assert.strictEqual(image.src, "scena1.png", "il ripiego dell'immagine non viene caricato");
+  assert.strictEqual(image.dataset.fallback, undefined, "il ripiego puo' entrare in ciclo");
+  onError();
+  assert.ok(removed && empty, "un ripiego mancante non viene rimosso correttamente");
+}
 
 /* Senza `assets/assets.js` l'app deve partire lo stesso: le immagini mancano e
    ogni casella cade sul suo ripiego tipografico, ma la storia si vede. Prima
@@ -138,6 +162,21 @@ assert.ok(app.demoLayer(), "il primo avvio della demo non costruisce le sagome")
 assert.notStrictEqual(app.actorImage("Mauro", sceneWithPose), originalPoseImage, "la demo non copre una posa di Mauro");
 assert.ok(app.actorImage("Mauro", sceneWithPose).startsWith("data:image/svg+xml"), "la posa demo non e' una sagoma");
 assert.ok(app.sceneImage(sceneWithPose).startsWith("data:image/svg+xml"), "la demo non copre lo sfondo");
+/* Il velo deve coprire tutto quello che una scena disegna. I due tavoli in
+   primo piano restavano dipinti davanti alle sagome, ed e' quello che copre
+   di piu': provare le posizioni con quelli addosso non serviva a niente. */
+{
+  const scoperte = new Set();
+  app.SLIDES.forEach((slide, index) => {
+    if (slide.t !== "scene") return;
+    app.goTo(index);
+    app.state.step = app.STORY.scene[slide.i].battute.length;
+    app.render();
+    for (const m of stage.innerHTML.matchAll(/src="([^"]+)"/g))
+      if (!/^data:image\/svg\+xml/.test(m[1])) scoperte.add(m[1].slice(0, 40));
+  });
+  assert.deepStrictEqual([...scoperte], [], "con la demo accesa una scena mostra ancora un disegno vero");
+}
 assert.strictEqual(JSON.stringify(app.ASSETS), originalAssets, "la demo ha modificato ASSETS invece di velarlo");
 app.demo();
 assert.strictEqual(app.actorImage("Mauro", sceneWithPose), originalPoseImage, "spegnendo la demo la posa non torna originale");
