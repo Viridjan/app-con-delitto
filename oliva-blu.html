@@ -895,9 +895,14 @@ const sceneImage = i => assetSource(`${backgroundSlot(i)}.png`);
 const coverImage = () => assetSource("copertina.png");
 const portraitImage = c => assetSource(`ritratto_${c.toLowerCase()}.png`);
 /* La posa vive nell'attore della scena: regia, rendering e inventario leggono
-   lo stesso dato, senza una seconda tabella da mantenere sincronizzata. */
+   lo stesso dato, senza una seconda tabella da mantenere sincronizzata.
+   Le parti di una scena sono una conversazione sola e condividono le pose: su
+   una schermata senza `cast` — un indizio a tutto campo — chi parla non avrebbe
+   nessuna posa, e il ritaglio neutro non esiste per tutti. Il `cast` della
+   schermata resta in coda, quindi vince sempre sui fratelli. */
 const ACTOR_POSES = STORY.scene.map(scene =>
-  new Map((scene.cast || []).filter(actor => actor.posa).map(actor => [actor.c, actor.posa])));
+  new Map([...STORY.scene.filter(s => s.n === scene.n), scene]
+    .flatMap(s => s.cast || []).filter(actor => actor.posa).map(actor => [actor.c, actor.posa])));
 const actorImage = (character, sceneIndex = null) => {
   const pose = sceneIndex === null ? null : ACTOR_POSES[sceneIndex].get(character);
   return assetSource(`attore_${character.toLowerCase()}${pose ? `_${pose}` : ""}.png`);

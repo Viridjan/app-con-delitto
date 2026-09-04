@@ -814,7 +814,16 @@ Each actor in `STORY.scene[].cast[]` may carry `posa`; `actorImage(c, scena)` bu
 `sync-assets.py` derives its pose inventory from those same fields, so a new pose needs one edit.
 A character with no pose for that scene falls back to the
 neutral cutout, and a missing file falls back like any other image — so a half-delivered set
-never breaks a scene. The malore — scene 3's second part, casella `scena3_malore` — is where they earn
+never breaks a scene.
+
+**The parts of a scene share their poses.** `ACTOR_POSES` is built per screen but merged across
+every screen with the same `n`, the screen's own `cast` last so it always wins. That matters
+because four screens have `cast:[]` — the stage is a clue plate — while two characters still
+speak on them, and the figure beside the bubble is `actorImage(chi parla, i)`. Scene 1's second
+part asked for `attore_mauro.png` and `attore_rosalia.png`, neutral cutouts binned on the day
+every scene got a pose, and the reader saw a `?` where Mauro should be. Merging gives it the
+`guardingo` and `pensierosa` of the same conversation. `smoke.js` now walks the **speakers** as
+well as the cast: checking `cast` alone is exactly what let this through. The malore — scene 3's second part, casella `scena3_malore` — is where they earn
 their keep: the whole cast reacts at once.
 
 ## How a scene is composed
