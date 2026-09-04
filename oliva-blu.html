@@ -159,15 +159,19 @@ kbd{font:inherit; font-size:.78em; border:1px solid var(--line); border-bottom-w
   padding-top:clamp(.9rem,2.4vh,1.6rem)}
 /* la figura intera, non il ritratto: si appoggia in basso come sul palco */
 .parlante{padding-right:clamp(.6rem,1.6vw,1.2rem); min-width:0; height:100%; min-height:0;
-  overflow:hidden; display:flex; align-items:flex-start; justify-content:center}
-/* mezzo busto: del ritaglio intero si mostra solo la parte alta */
-/* Tre quarti di figura, dalla testa alla vita: riquadro verticale 3:4 alto quanto
-   la meta' bassa, ritaglio ancorato in alto e sfumatura sul fondo. */
-.parlante .figura-parlante{display:block; height:100%; width:auto; max-width:100%;
-  aspect-ratio:3 / 4; object-fit:cover; object-position:top center;
-  animation:entra .35s ease-out both;
+  overflow:hidden; display:flex; align-items:flex-start; justify-content:center;
   -webkit-mask-image:linear-gradient(to bottom,#000 76%,transparent 99%);
   mask-image:linear-gradient(to bottom,#000 76%,transparent 99%)}
+/* Mezzo busto, dalla testa alla vita, e alla stessa scala per tutti: la figura
+   e' alta un multiplo del riquadro, ancorata in alto, e quello che esce ai lati
+   viene tagliato. La scala e' sull'**altezza** apposta. Un riquadro 3:4 con
+   `object-fit:cover` la prendeva dalla larghezza — e siccome ogni ritaglio e'
+   piu' stretto di 3:4, l'ingrandimento finiva per dipendere dall'apertura delle
+   braccia: `roberto_accoglienza` (642x900) restava figura intera dove
+   `mauro_guardingo` (229x900) era gia' mezzo busto. La sfumatura sul fondo sta
+   sul contenitore, non sull'immagine, o cadrebbe fuori campo. */
+.parlante .figura-parlante{display:block; height:265%; width:auto; max-width:none;
+  animation:entra .35s ease-out both}
 .parlante .ph.sigla{width:100%; font-size:clamp(2rem,6vw,3.4rem); opacity:.55}
 @keyframes entra{from{opacity:0; transform:translateY(6px)}to{opacity:1; transform:none}}
 .dialoghi{min-height:0; display:flex; flex-direction:column;
