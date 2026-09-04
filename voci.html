@@ -107,10 +107,9 @@ button{font:inherit; color:inherit; background:none; border:none; cursor:pointer
 </div>
 
 <script>
-/* Il motore delle voci e' lo stesso di oliva-blu.html, copiato apposta: l'app
-   deve restare un file unico e autosufficiente, quindi qui c'e' un gemello.
-   Cambiando il motore, cambiarlo in tutti e due. */
-const PARTENZA = {
+/* Il banco resta separato dall'app, ma replica la stessa catena audio.
+   Cambiando il motore, aggiornare entrambi e il test comportamentale. */
+const DEFAULT_VOICES = {
   //            altezza  onda        passo   nota  deriva  taglio  lettere/bip  volume
   Giuseppe:  { f: 242, onda: "triangle", passo: .094, nota: .105, deriva: -.10, taglio: 2200, den: 4, vol: .53 },
   Rosalia:   { f: 395, onda: "triangle", passo: .092, nota: .070, deriva:  .20, taglio: 4500, den: 3.4, vol: .48 },
@@ -118,9 +117,9 @@ const PARTENZA = {
   Augusto:   { f: 312, onda: "square",   passo: .076, nota: .075, deriva:  .07, taglio: 2600, den: 3, vol: .14 },
   Mauro:     { f: 183, onda: "square",   passo: .082, nota: .130, deriva:  .14, taglio: 4500, den: 6, vol: .07 }
 };
-const COLORE = { Giuseppe: "--gold", Rosalia: "--plum", Roberto: "--olive",
+const CHARACTER_COLORS = { Giuseppe: "--gold", Rosalia: "--plum", Roberto: "--olive",
                  Augusto: "--teal", Mauro: "--blu" };
-const MANOPOLE = [
+const CONTROLS = [
   { k: "f",      eti: "altezza",  min: 60,  max: 520,  passo: 1,    suff: " Hz" },
   { k: "passo",  eti: "ritmo",    min: .05, max: .16,  passo: .002, suff: " s" },
   { k: "nota",   eti: "durata",   min: .05, max: .22,  passo: .005, suff: " s" },
@@ -129,100 +128,110 @@ const MANOPOLE = [
   { k: "den",    eti: "lettere",  min: 2,   max: 9,    passo: .1,   suff: "" },
   { k: "vol",    eti: "volume",   min: .05, max: .6,   passo: .01,  suff: "" }
 ];
-const ONDE = { triangle: "triangolo", sine: "sinusoide", square: "quadra", sawtooth: "dente di sega" };
+const WAVE_NAMES = { triangle: "triangolo", sine: "sinusoide", square: "quadra", sawtooth: "dente di sega" };
 
-let VOCE = structuredClone(PARTENZA);
-let audio = null;
+let VOICE = structuredClone(DEFAULT_VOICES);
+let audio = null, voiceOutput = null;
 
-function suona(c, testo) {
+function stopVoice() {
+  if (!voiceOutput) return;
+  voiceOutput.gain.cancelScheduledValues(audio.currentTime);
+  voiceOutput.gain.setValueAtTime(0, audio.currentTime);
+  voiceOutput.disconnect();
+  voiceOutput = null;
+}
+
+function playVoice(character, text) {
   if (typeof AudioContext !== "function") return;
   audio = audio || new AudioContext();
-  if (audio.state === "suspended") { audio.resume().then(() => emetti(c, testo), () => {}); return; }
-  emetti(c, testo);
+  if (audio.state === "suspended") { audio.resume().then(() => emitVoice(character, text), () => {}); return; }
+  emitVoice(character, text);
 }
 
-function emetti(c, testo) {
-  const v = VOCE[c];
-  if (!v) return;
-  const bip = Math.max(3, Math.min(16, Math.round(testo.length / v.den)));
-  const filtro = audio.createBiquadFilter();
-  filtro.type = "lowpass"; filtro.frequency.value = v.taglio; filtro.Q.value = .7;
-  filtro.connect(audio.destination);
-  for (let i = 0; i < bip; i++) {
-    const t = audio.currentTime + .01 + i * v.passo;
-    const avanzamento = bip > 1 ? i / (bip - 1) : 0;
-    const o = audio.createOscillator(), g = audio.createGain();
-    o.type = v.onda;
-    o.frequency.setValueAtTime(v.f * (1 + v.deriva * avanzamento) * (.95 + Math.random() * .1), t);
-    g.gain.setValueAtTime(.0001, t);
-    g.gain.exponentialRampToValueAtTime(v.vol, t + .008);
-    g.gain.exponentialRampToValueAtTime(.0001, t + v.nota);
-    o.connect(g).connect(filtro);
-    if (i === bip - 1)
-      o.addEventListener("ended", () => filtro.disconnect(), { once: true });
-    o.start(t); o.stop(t + v.nota + .01);
+function emitVoice(character, text) {
+  stopVoice();
+  const profile = VOICE[character];
+  if (!profile) return;
+  const beepCount = Math.max(3, Math.min(16, Math.round(text.length / profile.den)));
+  const filter = audio.createBiquadFilter();
+  filter.type = "lowpass"; filter.frequency.value = profile.taglio; filter.Q.value = .7;
+  voiceOutput = audio.createGain();
+  filter.connect(voiceOutput).connect(audio.destination);
+  for (let index = 0; index < beepCount; index++) {
+    const time = audio.currentTime + .01 + index * profile.passo;
+    const progress = beepCount > 1 ? index / (beepCount - 1) : 0;
+    const oscillator = audio.createOscillator(), gain = audio.createGain();
+    oscillator.type = profile.onda;
+    oscillator.frequency.setValueAtTime(profile.f * (1 + profile.deriva * progress) * (.95 + Math.random() * .1), time);
+    gain.gain.setValueAtTime(.0001, time);
+    gain.gain.exponentialRampToValueAtTime(profile.vol, time + .008);
+    gain.gain.exponentialRampToValueAtTime(.0001, time + profile.nota);
+    oscillator.connect(gain).connect(filter);
+    if (index === beepCount - 1)
+      oscillator.addEventListener("ended", () => filter.disconnect(), { once: true });
+    oscillator.start(time); oscillator.stop(time + profile.nota + .01);
   }
-  return bip;
+  return beepCount;
 }
 
-const frase = () => document.getElementById("frase").value || "prova prova prova";
-const num = n => Number.isInteger(n) ? n : Math.round(n * 1000) / 1000;
+const samplePhrase = () => document.getElementById("frase").value || "prova prova prova";
+const formatNumber = n => Number.isInteger(n) ? n : Math.round(n * 1000) / 1000;
 
-function testo() {
-  const righe = Object.entries(VOCE).map(([c, v]) =>
-    `  ${(c + ":").padEnd(11)}{ f: ${v.f}, onda: "${v.onda}", passo: ${num(v.passo)}, ` +
-    `nota: ${num(v.nota)}, deriva: ${num(v.deriva)}, taglio: ${v.taglio}, ` +
-    `den: ${num(v.den)}, vol: ${num(v.vol)} }`);
-  document.getElementById("uscita").value = "const VOCE = {\n" + righe.join(",\n") + "\n};";
+function updateOutput() {
+  const lines = Object.entries(VOICE).map(([c, v]) =>
+    `  ${(c + ":").padEnd(11)}{ f: ${v.f}, onda: "${v.onda}", passo: ${formatNumber(v.passo)}, ` +
+    `nota: ${formatNumber(v.nota)}, deriva: ${formatNumber(v.deriva)}, taglio: ${v.taglio}, ` +
+    `den: ${formatNumber(v.den)}, vol: ${formatNumber(v.vol)} }`);
+  document.getElementById("uscita").value = "const VOICE = {\n" + lines.join(",\n") + "\n};";
 }
 
-function schede() {
-  document.getElementById("voci").innerHTML = Object.keys(VOCE).map(c => `
-    <section class="voce" style="--c:var(${COLORE[c]})">
+function cards() {
+  document.getElementById("voci").innerHTML = Object.keys(VOICE).map(c => `
+    <section class="voce" style="--c:var(${CHARACTER_COLORS[c]})">
       <div class="capo"><h2>${c}</h2><span style="flex:1"></span>
         <button data-ascolta="${c}">Ascolta</button></div>
       <div class="manopola">
         <label for="${c}-onda">onda</label>
-        <select id="${c}-onda" data-onda="${c}">${Object.entries(ONDE).map(([v, n]) =>
-          `<option value="${v}" ${VOCE[c].onda === v ? "selected" : ""}>${n}</option>`).join("")}</select>
+        <select id="${c}-onda" data-onda="${c}">${Object.entries(WAVE_NAMES).map(([v, n]) =>
+          `<option value="${v}" ${VOICE[c].onda === v ? "selected" : ""}>${n}</option>`).join("")}</select>
       </div>
-      ${MANOPOLE.map(m => `
+      ${CONTROLS.map(m => `
         <div class="manopola">
           <label for="${c}-${m.k}">${m.eti}</label>
           <input type="range" id="${c}-${m.k}" data-c="${c}" data-k="${m.k}"
-                 min="${m.min}" max="${m.max}" step="${m.passo}" value="${VOCE[c][m.k]}">
-          <output id="out-${c}-${m.k}">${num(VOCE[c][m.k])}${m.suff}</output>
+                 min="${m.min}" max="${m.max}" step="${m.passo}" value="${VOICE[c][m.k]}">
+          <output id="out-${c}-${m.k}">${formatNumber(VOICE[c][m.k])}${m.suff}</output>
         </div>`).join("")}
     </section>`).join("");
-  testo();
+  updateOutput();
 }
 
 document.addEventListener("input", e => {
   const t = e.target;
   if (t.dataset.k) {
-    VOCE[t.dataset.c][t.dataset.k] = parseFloat(t.value);
-    const m = MANOPOLE.find(x => x.k === t.dataset.k);
+    VOICE[t.dataset.c][t.dataset.k] = parseFloat(t.value);
+    const m = CONTROLS.find(x => x.k === t.dataset.k);
     document.getElementById(`out-${t.dataset.c}-${t.dataset.k}`).textContent =
-      num(parseFloat(t.value)) + m.suff;
-    testo();
-    suona(t.dataset.c, frase());          // si sente subito l'effetto della manopola
+      formatNumber(parseFloat(t.value)) + m.suff;
+    updateOutput();
+    playVoice(t.dataset.c, samplePhrase());          // si sente subito l'effetto della manopola
   } else if (t.dataset.onda) {
-    VOCE[t.dataset.onda].onda = t.value;
-    testo(); suona(t.dataset.onda, frase());
+    VOICE[t.dataset.onda].onda = t.value;
+    updateOutput(); playVoice(t.dataset.onda, samplePhrase());
   }
 });
 
 document.addEventListener("click", e => {
   const b = e.target.closest("[data-ascolta]");
-  if (b) suona(b.dataset.ascolta, frase());
+  if (b) playVoice(b.dataset.ascolta, samplePhrase());
 });
 
 document.getElementById("tutti").addEventListener("click", () => {
-  Object.keys(VOCE).forEach((c, i) => setTimeout(() => suona(c, frase()), i * 1600));
+  Object.keys(VOICE).forEach((c, i) => setTimeout(() => playVoice(c, samplePhrase()), i * 1600));
 });
 
 document.getElementById("ripristina").addEventListener("click", () => {
-  VOCE = structuredClone(PARTENZA); schede();
+  VOICE = structuredClone(DEFAULT_VOICES); cards();
   document.getElementById("eco").textContent = "riportate all’originale";
 });
 
@@ -233,5 +242,5 @@ document.getElementById("copia").addEventListener("click", () => {
     () => { t.select(); eco.textContent = "selezionato: copia a mano"; });
 });
 
-schede();
+cards();
 </script>

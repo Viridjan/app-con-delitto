@@ -12,7 +12,9 @@ scritte dall'autore dell'app — oggi sono circa la metà delle settanta.
 
 ## Com'è fatta
 
-Un file solo: **`oliva-blu.html`**. Niente build, niente dipendenze, niente server — si apre col
+Due file: **`oliva-blu.html`** con la storia, gli stili e il codice, e **`assets/assets.js`** con
+le immagini. Vanno tenuti insieme — l'app aperta senza il secondo funziona lo stesso, ma al posto
+delle illustrazioni mostra i ripieghi tipografici. Niente build, niente dipendenze, niente server — si apre col
 doppio clic e funziona anche senza rete. Dentro ci sono tre blocchi:
 
 - `<style>` — palette oliva e lume di candela, Bodoni Moda per i titoli, Alegreya Sans per le
@@ -67,9 +69,9 @@ cambiandolo va cambiato in tutti e due.
 
 ## Regia delle scene
 
-Ogni scena ha anche le sue **pose**: `POSE_SCENA` dice quale variante usare per ciascun
-personaggio (`giuseppe-malore` nella scena 4, `mauro-guardingo` nelle prime tre), e chi non ne ha
-una torna al ritaglio neutro. I nomi sono semantici, non versioni.
+Ogni scena ha anche le sue **pose**: ogni attore in `cast` può portare una `posa`
+(`giuseppe_malore` nel malore, `mauro_guardingo` nelle prime scene), e chi non ne ha una torna al
+ritaglio neutro. I nomi sono semantici, non versioni.
 
 Le posizioni di personaggi e oggetti si decidono a occhio, non a numeri indovinati. Premendo `r`
 su una scena si accende la **modalità regia**: si trascina per spostare, la rotella (o `+` / `-`)
@@ -84,8 +86,8 @@ il delitto al tavolo che sta ancora brindando. L'intestazione resta dove si lavo
 e artefatto — e online la scena si apre sull'immagine, che guadagna lo spazio del titolo.
 
 Regia e sviluppo **non esistono sul sito pubblico**: `r` e `v` rispondono solo aprendo il file
-da disco o nell'artefatto privato. La **modalità sviluppo** (`v`) mostra a che schermata e a che battuta siamo, quali immagini attese non sono
-incorporate, ed elenca le schermate — una per riga, dalla copertina al messaggio finale, con
+da disco o nell'artefatto privato. La **modalità sviluppo** (`v`) mostra a che schermata e a che
+battuta siamo, ed elenca le schermate — una per riga, dalla copertina al messaggio finale, con
 accesa quella in cui ci si trova — per andare dove serve in un clic invece che un passo alla
 volta. È semitrasparente, così si tiene aperto mentre si prova: sotto si vede la scena. Con
 il pannello aperto le frecce si dividono il lavoro — su e giù sfogliano l'elenco, destra e
@@ -102,7 +104,7 @@ python3 sync-assets.py     # tiene la versione più alta di ogni file, ne fa cop
 ```
 
 I fondali sorgente seguono `scenaX_back_nome`, gli elementi davanti al fondale
-`scenaX_foreground_nome`, e la copertina `copertina_nome`. La mappa `SCELTE` dichiara quale file
+`scenaX_foreground_nome`, e la copertina `copertina_nome`. La mappa `SLOT_SOURCES` dichiara quale file
 riempie quale casella (`scena1.png ← scena1_back_sala2`), mentre la versione (`_v4`, `_v5`) la sceglie da solo
 tenendo la più alta. **Tutta la catena usa gli underscore** — file sorgente, chiavi interne,
 copie web — e `smoke.js` fallisce alla prima chiave che contenga un trattino: è quello che
