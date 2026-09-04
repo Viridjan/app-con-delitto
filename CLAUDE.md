@@ -584,7 +584,7 @@ falls back to the monogram.
 donazione» and so on, which wrapped to two lines in the two-column grid on a phone and read as
 sentences where the card wanted a label. The `tag` under each still carries the phrase.
 
-**Open text questions, for the user, not for me.** Four inconsistencies survive a reading of
+**Open text questions, for the user, not for me.** Three inconsistencies survive a reading of
 `copione.txt` and are *not* to be fixed on my own — cutting or rewording is a product decision:
 
 1. **The note has two texts.** Mauro reads «Zio, ti prego: non fare la donazione. Quei beni fanno
@@ -594,17 +594,17 @@ sentences where the card wanted a label. The `tag` under each still carries the 
 2. **Quiz 5 asks about the glass, the scene answers about the bottle.** «Chi ha riconosciuto che
    nel bicchiere non c'era una bevanda?» expects Roberto, whose line — «Questa non è una bevanda.
    È un prodotto per le piante» — is said over the *bottiglietta* plate.
-3. **Rosalia opens scene 4's third part on an ellipsis.** Her first line is «…» and the next one
-   is the real one. Since a scene opens with its first line already revealed, that screen opens on
-   a bubble holding nothing but three dots, and it costs a click to get past. It is in
-   `copione.txt`, so it is text and not a bug — but if the beat is not wanted, cutting it is one
-   line in `STORY` and one in the txt.
-4. **Scene 1's exchange concludes before it explains.** Giuseppe says «Quindi nessun metodo
+3. **Scene 1's exchange concludes before it explains.** Giuseppe says «Quindi nessun metodo
    significa trattare alla cieca» and only then do Roberto and Augusto describe the three methods,
    after which he adds «Interessante!». The conclusion and the explanations are inverted.
 
 Two spelling slips were fixed under the standing exception, in both files at once: `possibilitá`
 → `possibilità` and `é` → `è`.
+
+**Rosalia's «…» opening scene 4's third part is deliberate** — asked on 4 September 2026, answered
+«la scena 4 é ok». That screen opens on a bubble holding three dots, because a scene opens with
+its first line already revealed, and it costs a click to reach her real line. That is the beat.
+Do not raise it again, and do not cut it.
 
 ## The investigation has a price
 
