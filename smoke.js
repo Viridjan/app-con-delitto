@@ -110,12 +110,19 @@ assert.ok(renderAnswers(app.STORY.quiz.map(wrongAnswer)).includes('class="score"
 
 /* Nessuna figura senza immagine. I ritagli neutri di Rosalia e Mauro non sono
    piu' incorporati, perche' ogni scena da' loro una posa: se una scena futura
-   li lasciasse scoperti, la figura sparirebbe dal palco senza un rumore. */
+   li lasciasse scoperti, la figura sparirebbe dal palco senza un rumore.
+   Si controlla chi sta in scena **e chi parla**: guardare solo il `cast` ha
+   lasciato passare la seconda parte della scena 1, dove il palco e' il piatto
+   del biglietto e i due parlano fuori campo — la figura accanto alla battuta
+   chiedeva `attore_mauro.png`, che non esiste piu'. */
 const missingActorImages = [];
-app.STORY.scene.forEach((sc, i) => (sc.cast || []).forEach(x => {
-  if (!/^data:/.test(app.actorImage(x.c, i)))
-    missingActorImages.push(`scena ${sc.n}${sc.parte ? " " + sc.parte : ""} · ${x.c}`);
-}));
+app.STORY.scene.forEach((sc, i) => {
+  const inGioco = new Set([...(sc.cast || []).map(x => x.c), ...sc.battute.map(b => b.c)]);
+  inGioco.forEach(c => {
+    if (!/^data:/.test(app.actorImage(c, i)))
+      missingActorImages.push(`scena ${sc.n}${sc.parte ? " " + sc.parte : ""} · ${c}`);
+  });
+});
 assert.deepStrictEqual(missingActorImages, [],
   `figure senza ritaglio incorporato: ${missingActorImages.join(", ")}`);
 
