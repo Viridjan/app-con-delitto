@@ -28,8 +28,10 @@ Sulla schermata di una scena non c'è altro che il dialogo: i box educativi “L
 “Osserva bene!” della scena 4, gli indizi di gioco, i brief delle illustrazioni e il messaggio
 educativo finale sono stati tolti dal copione. I brief restano in `img/ART.md`, per Codex.
 
-Le immagini viaggiano dentro l'HTML come data URI: l'app resta un file unico, condivisibile
-com'è.
+Le immagini viaggiano come data URI dentro `assets/assets.js`: pesano quanto pesano, ma l'app
+non chiede niente alla rete mentre è in scena. Dove ci può stare **un file solo** — l'artefatto
+privato — quel secondo file non viene caricato e al posto di ogni illustrazione compare il suo
+ripiego tipografico.
 
 ## Il palco a strati
 
@@ -44,6 +46,11 @@ Ogni scena è composta al volo, su tre livelli:
 Quando qualcuno parla, l'app lo porta avanti — si alza, cresce, prende un'ombra. Nessuno viene
 scurito. Le posizioni stanno in `STORY.scene[i].cast` e `.primo`.
 
+Accanto alla battuta compare lo stesso ritaglio, tagliato dalla testa alla vita. La misura la dà
+l'**altezza** della figura, non la larghezza: prendendola dalla larghezza, quanto un personaggio
+venisse ingrandito finiva per dipendere da quanto apre le braccia, e Roberto che dà il benvenuto
+restava una figurina intera dove gli altri erano mezzi busti.
+
 ## La voce dei personaggi
 
 Scoprendo una battuta la pagina sintetizza qualche bip con la Web Audio API — nessun file audio —
@@ -51,7 +58,7 @@ e **il testo compare al ritmo di quei bip**, un pezzo alla volta, come se il per
 parlando davvero. Il ritmo resta anche col volume a zero: il personaggio parla lo stesso, si vede
 soltanto.
 Ogni personaggio ha la sua altezza (Mauro cupo e con onda quadra, Rosalia acuta), e la battuta
-più lunga fa più bip, fino a un tetto di quattordici. Il volume si regola con la **barra in alto a destra** — l'altoparlante accanto dice il livello —
+più lunga fa più bip, da tre a sedici. Il volume si regola con la **barra in alto a destra** — l'altoparlante accanto dice il livello —
 e lasciandola si sente una prova. `m` azzera, e ripremuto rimette l'ultimo livello scelto.
 
 Il contesto audio nasce sospeso finché non c'è un gesto dell'utente e `resume()` è asincrono:
@@ -65,14 +72,20 @@ chi parlava prima: proseguendo a metà di una battuta, la voce si interrompe e p
 Le voci si regolano a orecchio in **[`voci.html`](voci.html)** — il banco: una scheda per
 personaggio, sette manopole (altezza, ritmo, durata, andamento, timbro, lettere per bip,
 volume), un pulsante per ascoltare e, in fondo, il blocco `const VOCE = {…}` già formattato da
-incollare qui. Il motore audio è duplicato apposta: l'app deve restare un file unico, quindi
-cambiandolo va cambiato in tutti e due.
+incollare qui. Il motore audio è duplicato apposta — il banco deve suonare esattamente come
+l'app, senza un terzo file fra i due — quindi cambiandolo va cambiato in tutti e due. `smoke.js`
+confronta i profili delle voci fra le due copie.
 
 ## Regia delle scene
 
 Ogni scena ha anche le sue **pose**: ogni attore in `cast` può portare una `posa`
 (`giuseppe_malore` nel malore, `mauro_guardingo` nelle prime scene), e chi non ne ha una torna al
 ritaglio neutro. I nomi sono semantici, non versioni.
+
+Le parti di una scena **condividono le pose**, perché sono una conversazione sola. Serve per le
+quattro schermate in cui il palco è il piatto di un indizio e non una stanza: lì il `cast` è
+vuoto, ma i personaggi parlano lo stesso, e la figura accanto alla battuta prende la posa che
+indossano negli altri momenti della stessa scena.
 
 Le posizioni di personaggi e oggetti si decidono a occhio, non a numeri indovinati. Premendo `r`
 su una scena si accende la **modalità regia**: si trascina per spostare, la rotella (o `+` / `-`)
@@ -123,8 +136,8 @@ interrogare **due dei quattro sospetti**: gli altri, su quell'oggetto, non parle
 risposte non stanno nel copione — sono informazioni nuove, sedici in tutto, e in una partita se
 ne sentono quattro. Ogni nome porta il suo volto, dove si chiede e dove si risponde, e in tutta
 la sezione il testo ha una misura sola. Aprire una scheda è
-già la scelta, e la schermata dice quante domande restano prima di spenderle. Per rigiocare si
-ricarica la pagina: è l'unica cosa che azzera l'indagine e le risposte.
+già la scelta, e la schermata dice quante domande restano prima di spenderle. Quello che non si è
+chiesto resta non letto: è il punto della cosa, ed è da lì che viene la voglia di rigiocare.
 
 Un **clic scopre**, un **pulsante cambia pagina**. Toccando lo schermo esce la battuta seguente;
 per passare alla schermata dopo c'è un pulsante: sopra l'ultima battuta nelle scene — fermo,
@@ -180,7 +193,7 @@ restano al plurale dove lo erano.
 | `d` | sagome colorate al posto delle illustrazioni |
 | `r` | regia: sposta e ridimensiona personaggi e oggetti sulla scena (non sul sito pubblico) |
 | `[` `]` | in regia: porta il selezionato in secondo o in primo piano, oggetti compresi |
-| `v` | sviluppo: stato, immagini mancanti, salto a una schermata (non sul sito pubblico) |
+| `v` | sviluppo: dove sei, e l'elenco delle schermate per saltarci (non sul sito pubblico) |
 | `↑` `↓` | col pannello sviluppo aperto: sfoglia l'elenco delle schermate |
 | `←` `→` | col pannello sviluppo aperto: percorre la storia, cambiando pagina a fine scena |
 | `m` | azzera il volume delle voci, o rimette l'ultimo |

@@ -980,7 +980,8 @@ The cross-file audit removed eight drift points:
 - `smoke.js` compares the ordered dialogue arrays from `STORY` and `copione.txt` in both
   directions, rather than searching for fragments anywhere in the HTML;
 - each clue owns its stable `id`, and `clueImage()` no longer depends on array position;
-- each staged actor owns its optional `posa`; the old parallel `ACTOR_POSES` table is gone;
+- each staged actor owns its optional `posa`, and the hand-maintained pose table is gone —
+  today's `ACTOR_POSES` is derived from `STORY` and cached, not a second source of truth;
 - `sync-assets.py` derives people, poses and clue IDs from `STORY`, eliminating two manually
   duplicated inventories;
 - with the developer panel open, up/down now move by the grouped rows shown in the panel,
