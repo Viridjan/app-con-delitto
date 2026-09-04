@@ -222,15 +222,15 @@ Normalised on 29 August 2026; keep it this way rather than adding a fourth way t
   that way and fixed by raising a floor, never by adding a step: `--t-voce`'s fluid term dropped
   below `--t-corpo` under 1240px (the investigator spoke smaller than the dialogue), and
   `--t-cifra` dropped below `--t-nome` under 800px — that token is gone now, but the floor it
-  taught stays. As the window narrows the steps **merge**, which is fine; they must never swap. The phone query overrides the tokens, not the selectors, but still carries its own
-  per-selector exceptions from the days it was tuned by hand, and at 390px, after five merges asked for
-  one by one on 2 September 2026, the count is **four**: 57 (cover, *Fine*, score, scene
-  numeral), 49.7 (buttons, the investigator's four screens, character descriptions), 39.6 (scene
-  titles, character names, the whole clue section) and 28.4 (dialogue, the speaker's name,
-  eyebrows, the sheet's closed rows). Each merge took one of the two existing values, never a new
-  one — the lower where a display size would have grown, the higher where reading text would have
-  shrunk. One inversion survives and is known: a character's description (49.7) is larger than
-  the name above it (39.6). Raising `--t-nome` in the query is the fix if it is ever wanted.
+  taught stays. As the window narrows the steps **merge**, which is fine; they must never swap.
+  The phone query no longer overrides a selector's size at all — `:root{font-size:112%}`, and the
+  speaker glyph on the volume control, which is an icon and not text; see *Type and the phone*. It used to carry fourteen hand-tuned literals, and five
+  of the merges they produced were asked for one by one on 2 September 2026; the whole pile went
+  the same day the `<meta viewport>` landed and the text came out enormous on a real device.
+  Re-measured on 4 September 2026 with `censimento.js` across all twenty screens, at 390px the
+  count is **five**, the same five: 46.6 / 28.7 / 24.6 / 20 / 15.7. The inversion recorded here —
+  a character's description larger than the name above it — went with the literals: the name now
+  reads 28.7 against the description's 20.
 - **Four reusable classes** carry the shapes that repeat, declared under `/* ---- ricette ---- */`
   right after the chrome: `.carta` (surface, hairline, radius, shadow), `.sollevabile` (the
   hover lift, `:not([disabled])`), `.centrata` (full-height centred column), `.ph-cifra` (the
@@ -423,9 +423,10 @@ it found and what was done:
   wins. It was 150% with fourteen literal sizes rewritten on top of it, grown over four requests
   — and all of it measured inside the 390px iframe while the document had **no `<meta viewport>`**,
   so on a real phone those rules never applied at all. Once the viewport landed the text came out
-  enormous, the user said so, and the pile of literals went. At 390px the steps read
+  enormous, the user said so, and the pile of literals went — the only `font-size` left inside the
+  query is the volume control's speaker glyph. At 390px the steps read
   46.6 / 28.7 / 24.6 / 20 / 15.7, against 88 / 38 / 27.2 / 22 / 14 on a big screen: the same five,
-  a little closer together.
+  a little closer together. Re-measured 4 September 2026, both widths.
   Measure on the device, not only in the frame: the frame cannot tell you the meta is missing.
 - **Where you choose, two columns.** `.clues` and `.opts` are `repeat(2, minmax(0,1fr))` inside
   that query: four clue cards and four suspects sit under the thumb instead of stretching over
@@ -583,7 +584,7 @@ falls back to the monogram.
 donazione» and so on, which wrapped to two lines in the two-column grid on a phone and read as
 sentences where the card wanted a label. The `tag` under each still carries the phrase.
 
-**Open text questions, for the user, not for me.** Three inconsistencies survive a reading of
+**Open text questions, for the user, not for me.** Four inconsistencies survive a reading of
 `copione.txt` and are *not* to be fixed on my own — cutting or rewording is a product decision:
 
 1. **The note has two texts.** Mauro reads «Zio, ti prego: non fare la donazione. Quei beni fanno
@@ -593,7 +594,12 @@ sentences where the card wanted a label. The `tag` under each still carries the 
 2. **Quiz 5 asks about the glass, the scene answers about the bottle.** «Chi ha riconosciuto che
    nel bicchiere non c'era una bevanda?» expects Roberto, whose line — «Questa non è una bevanda.
    È un prodotto per le piante» — is said over the *bottiglietta* plate.
-3. **Scene 1's exchange concludes before it explains.** Giuseppe says «Quindi nessun metodo
+3. **Rosalia opens scene 4's third part on an ellipsis.** Her first line is «…» and the next one
+   is the real one. Since a scene opens with its first line already revealed, that screen opens on
+   a bubble holding nothing but three dots, and it costs a click to get past. It is in
+   `copione.txt`, so it is text and not a bug — but if the beat is not wanted, cutting it is one
+   line in `STORY` and one in the txt.
+4. **Scene 1's exchange concludes before it explains.** Giuseppe says «Quindi nessun metodo
    significa trattare alla cieca» and only then do Roberto and Augusto describe the three methods,
    after which he adds «Interessante!». The conclusion and the explanations are inverted.
 
