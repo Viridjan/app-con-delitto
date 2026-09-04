@@ -84,12 +84,10 @@ isolare un caso si commenta il resto.
 - `trash/` — local, gitignored archive, divided by file type: rejected PNG files go in
   `trash/immagini/`, superseded working texts in `trash/documenti/`. It holds the former
   `copione-v2.txt`, everything previously kept in `assets/images/bocciate/`, and — since
-  4 September 2026 — every **superseded delivery**: once Codex ships `_v2`, the `_v1` is dead
-  weight, because `sync-assets.py` only ever picks the highest version per slot. Twenty-two of
-  them went that day, 23MB, taking `assets/images/` from 99MB to 77MB with the generated
-  `assets.js` byte-for-byte unchanged. Trash it, never delete it: the version numbers must stay
-  spoken for, and a rejected `_v3` is what stops the next one being called `_v3` too. Nothing in
-  this folder is read by the app or its build scripts.
+  4 September 2026 — everything the pipeline does not pick: twenty-two superseded deliveries plus
+  the two scene-3 rooms nothing draws, 28MB, taking `assets/images/` from 99MB to 71MB with the
+  generated `assets.js` byte-for-byte unchanged. See *Nothing unused stays in the source folder*.
+  Nothing in this folder is read by the app or its build scripts.
   Watch one name collision when trashing: a slot's first delivery is called after the slot itself
   (`attore_mauro_guardingo.png` fills `attore_mauro_guardingo.png`), so it reads like the live
   file when it is only version one. `img/ART.md` names slots, not deliveries, so moving a v1 does
@@ -200,6 +198,14 @@ they are the thing that covers the most — judging positions with those on top 
 `smoke.js` now walks every scene with the demo on and fails on the first `src` that is not an
 SVG silhouette.
 
+**Nothing unused stays in the source folder.** From 4 September 2026 `assets/images/` holds
+exactly the files the pipeline picks — 40 of them, 71MB, one per slot — and nothing else. A
+superseded delivery, a background no screen draws, a pose no `cast` selects: all of it goes to
+`trash/immagini/`, which is local and gitignored. The check is one line, and it must come back
+empty: `comm -23 <(ls assets/images/ | sort) <(python3 sync-assets.py | grep -oP '^\S+\.(png|webp)' | sort -u)`.
+Trash it, never delete it — the version numbers have to stay spoken for, or the next delivery
+gets called `_v3` after a `_v3` that was already rejected.
+
 **Image revisions must always be versioned.** Never overwrite an existing image, including
 newly generated assets that have not been committed yet. Keep the original filename unchanged
 and save every revision with the next available numeric suffix (`_v2`, `_v3`, …). Version
@@ -274,12 +280,12 @@ Normalised on 29 August 2026; keep it this way rather than adding a fourth way t
   "was the culprit named" were each computed in two places.
 - **Nothing embedded that nobody draws.** The app carries its images as data URIs, so a slot the
   pipeline fills but no screen requests is pure weight: the two rooms drawn for scene 3 were
-  772KB of it, because both its parts borrow scene 1's hall through `sfondoDa`. They keep their
-  source names, `scena3_back_brindisi.png` and `scena3_back_malore.png`, and no longer correspond
-  to any slot. `sync-assets.py` keeps a
-  `EXCLUDED_ASSETS` set for exactly this. `attore_rosalia.png` and `attore_mauro.png` followed,
-  another 144KB: those two have a pose in every scene, so their neutral cutout was never asked
-  for — and unlike the two rooms, the files went to `trash/immagini/`. That is a bet on the poses in `scene[].cast[]`,
+  772KB of it, because both its parts borrow scene 1's hall through `sfondoDa`. `attore_rosalia.png`
+  and `attore_mauro.png` followed, another 144KB: those two have a pose in every scene, so their
+  neutral cutout was never asked for. `EXCLUDED_ASSETS` now holds only those two names, because
+  they are generated from `CHARACTERS` and never had a file of their own; everything with a file
+  behind it that fills no slot has left `assets/images/` — see *Nothing unused stays in the source
+  folder*. That is a bet on the poses in `scene[].cast[]`,
   so `smoke.js` now resolves every figure of every scene through `actorImage()` and fails unless it
   lands on an embedded image; proven by taking Mauro's pose out of scene 1 and watching it name
   both parts. Giuseppe, Roberto and Augusto keep their neutral cutouts, because those three do
@@ -837,9 +843,10 @@ is why `primo` follows `backgroundSlot()`. Both parts of scene 3 borrow that hal
 they can share the two foreground tables, which exist solely as `scena1_sx/dx`. `sfondoDa` also
 takes a plain file stem, which is how four screens show a clue plate instead of a room.
 
-Neither `scena3_back_brindisi.png` nor `scena3_back_malore.png` is embedded: nothing draws them, so
-`sync-assets.py` skips them — see `EXCLUDED_ASSETS`. The `.png` stay in `assets/images/`, so
-giving a scene its own room again costs one line and a re-sync.
+Neither `scena3_back_brindisi.png` nor `scena3_back_malore.png` is embedded: nothing draws them.
+Since 4 September 2026 they are not in `assets/images/` either — they are in `trash/immagini/`.
+Giving that scene a room of its own again means moving the `.png` back, dropping `sfondoDa` from
+the screen, and re-syncing.
 
 ## Poses
 

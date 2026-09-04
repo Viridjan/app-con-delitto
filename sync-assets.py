@@ -38,14 +38,14 @@ CHARACTERS = INVENTORY["characters"]
 POSES = INVENTORY["poses"]
 CLUES = INVENTORY["clues"]
 # Le scene 3 e 4 giocano nella sala della scena 1 (`sfondoDa:"scena1"`), quindi
-# i loro sfondi non li disegna nessuno: incorporarli costava 772KB di file.
-# Se una di quelle scene torna ad avere una sala sua, togli il nome da qui e
-# rilancia: i .png sono sempre in assets/images/.
+# i loro sfondi non li disegna nessuno, e dal 4 settembre 2026 non stanno piu'
+# nemmeno in assets/images/: sono in trash/immagini/. Per ridare a quella scena
+# una sala sua servono il .png rimesso qui e `sfondoDa` tolto dalla scena.
+# Qui restano solo i due nomi che nascono da CHARACTERS senza avere un file:
 # Rosalia e Mauro hanno una posa in ogni scena, quindi il loro ritaglio neutro
-# non lo chiede nessuno: i .png sono in trash/immagini/. Se una scena futura li lascia
-# senza posa, `smoke.js` fallisce prima che la figura sparisca dal palco.
-EXCLUDED_ASSETS = {"scena3_back_brindisi.png", "scena3_back_malore.png",
-                 "attore_rosalia.png", "attore_mauro.png"}
+# non lo chiede nessuno. Se una scena futura li lascia senza posa, `smoke.js`
+# fallisce prima che la figura sparisca dal palco.
+EXCLUDED_ASSETS = {"attore_rosalia.png", "attore_mauro.png"}
 # solo le caselle che l'app sa mostrare: le varianti e le prove restano fuori dal file
 EXPECTED_ASSETS = (set(SLOT_SOURCES)
           | {"detective_riflessione.png", "detective_osservazione.png",
@@ -129,8 +129,8 @@ def main():
     if not isinstance(source_cache, dict):
         source_cache = {}
     next_cache = {}
-    # Gli asset esclusi consapevolmente non sono anomalie: restano nei sorgenti
-    # per un eventuale riuso, ma non devono sporcare il report a ogni sync.
+    # Quello che sta in assets/images/ e non riempie nessuna casella va segnalato:
+    # dal 4 settembre 2026 non ci deve stare niente di inutilizzato.
     skipped_assets = sorted(k for k in best_sources if k not in EXPECTED_ASSETS and k not in EXCLUDED_ASSETS)
     asset_map = {}
     for key, (_, f) in sorted(best_sources.items()):
