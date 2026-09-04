@@ -335,8 +335,16 @@ change styling hooks only.
 Two declared regions: the top holds the title and the stage, and never moves; the
 bottom scrolls on its own. Nothing draws the line between them — a hairline ran along it until
 3 September 2026 and the gap does the job on its own. The bottom is split `32% 1fr` — the speaker's **actor cutout**
-(`attore_*.png`, not the portrait) in a 3:4 frame cropped from the top, head to waist, faded out
-at the bottom — and the dialogue column. Use `1fr`, not a second percentage: two fixed
+(`attore_*.png`, not the portrait) cropped head to waist, faded out at the bottom — and the
+dialogue column. The figure is sized **on its height**, `height:265%` of the frame, anchored at
+the top, whatever leaves the sides clipped by the container's `overflow:hidden`; the fade lives
+on `.parlante`, not on the image, or it would fall outside the visible band. It was a 3:4 box
+with `object-fit:cover` until 4 September 2026, which took the scale from the *width* — and
+since every cutout is narrower than 3:4, how much a figure was enlarged depended on how wide the
+pose is. `clean_bbox()` crops tight to the drawing, so `roberto_accoglienza` (642×900, arms
+open) came out a whole tiny figure where `mauro_guardingo` (229×900) was already a bust. Same
+rule, different silhouette. Sizing on the height gives every character the same body scale, and
+costs Roberto his hands at the edges. Use `1fr`, not a second percentage: two fixed
 percentages plus a gap overflow and produce a horizontal scrollbar.
 
 The dialogue column carries across the parts of one scene. Screens that share the same `n` are
