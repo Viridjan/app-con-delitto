@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Aggancia le immagini consegnate da Codex all'app.
 
-Codex consegna in assets/images/ con suffissi di version (_v2, _v5, ...).
-Questo script tiene la version piu' alta di ogni personaggio, ne fa una copia
-web leggera in assets/web/, e riscrive la asset_map ASSETS start oliva-blu.html.
+Codex consegna in assets/images/ con suffissi di versione (_v2, _v5, ...).
+Questo script tiene la versione piu' alta di ogni personaggio, ne fa una copia
+web leggera in assets/web/ e riscrive la mappa ASSETS usata da oliva-blu.html.
 Da rilanciare a ogni consegna: python3 sync-assets.py
 """
 import base64, hashlib, json, re, subprocess, sys
@@ -12,6 +12,8 @@ from PIL import Image
 
 SRC, WEB, HTML = Path("assets/images"), Path("assets/web"), Path("oliva-blu.html")
 ASSET_JS = Path("assets/assets.js")
+CACHE_FILE = WEB / ".sources.json"
+CACHE_VERSION = 1  # aumentare quando cambiano ritaglio o parametri di codifica
 # `scena` a 1600 era quattro volte quello che serve: a 1920x1080 il palco e' un
 # quadrato da ~390px, e 1200 tiene 3x di margine e resta 1:1 su uno schermo 4K.
 IMAGE_WIDTHS = {"ritratto": 900, "attore": 700, "scena": 1200, "indizio": 512, "copertina": 560,
@@ -20,7 +22,7 @@ IMAGE_WIDTHS = {"ritratto": 900, "attore": 700, "scena": 1200, "indizio": 512, "
 # un ritratto, e la mascotte che lo sostituiva ora sono le pose dell'investigatore.
 ALIAS = {}
 # Codex consegna varianti con nomi suoi: qui si dice quale riempie quale slot.
-# La version (_vN) la sceglie comunque lo script, tenendo la piu' alta.
+# La versione (_vN) la sceglie comunque lo script, tenendo la piu' alta.
 SLOT_SOURCES = {"copertina.png": "copertina_quadro_oliva_animato",
           "scena1.png": "scena1_back_sala2",
           "scena1_sx.png": "scena1_foreground_sala2_oggettoSX",
@@ -37,7 +39,7 @@ POSES = INVENTORY["poses"]
 CLUES = INVENTORY["clues"]
 # Le scene 3 e 4 giocano nella sala della scena 1 (`sfondoDa:"scena1"`), quindi
 # i loro sfondi non li disegna nessuno: incorporarli costava 772KB di file.
-# Se una di quelle scene torna ad avere una sala sua, togli il name da qui e
+# Se una di quelle scene torna ad avere una sala sua, togli il nome da qui e
 # rilancia: i .png sono sempre in assets/images/.
 # Rosalia e Mauro hanno una posa in ogni scena, quindi il loro ritaglio neutro
 # non lo chiede nessuno: i .png sono in trash/immagini/. Se una scena futura li lascia
@@ -96,12 +98,19 @@ def logical_name(name):
         base_name = base_name.replace(a, b)
     return base_name + ".png", version
 
+def write_if_changed(path, content):
+    """Evita di toccare timestamp e watcher quando il contenuto e' identico."""
+    if path.is_file() and path.read_text(encoding="utf-8") == content:
+        return False
+    path.write_text(content, encoding="utf-8")
+    return True
+
 def main():
     if not SRC.is_dir(): sys.exit(f"manca {SRC}/")
     selected_sources = {}
     for slot, source_name in SLOT_SOURCES.items():          # un file puo' servire piu' caselle
         selected_sources.setdefault(source_name + ".png", []).append(slot)
-    best_sources = {}                                # name logical_name -> (version, file)
+    best_sources = {}                                # nome logico -> (versione, file)
     for f in sorted(SRC.iterdir()):
         if not f.is_file(): continue             # salta le sottocartelle e gli scarti
         if "-" in f.name:
@@ -113,6 +122,13 @@ def main():
                 best_sources[slot] = (version, f)
 
     WEB.mkdir(parents=True, exist_ok=True)
+    try:
+        source_cache = json.loads(CACHE_FILE.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        source_cache = {}
+    if not isinstance(source_cache, dict):
+        source_cache = {}
+    next_cache = {}
     # Gli asset esclusi consapevolmente non sono anomalie: restano nei sorgenti
     # per un eventuale riuso, ma non devono sporcare il report a ogni sync.
     skipped_assets = sorted(k for k in best_sources if k not in EXPECTED_ASSETS and k not in EXCLUDED_ASSETS)
@@ -120,9 +136,14 @@ def main():
     for key, (_, f) in sorted(best_sources.items()):
         if key not in EXPECTED_ASSETS: continue
         out = WEB / (Path(key).stem + ".webp")
+        stat = f.stat()
+        signature = [CACHE_VERSION, f.name, stat.st_mtime_ns, stat.st_size]
+        next_cache[key] = signature
         # Non ricodificare asset invariati. Oltre a velocizzare il sync, evita
-        # di tenere in memoria i 21 frames della copertina a ogni consegna.
-        if out.is_file() and out.stat().st_size and out.stat().st_mtime >= f.stat().st_mtime:
+        # di tenere in memoria i 21 frame della copertina a ogni consegna. Il
+        # nome sorgente e' parte della firma: tornando da _v3 a _v2 non si puo'
+        # riusare per errore il WebP della revisione rimossa.
+        if out.is_file() and out.stat().st_size and source_cache.get(key) == signature:
             b64 = base64.b64encode(out.read_bytes()).decode()
             asset_map[key] = f"data:image/webp;base64,{b64}"
             print(f"{f.name:32} -> {out.name:28} {out.stat().st_size // 1024:4}KB  cache")
@@ -147,7 +168,7 @@ def main():
             continue
         should_crop = key.startswith("attore_") or key[:-4].endswith(("_sx", "_dx"))
         if should_crop and im.mode in ("RGBA", "LA"):
-            # i ritagli arrivano start un quadrato con molto vuoto attorno:
+            # i ritagli arrivano dentro un quadrato con molto vuoto attorno:
             # senza togliere il vuoto la figura sul palco resta minuscola
             bbox = clean_bbox(im)
             if bbox: im = im.crop(bbox)
@@ -162,15 +183,14 @@ def main():
         # degli indizi; 4 mantiene una resa indistinguibile alle dimensioni web.
         im.save(out, "WEBP", quality=80, method=4)
         # L'artifact pubblicato non puo' leggere file locali (niente capability assets),
-        # quindi le immagini viaggiano start l'HTML come data URI.
+        # quindi le immagini viaggiano in assets.js come data URI.
         b64 = base64.b64encode(out.read_bytes()).decode()
         asset_map[key] = f"data:image/webp;base64,{b64}"
         print(f"{f.name:32} -> {out.name:28} {out.stat().st_size // 1024:4}KB")
 
     lines = "\n".join(f'  "{k}": "{v}",' for k, v in asset_map.items())
     asset_block = "const ASSETS = {\n" + lines + "\n};\n"
-    ASSET_JS.write_text("/* Generato da sync-assets.py: non modificare a mano. */\n" + asset_block,
-                        encoding="utf-8")
+    write_if_changed(ASSET_JS, "/* Generato da sync-assets.py: non modificare a mano. */\n" + asset_block)
     # L'impronta del contenuto entra nell'URL. Il nome del file non cambia mai,
     # quindi senza di essa un browser che ha gia' visto `assets.js` continua a
     # servire le immagini vecchie — o, se le ha viste mancare, la loro assenza:
@@ -185,7 +205,8 @@ def main():
     elif 'src="assets/assets.js' not in updated_html:
         sys.exit("asset_block ASSETS o riferimento assets/assets.js non trovato")
     updated_html = re.sub(r'<script src="assets/assets\.js[^"]*"></script>', script_tag, updated_html, count=1)
-    HTML.write_text(updated_html, encoding="utf-8")
+    write_if_changed(HTML, updated_html)
+    write_if_changed(CACHE_FILE, json.dumps(next_cache, ensure_ascii=False, indent=2) + "\n")
     if skipped_assets:
         print("\nfuori dalle caselle previste, non agganciate: " + ", ".join(skipped_assets))
     missing_assets = sorted(k for k in EXPECTED_ASSETS - set(asset_map) if not k[:-4].endswith(("_sx", "_dx")))
