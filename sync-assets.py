@@ -6,7 +6,7 @@ Questo script tiene la version piu' alta di ogni personaggio, ne fa una copia
 web leggera in assets/web/, e riscrive la asset_map ASSETS start oliva-blu.html.
 Da rilanciare a ogni consegna: python3 sync-assets.py
 """
-import base64, json, re, subprocess, sys
+import base64, hashlib, json, re, subprocess, sys
 from pathlib import Path
 from PIL import Image
 
@@ -171,13 +171,20 @@ def main():
     asset_block = "const ASSETS = {\n" + lines + "\n};\n"
     ASSET_JS.write_text("/* Generato da sync-assets.py: non modificare a mano. */\n" + asset_block,
                         encoding="utf-8")
+    # L'impronta del contenuto entra nell'URL. Il nome del file non cambia mai,
+    # quindi senza di essa un browser che ha gia' visto `assets.js` continua a
+    # servire le immagini vecchie — o, se le ha viste mancare, la loro assenza:
+    # e' quello che e' successo su Pages il 4 settembre 2026.
+    fingerprint = hashlib.sha1(asset_block.encode("utf-8")).hexdigest()[:8]
+    script_tag = f'<script src="assets/assets.js?v={fingerprint}"></script>'
     html = HTML.read_text(encoding="utf-8")
     updated_html, n = re.subn(r"const ASSETS = \{.*?\};\n?", "", html, count=1, flags=re.S)
     if n:
         updated_html = updated_html.replace("<script>\n/* ------------------------------------------------",
-                              '<script src="assets/assets.js"></script>\n<script>\n/* ------------------------------------------------', 1)
-    elif 'src="assets/assets.js"' not in updated_html:
+                              script_tag + '\n<script>\n/* ------------------------------------------------', 1)
+    elif 'src="assets/assets.js' not in updated_html:
         sys.exit("asset_block ASSETS o riferimento assets/assets.js non trovato")
+    updated_html = re.sub(r'<script src="assets/assets\.js[^"]*"></script>', script_tag, updated_html, count=1)
     HTML.write_text(updated_html, encoding="utf-8")
     if skipped_assets:
         print("\nfuori dalle caselle previste, non agganciate: " + ", ".join(skipped_assets))

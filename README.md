@@ -13,7 +13,8 @@ scritte dall'autore dell'app — oggi sono circa la metà delle settanta.
 ## Com'è fatta
 
 Due file: **`oliva-blu.html`** con la storia, gli stili e il codice, e **`assets/assets.js`** con
-le immagini. Vanno tenuti insieme — l'app aperta senza il secondo funziona lo stesso, ma al posto
+le immagini — richiamato con l'impronta del suo contenuto nell'URL, così un browser non serve mai
+una versione vecchia. Vanno tenuti insieme — l'app aperta senza il secondo funziona lo stesso, ma al posto
 delle illustrazioni mostra i ripieghi tipografici. Niente build, niente dipendenze, niente server — si apre col
 doppio clic e funziona anche senza rete. Dentro ci sono tre blocchi:
 
