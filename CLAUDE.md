@@ -1038,8 +1038,16 @@ screen stayed black, 99.7% background, story and all. `smoke.js` now opens the a
 external scripts left out and asserts both halves of the promise: `IMAGES` is empty, and the
 stage still draws. This is not hypothetical: the artifact published on 4 September 2026 runs the
 whole story with **no illustrations at all** — placeholders in every slot — and that is the
-standing cost of the split. Whoever publishes it should know, and if the preview is meant to look
-like the finished thing, the images have to come back inside the file.
+standing cost of the split. Whoever publishes it should know.
+
+**The branch that pays it back: `file-unico`.** Created 5 September 2026 off `aaa22cd`, it is this
+tree with one change — `sync-assets.py` writes the `const ASSETS = {…}` block straight into
+`oliva-blu.html` instead of into `assets/assets.js`, which does not exist there. The HTML comes out
+at about 3.9MB and opens from an empty folder with every illustration in place; that is the branch
+to publish the artifact from. `dom.js` gives byte-identical markup on both, so a fix travels by
+`cherry-pick`: only the HTML's asset block, `sync-assets.py` and one block of `smoke.js` differ.
+Pages builds from `main`, so nothing on that branch is ever served publicly. Do not merge it —
+it is a deployment variant, not work in progress.
 
 ## Modularisation and English naming — current status
 

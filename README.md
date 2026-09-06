@@ -203,6 +203,11 @@ restano al plurale dove lo erano.
 Il sito pubblico sta su **https://viridjan.github.io/app-con-delitto/** e si aggiorna a ogni
 push su `main`.
 
+C'è anche un ramo **`file-unico`**: lo stesso identico programma, ma con le immagini dentro
+l'HTML invece che in `assets/assets.js`. Serve dove ci può stare una pagina sola — l'anteprima
+privata — che da `main` esce senza nessuna illustrazione. Non va in produzione e non va unito:
+è una variante di distribuzione, non un lavoro in corso.
+
 ## Verifica
 
 ```sh
