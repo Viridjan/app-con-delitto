@@ -33,6 +33,18 @@ git filter-repo --force --path assets/images/ --invert-paths \
   --strip-blobs-bigger-than 4M --refs refs/heads/main
 ```
 
+**The definitive deliveries come back.** The filter drops `assets/images/` from every commit, the
+tip included, so the tool immediately re-adds the 40 current sources from the working tree in one
+commit of their own. They are the reference — for comparing a new delivery, for re-encoding at a
+different width or quality, and for the version numbers that may never be reused — and a reference
+that lives on one disk is not a reference. What leaves is the sediment under them: 39 superseded
+image revisions (71MB raw) and 23 old single-file HTML blobs over 4M (128MB raw).
+
+That re-add happens **after** the filter on purpose: `scena1_back_sala2_v5.png` is 6.29MB and the
+4M ceiling would strip it. The ceiling therefore applies to the history under the tip, not to the
+tip itself, and the verification is written that way. Whoever filters again must re-add the same
+way, or that file disappears.
+
 Here `--force` permits filtering the disposable clone after its preparation commit; it is
 not a force-push. `4M` is 4,194,304 bytes. Current `assets/assets.js` is 3,842,102 bytes and
 survives; historical HTML blobs around 5.8 MB exceed the limit. Removing a large blob can
@@ -50,8 +62,9 @@ whether to filter it too or to give up the storage goal; there is no third optio
 The tool performs no reflog expiry and no garbage collection, so the candidate's own `.git` still
 holds the pre-filter objects. Do not judge it by that directory's size. Measure by cloning the
 candidate with `--no-hardlinks` and running `git reflog expire --expire=now --all && git gc
---prune=now`: on 7 September that gave **161.02 MiB → 8.19 MiB**, with `assets/images/` absent
-from every commit and every object.
+--prune=now`: on 7 September that gave **161.02 MiB → 83.72 MiB**, with the 40 definitive sources
+present in the tip and absent from every commit under it. (Dropping them entirely would give
+8.19 MiB — measured, and rejected: they are wanted on git as a reference.)
 
 Checks include the path's absence and the blob-size ceiling throughout rewritten `main`,
 `node smoke.js` on the candidate, on an exported `file-unico`, and on the unchanged source,
