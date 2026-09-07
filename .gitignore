@@ -7,13 +7,13 @@ assets/web/
 # la copia a pagina sola per l'artefatto: si rigenera con --file-unico
 oliva-blu-completo.html
 
-# Proposta di Codex, in attesa di una decisione: togliere da git le consegne
-# originali. La riga e' commentata apposta — i file sono ancora tracciati, e
-# NON sono rigenerabili: fuori da git l'unica copia sarebbe questo disco, e
-# servono per ricodificare a qualita' o larghezza diverse, per un ritaglio
-# nuovo e per il registro dei numeri di versione. `assets/assets.js` resta
-# tracciato in ogni caso: e' l'app pubblicata, e da solo basta a far girare tutto.
-# assets/images/
+# Le consegne originali di Codex, fuori da git dal 7 settembre 2026. NON sono
+# rigenerabili: servono per ricodificare a qualita' o larghezza diverse, per un
+# ritaglio nuovo e per il registro dei numeri di versione, e nessuno script le
+# rifa'. Finche' la storia non viene riscritta restano dentro `.git`; dopo,
+# l'unica copia sara' il disco di chi le tiene. `assets/assets.js` resta
+# tracciato: e' l'app pubblicata, e da solo basta a far girare tutto.
+assets/images/
 
 .DS_Store
 

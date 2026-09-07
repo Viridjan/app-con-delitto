@@ -43,8 +43,14 @@ def main():
     if not shutil.which('git-filter-repo'):
         parser.error('git-filter-repo must already be installed')
     original_main = git(source, 'rev-parse', 'refs/heads/main')
-    original_single = git(source, 'rev-parse', 'refs/heads/file-unico')
-    single_tree = git(source, 'rev-parse', 'file-unico^{tree}')
+    # Un solo ramo, dal 7 settembre 2026: `file-unico` era una variante di
+    # distribuzione ed e' diventata una flag di `sync-assets.py`. Finche'
+    # esisteva, filtrare il solo `main` non liberava niente — quel ramo teneva
+    # raggiungibili tutte e 40 le sorgenti. Se ne ricompare uno, va deciso se
+    # filtrarlo insieme o se rinunciare allo scopo: non c'e' una terza strada.
+    branches = git(source, 'for-each-ref', '--format=%(refname:short)', 'refs/heads').split()
+    verify(branches == ['main'],
+           f'this tool filters main only; the repository also has {branches}')
     protected = ['oliva-blu.html', 'voci.html', 'assets/assets.js']
     hashes = {name: digest(source / name) for name in protected}
     if int(git(source, 'cat-file', '-s', 'HEAD:assets/assets.js')) >= 4 * 1024 * 1024:
@@ -56,7 +62,6 @@ def main():
     run('git', 'bundle', 'verify', str(bundle), cwd=source)
     candidate = dest / 'candidate'
     run('git', 'clone', '--branch', 'main', str(bundle), str(candidate), cwd=dest)
-    run('git', 'branch', 'file-unico', original_single, cwd=candidate)
     run('git', 'remote', 'remove', 'origin', cwd=candidate)
 
     # Include the reviewable working-tree cleanup without committing in the source repo.
@@ -86,10 +91,6 @@ def main():
     run('git', 'bundle', 'verify', str(dest / 'prepared.bundle'), cwd=candidate)
     run('git', 'filter-repo', '--force', '--path', 'assets/images/', '--invert-paths',
         '--strip-blobs-bigger-than', '4M', '--refs', 'refs/heads/main', cwd=candidate)
-    verify(git(candidate, 'rev-parse', 'file-unico') == original_single,
-           'file-unico moved inside the candidate')
-    verify(git(candidate, 'rev-parse', 'file-unico^{tree}') == single_tree,
-           'the file-unico tree changed inside the candidate')
     verify({name: digest(candidate / name) for name in protected} == hashes,
            'a protected file changed inside the candidate')
     verify(not git(candidate, 'log', 'main', '--format=%H', '--', 'assets/images/'),
@@ -102,28 +103,28 @@ def main():
                for line in sizes.splitlines() if line.startswith('blob ')),
            'a blob over the 4M ceiling survived in the rewritten main')
     run('node', 'smoke.js', cwd=candidate)
-    # Exercise the protected branch without checking it out over the candidate.
-    with tempfile.TemporaryDirectory(prefix='file-unico-check-') as directory:
-        archive = dest / 'file-unico.tar'
-        run('git', 'archive', '--output', str(archive), 'file-unico', cwd=candidate)
+    # La stessa app estratta dal ramo riscritto, fuori dal clone candidato: se
+    # il filtro avesse toccato qualcosa che serve a farla girare, si vede qui.
+    with tempfile.TemporaryDirectory(prefix='main-check-') as directory:
+        archive = dest / 'main.tar'
+        run('git', 'archive', '--output', str(archive), 'main', cwd=candidate)
         run('tar', '-xf', str(archive), '-C', directory, cwd=dest)
         run('node', 'smoke.js', cwd=Path(directory))
         archive.unlink()
     run('git', 'fsck', '--full', cwd=candidate)
     verify(git(source, 'rev-parse', 'main') == original_main,
            'main moved in the source repository')
-    verify(git(source, 'rev-parse', 'file-unico') == original_single,
-           'file-unico moved in the source repository')
     verify({name: digest(source / name) for name in protected} == hashes,
            'a protected file changed in the source repository')
     run('node', 'smoke.js', cwd=source)
     report = dict(source=str(source), candidate=str(candidate),
                   main_before=original_main, main_candidate=git(candidate, 'rev-parse', 'main'),
-                  file_unico=original_single, file_unico_tree=single_tree,
                   protected_sha256=hashes, bundle_sha256=digest(bundle),
                   prepared_bundle_sha256=digest(dest / 'prepared.bundle'),
-                  checks='main smoke, file-unico smoke, source smoke, hashes, path drop, blob limit, fsck passed',
-                  scope='main only; file-unico retains its original reachable history',
+                  size_before=git(source, 'count-objects', '-vH').replace('\n', ' · '),
+                  size_after=git(candidate, 'count-objects', '-vH').replace('\n', ' · '),
+                  checks='main smoke, exported-main smoke, source smoke, hashes, path drop, blob limit, fsck passed',
+                  scope='the whole repository: main is the only branch',
                   publication='Not performed. Human review required; no remote configured in candidate.')
     (dest / 'report.json').write_text(json.dumps(report, indent=2) + '\n')
     print(json.dumps(report, indent=2))

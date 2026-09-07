@@ -19,6 +19,9 @@ For long-term recovery, choose durable storage outside the repository instead of
 The destination contains:
 
 - `before.bundle`: all original refs and their reachable objects, verified before filtering.
+  A copy of the 7 September run is kept at `trash/documenti/prima-della-riscrittura-087bf25.bundle`
+  with its report beside it — local and gitignored, and on the same disk as everything else, which
+  is not a backup.
 - `prepared.bundle`: the candidate before filtering, also including pending cleanup changes.
 - `candidate/`: an isolated clone with no remote configured.
 - `report.json`: original and candidate commit IDs, protected file hashes, bundle hashes and checks.
@@ -36,20 +39,19 @@ survives; historical HTML blobs around 5.8 MB exceed the limit. Removing a large
 remove the corresponding file from historical commits: old revisions need not remain runnable.
 The tool verifies current HTML, asset map and voice bench are byte-identical after filtering.
 
-## Why only main is filtered
+## Scope: the whole repository
 
-**Written while the `file-unico` branch existed; that branch was dropped on 7 September 2026**, so
-the reasoning below now describes a constraint that no longer applies — and the tool still
-enforces it. Re-read it before running: `--refs refs/heads/main` and every `file-unico`
-verification have no target left, and with one history to filter the operation can finally reach
-its storage goal.
+`main` is the only branch since 7 September 2026, so filtering it filters everything. The tool
+verifies that before starting and refuses if another branch appears — while `file-unico` existed,
+filtering `main` alone removed nothing from the object store, because that branch kept all 40
+source images reachable and `.git` stayed at 347MB. If a second branch is ever wanted, decide
+whether to filter it too or to give up the storage goal; there is no third option.
 
-The original reasoning: `file-unico` had to stay intact, commit ID and tree included, so filtering
-every ref would have violated that. Its history therefore kept the old source images and large
-blobs, and the cleanup removed nothing from the object store — 40 source images stayed reachable
-and `.git` stayed at 347MB. That is precisely why the branch was dropped in favour of a build
-flag. Partial filtering also leaves old objects available locally. No reflog expiry or garbage
-collection is performed. Do not judge the candidate solely by its `.git` directory size.
+The tool performs no reflog expiry and no garbage collection, so the candidate's own `.git` still
+holds the pre-filter objects. Do not judge it by that directory's size. Measure by cloning the
+candidate with `--no-hardlinks` and running `git reflog expire --expire=now --all && git gc
+--prune=now`: on 7 September that gave **161.02 MiB → 8.19 MiB**, with `assets/images/` absent
+from every commit and every object.
 
 Checks include the path's absence and the blob-size ceiling throughout rewritten `main`,
 `node smoke.js` on the candidate, on an exported `file-unico`, and on the unchanged source,
