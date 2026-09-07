@@ -65,10 +65,11 @@ def main():
     run('git', 'remote', 'remove', 'origin', cwd=candidate)
 
     # Include the reviewable working-tree cleanup without committing in the source repo.
+    # `assets/images/` resta fuori da questo passaggio anche se e' tracciata: il
+    # filtro la toglierebbe subito dopo, e le consegne definitive rientrano in
+    # fondo, in un commit loro. Portarsele dentro qui sarebbe lavoro buttato.
     names = git(source, 'ls-files', '-z', '--cached', '--others', '--exclude-standard')
-    selected = set(names.split('\0')) - {''}
-    if any(name.startswith('assets/images/') for name in selected):
-        raise RuntimeError('Untrack assets/images/ before preparing the rewrite')
+    selected = {n for n in names.split('\0') if n and not n.startswith('assets/images/')}
     tracked = set(git(candidate, 'ls-files', '-z').split('\0')) - {''}
     for name in tracked - selected:
         (candidate / name).unlink()
@@ -91,17 +92,40 @@ def main():
     run('git', 'bundle', 'verify', str(dest / 'prepared.bundle'), cwd=candidate)
     run('git', 'filter-repo', '--force', '--path', 'assets/images/', '--invert-paths',
         '--strip-blobs-bigger-than', '4M', '--refs', 'refs/heads/main', cwd=candidate)
+    # Il filtro toglie `assets/images/` da OGNI commit, tip compreso. Le consegne
+    # definitive pero' devono restare su git: sono il riferimento per confrontare
+    # una consegna nuova, per ricodificare a qualita' o larghezza diverse e per
+    # il registro dei numeri di versione. Quindi si rimettono qui, in un commit
+    # solo, dopo il filtro: la storia non porta piu' le 39 revisioni superate,
+    # il tip porta i 40 file correnti. Il commit e' dopo il filtro apposta, cosi'
+    # il tetto dei 4M non lo tocca — `scena1_back_sala2_v5.png` pesa 6,29MB e
+    # verrebbe strippata. Se un domani si rifiltra, va rimessa allo stesso modo.
+    sources = sorted(q.name for q in (source / 'assets/images').iterdir() if q.is_file())
+    verify(bool(sources), 'assets/images/ is empty in the source working tree')
+    (candidate / 'assets/images').mkdir(parents=True, exist_ok=True)
+    for name in sources:
+        shutil.copy2(source / 'assets/images' / name, candidate / 'assets/images' / name)
+    run('git', 'add', 'assets/images', cwd=candidate)
+    run('git', '-c', 'user.name=History rewrite preview', '-c',
+        'user.email=preview@localhost', 'commit', '-m',
+        'chore: le consegne definitive, una versione per casella', cwd=candidate)
+    kept = git(candidate, 'ls-tree', '-r', '--name-only', 'main', 'assets/images/').split()
+    verify(len(kept) == len(sources),
+           f'the tip carries {len(kept)} sources, the working tree has {len(sources)}')
+    older = git(candidate, 'log', 'main~1', '--format=%H', '--', 'assets/images/')
+    verify(not older, 'assets/images/ still appears in the history under the final commit')
     verify({name: digest(candidate / name) for name in protected} == hashes,
            'a protected file changed inside the candidate')
-    verify(not git(candidate, 'log', 'main', '--format=%H', '--', 'assets/images/'),
-           'assets/images/ still appears somewhere in the rewritten main')
     objects = git(candidate, 'rev-list', '--objects', 'main')
     sizes = subprocess.run(['git', 'cat-file', '--batch-check=%(objecttype) %(objectsize)'],
                            input='\n'.join(line.split()[0] for line in objects.splitlines()),
                            cwd=candidate, text=True, check=True, stdout=subprocess.PIPE).stdout
+    # `ls-tree` stampa `mode type sha\tpath`: lo sha e' la terza colonna, non la prima.
+    tip_blobs = {line.split()[2] for line in git(candidate, 'ls-tree', '-r', 'main').splitlines()}
     verify(all(int(line.split()[1]) <= 4 * 1024 * 1024
-               for line in sizes.splitlines() if line.startswith('blob ')),
-           'a blob over the 4M ceiling survived in the rewritten main')
+               for line, name in zip(sizes.splitlines(), objects.splitlines())
+               if line.startswith('blob ') and name.split()[0] not in tip_blobs),
+           'a blob over the 4M ceiling survived in the history under the tip')
     run('node', 'smoke.js', cwd=candidate)
     # La stessa app estratta dal ramo riscritto, fuori dal clone candidato: se
     # il filtro avesse toccato qualcosa che serve a farla girare, si vede qui.
