@@ -81,13 +81,13 @@ Non c'e' watcher e non serve un server: `oliva-blu.html` si apre da disco insiem
   `indizio_*` plates keep their own family prefixes. Source filenames use underscores only and
   are mapped to the app's stable underscore-only logical slots in `SLOT_SOURCES`. Physical files in both
   `assets/images/` and generated `assets/web/` use underscores only.
-- `trash/` — local, gitignored archive, divided by file type: rejected PNG files go in
-  `trash/immagini/`, superseded working texts in `trash/documenti/`. It holds the former
-  `copione-v2.txt`, everything previously kept in `assets/images/bocciate/`, and — since
-  4 September 2026 — everything the pipeline does not pick: twenty-two superseded deliveries plus
-  the two scene-3 rooms nothing draws, 28MB, taking `assets/images/` from 99MB to 71MB with the
-  generated `assets.js` byte-for-byte unchanged. See *Nothing unused stays in the source folder*.
-  Nothing in this folder is read by the app or its build scripts.
+- `trash/` — local, gitignored archive, two empty folders since 7 September 2026:
+  `trash/immagini/` for rejected PNG files, `trash/documenti/` for superseded working texts. It
+  had collected 349MB — 84 superseded deliveries, the former `copione-v2.txt`, and the git bundles
+  from the history rewrite — and the user emptied it. Nothing in it was ever read by the app or
+  its build scripts; what the images still carried, the version numbers, now lives in
+  [docs/versioni-consumate.md](docs/versioni-consumate.md). Put new rejects here, and write down
+  anything they are the last record of **before** the folder is emptied again.
   Watch one name collision when trashing: a slot's first delivery is called after the slot itself
   (`attore_mauro_guardingo.png` fills `attore_mauro_guardingo.png`), so it reads like the live
   file when it is only version one. `img/ART.md` names slots, not deliveries, so moving a v1 does
@@ -209,7 +209,11 @@ gets called `_v3` after a `_v3` that was already rejected.
 **Image revisions must always be versioned.** Never overwrite an existing image, including
 newly generated assets that have not been committed yet. Keep the original filename unchanged
 and save every revision with the next available numeric suffix (`_v2`, `_v3`, …). Version
-numbers already used anywhere, including rejected files in `trash/immagini/`, must not be reused. A new
+numbers already used must not be reused, rejected revisions included — the register of what has
+been spent is [docs/versioni-consumate.md](docs/versioni-consumate.md), 62 slots and 124 versions,
+and the next delivery starts one above the highest listed. It used to be the filenames sitting in
+`trash/immagini/`; that folder was emptied on 7 September 2026, so the table is now the only
+record. Regenerate it before deleting anything else that carries a version number. A new
 semantic pose may start with a new descriptive filename, but later changes to that pose must
 still use numeric version suffixes.
 
