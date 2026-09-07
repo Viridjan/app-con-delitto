@@ -11,6 +11,10 @@ from pathlib import Path
 from PIL import Image
 
 SRC, WEB, HTML = Path("assets/images"), Path("assets/web"), Path("oliva-blu.html")
+# La copia con le immagini dentro: una pagina sola, per l'artefatto privato, che
+# e' per forza un file solo e non puo' caricare `assets/assets.js`. Non e'
+# tracciata e non serve a nient'altro — si rigenera con --file-unico.
+SINGLE_FILE = Path("oliva-blu-completo.html")
 ASSET_JS = Path("assets/assets.js")
 CACHE_FILE = WEB / ".sources.json"
 CACHE_VERSION = 1  # aumentare quando cambiano ritaglio o parametri di codifica
@@ -105,6 +109,27 @@ def write_if_changed(path, content):
     path.write_text(content, encoding="utf-8")
     return True
 
+def write_single_file(html, asset_block, expected_count):
+    """L'artefatto pubblicato e' una pagina sola: `<script src>` non trova niente,
+    e senza questa copia l'anteprima gira con un ripiego tipografico in ogni
+    casella. Non e' un ramo, e' un bersaglio: si rigenera e non entra in git."""
+    inline = ("<script>\n/* Generato da sync-assets.py --file-unico: non modificare a mano. */\n"
+              + asset_block + "</script>")
+    single, n = re.subn(r'<script src="assets/assets\.js[^"]*"></script>', inline, html, count=1)
+    if not n:
+        sys.exit("nell'HTML non c'e' il richiamo ad assets/assets.js: impossibile incorporarlo")
+    # Il controllo sta qui, dove i dati ci sono: piu' tardi servirebbe rileggere
+    # tutto per riscoprire quello che in questo momento e' gia' in mano.
+    if 'src="' in single.split("<body")[0] or "<script src=" in single:
+        sys.exit("la copia a file unico richiama ancora qualcosa dall'esterno")
+    if single.count("data:image/webp;base64,") != expected_count:
+        sys.exit(f"la copia a file unico porta {single.count('data:image/webp;base64,')} immagini "
+                 f"invece di {expected_count}")
+    write_if_changed(SINGLE_FILE, single)
+    print(f"\n{SINGLE_FILE} · {SINGLE_FILE.stat().st_size // 1024}KB · "
+          f"{expected_count} immagini dentro, niente accanto")
+
+
 def main():
     if not SRC.is_dir(): sys.exit(f"manca {SRC}/")
     selected_sources = {}
@@ -188,6 +213,23 @@ def main():
         asset_map[key] = f"data:image/webp;base64,{b64}"
         print(f"{f.name:32} -> {out.name:28} {out.stat().st_size // 1024:4}KB")
 
+    # `assets/assets.js` e' tracciato ed e' l'app pubblicata: qui una consegna
+    # incompleta la sovrascriverebbe con quello che c'e' adesso in
+    # assets/images/, che da quando la cartella e' fuori da git puo' essere
+    # mezza vuota. Provato: con una sorgente su quaranta il file scendeva da
+    # 3753KB a 46KB e lo script usciva contento — trentanove illustrazioni
+    # perse, e ad accorgersene era solo `smoke.js`, se qualcuno lo lanciava.
+    # La regola non e' "vietato un sync parziale", e' "non si perde una casella
+    # che c'era": chi vuole davvero rimuoverne una passa --sostituisci.
+    previous_assets = set(re.findall(r'^  "([^"]+)":', ASSET_JS.read_text(encoding="utf-8"), re.M)) \
+        if ASSET_JS.is_file() else set()
+    lost_assets = sorted(previous_assets - set(asset_map))
+    if lost_assets and "--sostituisci" not in sys.argv:
+        sys.exit(f"{len(lost_assets)} caselle sparirebbero da {ASSET_JS}: "
+                 + ", ".join(lost_assets[:6]) + ("…" if len(lost_assets) > 6 else "")
+                 + f"\nassets/images/ ha {len(asset_map)} sorgenti su {len(previous_assets)}."
+                 " Rimetti le consegne mancanti, o rilancia con --sostituisci se e' voluto.")
+
     lines = "\n".join(f'  "{k}": "{v}",' for k, v in asset_map.items())
     asset_block = "const ASSETS = {\n" + lines + "\n};\n"
     write_if_changed(ASSET_JS, "/* Generato da sync-assets.py: non modificare a mano. */\n" + asset_block)
@@ -206,6 +248,8 @@ def main():
         sys.exit("asset_block ASSETS o riferimento assets/assets.js non trovato")
     updated_html = re.sub(r'<script src="assets/assets\.js[^"]*"></script>', script_tag, updated_html, count=1)
     write_if_changed(HTML, updated_html)
+    if "--file-unico" in sys.argv:
+        write_single_file(updated_html, asset_block, len(asset_map))
     write_if_changed(CACHE_FILE, json.dumps(next_cache, ensure_ascii=False, indent=2) + "\n")
     if skipped_assets:
         print("\nfuori dalle caselle previste, non agganciate: " + ", ".join(skipped_assets))

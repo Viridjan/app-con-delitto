@@ -46,6 +46,21 @@ assert.deepStrictEqual(Array.from(app.STORY.scene, app.sceneNumber),
   assert.ok(stageNudo.innerHTML.length > 500, "senza assets.js l'app non disegna piu' niente");
 }
 
+/* La copia a pagina sola per l'artefatto, se qualcuno l'ha generata, dev'essere
+   questa app e non una di ieri: pubblicarne una vecchia e' il modo silenzioso di
+   mandare in giro una storia che non e' piu' quella. Si confronta tutto tranne
+   il blocco delle immagini, che nei due file sta in posti diversi. */
+{
+  const singleFile = "oliva-blu-completo.html";
+  if (fs.existsSync(singleFile)) {
+    const senzaMappa = t => t
+      .replace(/<script src="assets\/assets\.js[^"]*"><\/script>\n?/, "")
+      .replace(/<script>\n\/\* Generato da sync-assets\.py[\s\S]*?<\/script>\n?/, "");
+    assert.strictEqual(senzaMappa(fs.readFileSync(singleFile, "utf8")), senzaMappa(appHtml),
+      `${singleFile} non e' piu' questa app: rigenerala con python3 sync-assets.py --file-unico`);
+  }
+}
+
 // File fisici e chiavi ASSETS condividono la convenzione underscore-only.
 // La pipeline blocca i sorgenti sbagliati; questo protegge anche il contratto HTML.
 const hyphenatedAssets = Object.keys(app.ASSETS).filter(k => k.includes("-"));
