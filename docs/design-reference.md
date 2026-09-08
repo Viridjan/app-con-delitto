@@ -482,7 +482,20 @@ The cast page is the one place where back does something: `←` / `↑` call `sc
 page back through the portraits. Leafing through a cast list is not rewinding the story — nothing
 is revealed there, so nothing is taken back.
 
-`scrollCard()` finds the current card as **the one whose top is nearest the stage's**, and that
+`scrollCard()` scrolls the container itself rather than calling `scrollIntoView`, and it declares
+the page finished from the **scroll position**, not from the card index. Both changed on
+8 September 2026, because on some devices the button did nothing at all: inside a container with
+`scroll-snap-type:mandatory` and `scroll-snap-stop:always`, a programmatic `scrollIntoView` is
+ignored or re-snapped to the card you started from on more than one engine, and `scrollCard`
+returned `true` regardless — so `advance()` never changed screen and the button stayed pressable
+and mute, for good. Now the destination is computed here (`box.scrollTop + card.top - stage.top`)
+and the snap only settles it, and when the scroll is already at the bottom, forward means leaving
+the page. `castScroller()` picks whoever actually scrolls, the stage or the document:
+`#stage:has(.cast)` becomes the scroll container only where `:has()` is supported, and measuring
+one while moving the other leads nowhere. `smoke.js` walks the page with `advance()` and fails if
+it never leaves.
+
+The current card is still found as **the one whose top is nearest the stage's**, and that
 wording is load-bearing. Dividing `scrollTop` by `clientHeight` broke first: on a phone a card is
 taller than a screen. Taking "the last card starting above the edge" broke next: the last card
 sits a few pixels below it, because there is no scroll left to bring it up, so the page never

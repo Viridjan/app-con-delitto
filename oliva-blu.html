@@ -1392,9 +1392,23 @@ function goTo(n) {
    il suo pulsante sotto al testo, e premerlo porta al personaggio seguente.
    Dall'ultima non resta niente da scorrere, quindi la pagina si dichiara
    finita e a cambiarla ci pensa `avanti()`. */
+/* Chi scorre davvero: lo stage quando ha scorrimento suo, il documento quando
+   no. `#stage:has(.cast)` diventa il contenitore che scorre solo dove `:has()`
+   funziona; dove non funziona scorre la pagina, e misurare l'uno mentre si
+   muove l'altro non porta da nessuna parte. */
+const castScroller = () =>
+  stage.scrollHeight > stage.clientHeight + 1 ? stage : document.scrollingElement;
+
 function scrollCard(verso) {
   const c = cards();
   if (!c.length) return false;
+  const box = castScroller();
+  /* In fondo allo scorrimento non resta niente da scoprire: l'ultima scheda e'
+     li' davanti quanto ci puo' stare, e "avanti" vuol dire uscire dalla pagina.
+     Senza questa riga la pagina non si dichiarava mai finita dove l'ultima
+     scheda non riesce a portare la sua cima in cima — e il pulsante, che
+     restituiva comunque true, restava premibile e muto per sempre. */
+  if (verso > 0 && box.scrollTop >= box.scrollHeight - box.clientHeight - 2) return false;
   /* quale scheda si sta guardando: quella che comincia piu' vicino al bordo.
      Non si divide per l'altezza dello schermo — da telefono una scheda e' piu'
      alta di una schermata — e non si guarda "sopra il bordo": l'ultima scheda
@@ -1408,7 +1422,13 @@ function scrollCard(verso) {
   });
   const i = qui + verso;
   if (i < 0 || i >= c.length) return false;
-  c[i].scrollIntoView({ block: "start", behavior: scrollBehavior() });
+  /* Si sposta lo scorrimento a mano invece di chiedere `scrollIntoView`: dentro
+     un contenitore con `scroll-snap-type:mandatory` e `scroll-snap-stop:always`
+     quella chiamata viene ignorata o riagganciata alla scheda di partenza su
+     piu' di un motore, e il pulsante non faceva niente. Qui la destinazione la
+     calcoliamo noi e lo snap si limita ad assestarla. */
+  box.scrollTo({ top: box.scrollTop + (c[i].getBoundingClientRect().top - bordo),
+                 behavior: scrollBehavior() });
   return true;
 }
 

@@ -61,6 +61,21 @@ assert.deepStrictEqual(Array.from(app.STORY.scene, app.sceneNumber),
   }
 }
 
+/* La pagina dei personaggi non deve intrappolare il pulsante. `reveal()` li'
+   scorre di una scheda e restituisce true finche' ce n'e' un'altra; se
+   restituisse true per sempre, `advance()` non cambierebbe mai schermata e il
+   pulsante resterebbe premibile e muto — che e' esattamente il guasto visto su
+   alcuni dispositivi l'8 settembre 2026, dove `scrollIntoView` dentro un
+   contenitore con snap obbligatorio non spostava niente. */
+{
+  const castIndex = app.SLIDES.findIndex(x => x.t === "cast");
+  app.goTo(castIndex);
+  let passi = 0;
+  while (app.state.n === castIndex && passi < 20) { app.advance(); passi++; }
+  assert.notStrictEqual(app.state.n, castIndex,
+    "dalla pagina dei personaggi il pulsante non porta mai fuori");
+}
+
 // File fisici e chiavi ASSETS condividono la convenzione underscore-only.
 // La pipeline blocca i sorgenti sbagliati; questo protegge anche il contratto HTML.
 const hyphenatedAssets = Object.keys(app.ASSETS).filter(k => k.includes("-"));
