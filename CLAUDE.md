@@ -437,6 +437,14 @@ and the script exited happy — only `smoke.js` noticed, and only if someone ran
 new one would lose any, naming them. `--sostituisci` is the way through when a removal is meant.
 An absent `assets/images/` was already handled — the script exits on `manca assets/images/`.
 
+**Publishing the artifact.** `oliva-blu-completo.html` is a complete document — `<!doctype>`,
+`<html lang="it">`, `<head>`, `<body>` — and the Artifact tool wraps what it publishes in a shell
+of its own, so the outer tags have to come off first: keep everything between `<head>` and
+`</head>` except `charset` and `viewport`, which the wrapper supplies, then everything inside
+`<body>`. Publishing the file whole nests one document inside another and the inner `<head>` is
+dropped, taking the viewport declaration with it — that is the phone type scale gone. Done that
+way on 8 September 2026, at `ae31691c`, and the preview finally runs with its illustrations.
+
 **The single page is a build target, not a branch.** The published artifact is one HTML page —
 `<script src>` finds nothing there — so from `main` it runs the whole story with a typographic
 placeholder in every slot. `python3 sync-assets.py --file-unico` writes `oliva-blu-completo.html`
