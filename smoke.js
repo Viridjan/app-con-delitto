@@ -5,7 +5,7 @@ const { openApp } = require("./stub-dom");
 const appHtml = fs.readFileSync("oliva-blu.html", "utf8");
 const voiceBenchHtml = fs.readFileSync("voci.html", "utf8");
 
-const CODA = "{state,SLIDES,STORY,goTo,advance,reveal,advanceLabel,hasMoreToReveal,advanceButton,investigationComplete,verdictPose,render,toggleDirector,toggleDevelopment,openClue,askForSolution,overlayElement,MAX_CLUES,MAX_PEOPLE,SUSPECTS,DIRECTOR_ENABLED,DEV_ENABLED,TITLES_ENABLED,actorImage,clueImage,setupImageSlots,sceneNumber,ASSETS,demo,sceneImage,demoLayer:()=>DEMO_LAYER,splitText,VOICE}";
+const CODA = "{state,SLIDES,STORY,stageOrder,changeDepth,goTo,advance,reveal,advanceLabel,hasMoreToReveal,advanceButton,investigationComplete,verdictPose,render,toggleDirector,toggleDevelopment,openClue,askForSolution,overlayElement,MAX_CLUES,MAX_PEOPLE,SUSPECTS,DIRECTOR_ENABLED,DEV_ENABLED,TITLES_ENABLED,actorImage,clueImage,setupImageSlots,sceneNumber,ASSETS,demo,sceneImage,demoLayer:()=>DEMO_LAYER,splitText,VOICE}";
 const { app, stage } = openApp(CODA);
 assert.deepStrictEqual(Array.from(app.STORY.scene, app.sceneNumber),
   Array.from(app.STORY.scene, (scene, index) => scene.n || index + 1),
@@ -56,7 +56,10 @@ assert.deepStrictEqual(Array.from(app.STORY.scene, app.sceneNumber),
     const senzaMappa = t => t
       .replace(/<script src="assets\/assets\.js[^"]*"><\/script>\n?/, "")
       .replace(/<script>\n\/\* Generato da sync-assets\.py[\s\S]*?<\/script>\n?/, "");
-    assert.strictEqual(senzaMappa(fs.readFileSync(singleFile, "utf8")), senzaMappa(appHtml),
+    /* Si confrontano le impronte, non i due testi: `strictEqual` su 4MB stampa
+       l'intero file come diff, e il messaggio utile ci annega dentro. */
+    const impronta = t => require("crypto").createHash("sha256").update(senzaMappa(t)).digest("hex");
+    assert.strictEqual(impronta(fs.readFileSync(singleFile, "utf8")), impronta(appHtml),
       `${singleFile} non e' piu' questa app: rigenerala con python3 sync-assets.py --file-unico`);
   }
 }
@@ -74,6 +77,39 @@ assert.deepStrictEqual(Array.from(app.STORY.scene, app.sceneNumber),
   while (app.state.n === castIndex && passi < 20) { app.advance(); passi++; }
   assert.notStrictEqual(app.state.n, castIndex,
     "dalla pagina dei personaggi il pulsante non porta mai fuori");
+}
+
+/* `[` e `]` devono muovere di un posto nell'ordine che si vede, non nell'elenco.
+   Roberto nella scena 1 porta z:6 e stava davanti a tutti: scambiarlo di posto
+   dentro `cast` non cambiava profondita', e il comando non faceva niente di
+   visibile. Qui si guarda l'ordine vero prima e dopo, e si controlla anche che
+   il giro di andata e ritorno rimetta le cose com'erano — comprese le righe da
+   incollare, che non devono riempirsi di `z` inventati. */
+{
+  const scenaConZ = app.SLIDES.findIndex(x => x.t === "scene"
+    && (app.STORY.scene[x.i].cast || []).some(a => a.z !== undefined));
+  assert.notStrictEqual(scenaConZ, -1, "nessuna scena con uno z esplicito da provare");
+  app.goTo(scenaConZ);
+  const sc = app.STORY.scene[app.SLIDES[scenaConZ].i];
+  const conZ = sc.cast.find(a => a.z !== undefined);
+  const nomi = () => app.stageOrder(sc).map(e => e.dato.c || e.dato.lato);
+  const prima = nomi(), primaZ = JSON.stringify([sc.cast, sc.primo]);
+  const posto = () => app.stageOrder(sc).findIndex(e => e.dato === conZ);
+  const partenza = posto();
+
+  app.changeDepth(-1, { dato: conZ });
+  assert.strictEqual(posto(), partenza - 1,
+    `[ non arretra di un posto nell'ordine visivo: ${prima} -> ${nomi()}`);
+
+  app.changeDepth(1, { dato: conZ });
+  assert.strictEqual(posto(), partenza, "] non riporta la figura dov'era");
+  assert.deepStrictEqual(nomi(), prima, "andata e ritorno cambiano l'ordine visivo");
+  assert.strictEqual(JSON.stringify([sc.cast, sc.primo]), primaZ,
+    "andata e ritorno lasciano coordinate o z diversi da quelli di partenza");
+
+  // sullo sfondo i due comandi non fanno niente: sta sotto a tutti per definizione
+  app.changeDepth(1, { sfondo: true, dato: {} });
+  assert.deepStrictEqual(nomi(), prima, "[ o ] hanno mosso qualcosa partendo dallo sfondo");
 }
 
 // File fisici e chiavi ASSETS condividono la convenzione underscore-only.

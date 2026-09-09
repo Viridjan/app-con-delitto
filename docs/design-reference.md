@@ -470,6 +470,13 @@ else, including on into the clue table. The opening screens had two labels of th
 nothing special happens there either — you turn a page. There is none on the last
 screen.
 
+**A focused control keeps its own Space.** The global `keydown` returns early when Space arrives
+with the focus on a button, link, field or `summary` — `isNativeControl()` — because pressing a
+button from the keyboard is exactly what Space is for. Cancelling it meant `Prosegui` did nothing
+when reached by tab, and neither did the sheet's answers. Every other shortcut still fires with
+the focus anywhere: none of them collides with a native activation. On the stage, Space reveals
+as it always did.
+
 **Two gestures, two keys each.** Forward is `spazio`, `→` or `↓`; back is `←` or `↑`, and in the
 story back does nothing at all — every one of them goes through `reveal()`, never `advance()`, so
 the button stays the only way to change screen. Two author modes come first. In staging the arrows nudge the

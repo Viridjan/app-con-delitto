@@ -23,6 +23,7 @@ out of it into another place.
 node smoke.js              # il controllo: schermate, quiz, copione, indagine, cancelli, voci
 node dom.js prima.txt      # fotografia del markup di ogni schermata (per i riordini)
 node estrai-copione.js     # riscrive copione.txt da STORY — dopo ogni modifica al testo
+python3 prova-regia.py     # regia e tastiera in un browser vero: selezione, +/-, [ ], spazio
 python3 sync-assets.py     # converte le immagini e rigenera assets/assets.js
 python3 sync-assets.py --file-unico   # e in piu' la copia a pagina sola, per l'artefatto
 
@@ -67,6 +68,11 @@ Non c'e' watcher e non serve un server: `oliva-blu.html` si apre da disco insiem
 - `copione.txt` — the approved script. The verbatim reference; `smoke.js` checks the app against
   it. Regenerate with `node estrai-copione.js` after any agreed change to the text.
 - `estrai-copione.js` — writes `copione.txt` out of `STORY`, so the two can never drift.
+- `regia.js` + `prova-regia.py` — the staging and keyboard behaviour checks. They need a real
+  browser: they click, drag and send keys on real nodes, which `smoke.js`'s stub does not have.
+  `python3 prova-regia.py` pastes `regia.js` into a copy of the app, reads the verdict out of the
+  page title and exits non-zero on a failure. Every check drives the real functions; none
+  restates the logic it is checking.
 - `censimento.js` — inject it into the page and it reports how many text sizes and how many
   distinct text styles actually reach the screen, and which texts carry no rule of their own.
   The count is a contract: five sizes, on a big screen and on a phone alike.
@@ -286,13 +292,30 @@ Three layers inside `.palco`, all positioned in percentages of the frame:
 Actors and props sit on **one** stacking scale, not two: actors default to `z-index:1` and props
 to `5`, and an optional `z` on either entry overrides that. Scene 1 uses all three levels: the
 left table stays at `5`, Roberto is `z:6` so his arm passes in front of it, and the right table
-is `z:7` because it stands nearer the camera than he does. In staging mode `[` / `]` swap places inside the
-element's own list, and at the end of that list they cross the other plane instead of stopping.
-This is the only `z-index` anyone may set on the stage; `.attivo` still must not have one.
+is `z:7` because it stands nearer the camera than he does. In staging mode `[` / `]` move the
+selection one place along the order you actually see, which `stageOrder()` computes: `z` first,
+and among equal `z` the markup order, which puts every actor before every prop. Two neighbours
+swap depths; when they already share a depth *and* a list they simply swap places there, so an
+entry that carried no `z` does not acquire one and the lines to paste back stay as they were.
+Until 9 September 2026 the commands swapped array positions and ignored explicit `z` entirely:
+Roberto sits at `z:6`, so `[` moved him inside `cast` and left him in front of everyone — the
+command did nothing you could see. This is the only `z-index` anyone may set on the stage;
+`.attivo` still must not have one.
 
 **Positions are decided by eye, not by guessing numbers.** Press `r` on a scene for staging mode:
 drag to move, wheel or `+`/`-` to resize, arrows for fine steps. The panel prints the `cast:` and
 `primo:` lines to paste back into `STORY`. Changes live only in the open page.
+
+**The selection belongs to the screen you are on.** `activateDirector()` re-binds it to the
+current nodes or clears it; it does not survive a screen change on its own, because `dato` and
+`nodo` would still point at the previous scene and at an element no longer in the page. The
+arrows moved the previous scene's actor that way, in silence, until 9 September 2026. The
+background counts as a selection like any other and is re-bound the same way.
+
+**One resize, two ways to ask for it.** `resizeSelection(±1)` serves the wheel and the `+`/`-`
+keys. They were two code paths and the second knew only `h`: on the background, which has `scala`
+and no `h`, pressing `+` changed nothing and added an `h:NaN` that went straight into the block
+you paste back.
 
 **The stage is clipped 10% top and bottom, on every screen**: ceiling above the figures, empty
 floor below. It was made phone-only for one afternoon on 3 September 2026 and put back the same

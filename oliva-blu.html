@@ -1858,8 +1858,14 @@ function activateDirector(i) {
   const voci = [...(sc.cast || []), ...(sc.primo || [])];
   const nodi = [...pal.querySelectorAll(".attore, .primo")];
 
+  /* La selezione non sopravvive al cambio di schermata da sola: `dato` e `nodo`
+     puntano alla scena di prima, e il nodo non e' nemmeno piu' in pagina. Le
+     frecce spostavano cosi' l'attore della scena precedente, in silenzio.
+     Qui la selezione o si riaggancia ai nodi di adesso, o si azzera. */
   const gia = voci.indexOf(selection?.dato);
   if (gia >= 0) { nodi[gia].classList.add("sel"); selection = { nodo: nodi[gia], dato: voci[gia], nome: selection.nome }; }
+  else if (selection?.sfondo && selection.dato === sc.sfondo) selection = { ...selection, nodo: pal.querySelector(".sfondo") };
+  else selection = null;
 
   nodi.forEach((n, k) => {
     const dato = voci[k], nome = dato.c || `oggetto ${dato.lato.toUpperCase()}`;
@@ -1916,36 +1922,77 @@ function activateDirector(i) {
   pal.addEventListener("wheel", e => {
     if (!selection) return;
     e.preventDefault();
-    if (selection.sfondo) {
-      selection.dato.scala = Math.max(1, Math.min(4, selection.dato.scala + (e.deltaY < 0 ? .05 : -.05)));
-      positionBackground(selection.nodo, selection.dato);
-    } else {
-      selection.dato.h = Math.max(2, selection.dato.h + (e.deltaY < 0 ? 1 : -1));
-      positionElement(selection.nodo, selection.dato);
-    }
-    renderDirectorPanel(i);
+    resizeSelection(e.deltaY < 0 ? 1 : -1);
   }, { passive: false });
 
   renderDirectorPanel(i);
 }
 
-/* La sovrapposizione segue l'ordine dell'elenco: chi viene dopo sta davanti.
-   Questi due comandi scambiano di posto e quindi cambiano la profondita'. */
-/* Dentro il proprio elenco si scambia di posto. Arrivati in fondo si scavalca
-   l'altro piano: gli oggetti in primo piano stanno davanti a tutti finche' un
-   attore non chiede di passargli davanti (z 6), o l'oggetto di finire dietro
-   (z 0). Senza z valgono i piani di partenza: attori 1, oggetti 5. */
-function changeDepth(verso) {
-  if (selection.sfondo) return;                 // lo sfondo sta sotto a tutti, per definizione
+/* Il piano di partenza di chi non dichiara uno `z`: gli attori stanno a 1, gli
+   oggetti in primo piano a 5. */
+const DEFAULT_DEPTH = attore => attore ? 1 : 5;
+const depthOf = e => e.dato.z === undefined ? DEFAULT_DEPTH(e.attore) : e.dato.z;
+
+/* L'ordine in cui si vedono davvero le figure sul palco: prima lo `z-index`,
+   e a parita' di z l'ordine del markup, che mette gli attori prima degli
+   oggetti. E' questo l'ordine che i comandi `[` e `]` devono percorrere. */
+function stageOrder(sc) {
+  const voci = [
+    ...(sc.cast || []).map((dato, k) => ({ dato, attore: true, dom: k })),
+    ...(sc.primo || []).map((dato, k) => ({ dato, attore: false, dom: (sc.cast || []).length + k })),
+  ];
+  return voci.sort((a, b) => depthOf(a) - depthOf(b) || a.dom - b.dom);
+}
+
+/* `[` e `]` spostano di un posto **nell'ordine che si vede**, non nell'elenco.
+   Scambiare due caselle dell'array ignorava gli `z` espliciti: Roberto nella
+   scena 1 sta a z:6 e restava davanti a tutti anche dopo `[`, perche' cambiava
+   posto in `cast` e non profondita'. Qui i due vicini si scambiano il piano —
+   e quando stanno sullo stesso piano nello stesso elenco basta scambiarli di
+   posto, cosi' chi non aveva uno `z` non se lo ritrova addosso e le righe da
+   incollare restano quelle di prima. */
+function changeDepth(verso, target = selection) {
+  if (!target || target.sfondo) return;         // lo sfondo sta sotto a tutti, per definizione
   const sc = STORY.scene[SLIDES[state.n].i];
-  const attore = (sc.cast || []).includes(selection.dato);
-  const arr = attore ? sc.cast : (sc.primo || []);
-  const k = arr.indexOf(selection.dato), j = k + verso;
-  if (k < 0) return;
-  if (j >= 0 && j < arr.length) [arr[k], arr[j]] = [arr[j], arr[k]];
-  else if (attore ? verso > 0 : verso < 0) selection.dato.z = attore ? 6 : 0;
-  else delete selection.dato.z;
+  const ordine = stageOrder(sc);
+  const k = ordine.findIndex(e => e.dato === target.dato), j = k + verso;
+  if (k < 0 || j < 0 || j >= ordine.length) return;   // ai due estremi non c'e' dove andare
+  const io = ordine[k], vicino = ordine[j];
+  const mio = depthOf(io), suo = depthOf(vicino);
+  if (mio === suo && io.attore === vicino.attore) {
+    const arr = io.attore ? sc.cast : sc.primo;
+    const a = arr.indexOf(io.dato), b = arr.indexOf(vicino.dato);
+    [arr[a], arr[b]] = [arr[b], arr[a]];
+  } else {
+    /* Stesso piano ma elenchi diversi: scambiare i due z non muoverebbe niente,
+       perche' a parita' di z decide il markup. Serve un gradino vero. */
+    setDepth(io, mio === suo ? suo + verso : suo);
+    if (mio !== suo) setDepth(vicino, mio);
+  }
   render();
+}
+
+/* Uno `z` uguale al piano di partenza non si scrive: il blocco da incollare
+   deve restare quello di prima finche' non si sposta davvero qualcosa. */
+function setDepth(e, z) {
+  if (z === DEFAULT_DEPTH(e.attore)) delete e.dato.z;
+  else e.dato.z = z;
+}
+
+/* Ingrandire e rimpicciolire: un passo avanti o indietro, uno solo per la
+   rotella e per i tasti + e -. Erano due strade e la seconda conosceva solo
+   `h`: sullo sfondo, che ha `scala` e non `h`, premere + non cambiava niente e
+   ci aggiungeva un `h:NaN` che finiva pari pari nel blocco da incollare. */
+function resizeSelection(verso) {
+  if (!selection) return;
+  if (selection.sfondo) {
+    selection.dato.scala = Math.max(1, Math.min(4, selection.dato.scala + verso * .05));
+    positionBackground(selection.nodo, selection.dato);
+  } else {
+    selection.dato.h = Math.max(2, selection.dato.h + verso);
+    positionElement(selection.nodo, selection.dato);
+  }
+  renderDirectorPanel(SLIDES[state.n].i);
 }
 
 function moveSelection(dx, db, grosso) {
@@ -2091,9 +2138,19 @@ document.getElementById("k-vol").oninput = e => setVolume(e.target.value / 100, 
 document.getElementById("k-vol").onchange = e => setVolume(e.target.value / 100, true);
 updateVolumeDisplay();
 
+/* Chi risponde da solo alla tastiera: pulsanti, link, campi, riepiloghi. */
+const isNativeControl = el =>
+  !!el?.closest?.("button,a[href],input,select,textarea,summary,[contenteditable]");
+
 document.addEventListener("keydown", e => {
   if (e.metaKey || e.ctrlKey || e.altKey) return;
   if (/^(INPUT|TEXTAREA)$/.test(e.target.tagName)) return;
+  /* Lo spazio, quando il fuoco sta su un controllo, e' del controllo: premere un
+     pulsante da tastiera si fa cosi'. Intercettandolo qui `Prosegui` non faceva
+     niente se lo si raggiungeva col tab, e nemmeno le risposte della scheda
+     finale. Le altre scorciatoie restano anche col fuoco addosso, perche' non
+     collidono con nessuna attivazione nativa. */
+  if (e.key === " " && isNativeControl(e.target)) return;
   if (e.key === "Escape") { if (state.overlay) closeOverlay(); return; }
   if (state.overlay) return;
   switch (e.key) {
@@ -2134,10 +2191,7 @@ document.addEventListener("keydown", e => {
       if (state.directorMode && selection) { e.preventDefault(); changeDepth(e.key === "]" ? 1 : -1); }
       break;
     case "+": case "=": case "-": case "_":
-      if (state.directorMode && selection) {
-        selection.dato.h = Math.max(2, selection.dato.h + (e.key === "+" || e.key === "=" ? 1 : -1));
-        positionElement(selection.nodo, selection.dato); renderDirectorPanel(SLIDES[state.n].i);
-      }
+      if (state.directorMode && selection) resizeSelection(e.key === "+" || e.key === "=" ? 1 : -1);
       break;
     case "?": openHelp(); break;
     case "f": case "F":
