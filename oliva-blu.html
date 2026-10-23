@@ -25,7 +25,7 @@
      e l'oro a 3.49. Scuriti quanto basta e non un grammo di piu'. */
   --ink:#23281A; --muted:#676F55; --line:#DBD2BD;
   --olive:#5E7233; --gold:#966107; --blu:#1F3FC4;
-  --plum:#96496D; --teal:#3F7565;
+  --plum:#96496D; --teal:#3F7565; --rust:#A64B2A; --vino:#8E2B3E;
   --shadow:0 1px 2px rgba(35,40,26,.06),0 8px 28px rgba(35,40,26,.08);
   /* i tre caratteri, scritti una volta sola: titoli, testo, dati */
   /* I sei gradini della scala tipografica. Prima ogni regola decideva un
@@ -52,7 +52,7 @@
     --bg:#12160F; --surface:#1B2016; --surface-2:#232A1D;
     --ink:#EDE7D6; --muted:#98A182; --line:#333C29;
     --olive:#9CB65C; --gold:#DFA93C; --blu:#7B96FF;
-    --plum:#DA8FB2; --teal:#78BFAA;
+    --plum:#DA8FB2; --teal:#78BFAA; --rust:#E8957A; --vino:#E98C9E;
     --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 34px rgba(0,0,0,.45);
   }
 }
@@ -60,7 +60,7 @@
   --bg:#12160F; --surface:#1B2016; --surface-2:#232A1D;
   --ink:#EDE7D6; --muted:#98A182; --line:#333C29;
   --olive:#9CB65C; --gold:#DFA93C; --blu:#7B96FF;
-  --plum:#DA8FB2; --teal:#78BFAA;
+  --plum:#DA8FB2; --teal:#78BFAA; --rust:#E8957A; --vino:#E98C9E;
   --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 34px rgba(0,0,0,.45);
 }
 
@@ -217,6 +217,8 @@ kbd{font:inherit; font-size:.78em; border:1px solid var(--line); border-bottom-w
 [data-c="Roberto"]{--speaker:var(--olive)}
 [data-c="Augusto"]{--speaker:var(--teal)}
 [data-c="Mauro"]{--speaker:var(--blu)}
+[data-c="Elisa"]{--speaker:var(--rust)}
+[data-c="Andrea"]{--speaker:var(--vino)}
 
 /* ---- le schermate dell'investigatore: la voce, sola in mezzo allo schermo ---- */
 .narr-fine{gap:.9rem; text-align:center}
@@ -290,9 +292,15 @@ kbd{font:inherit; font-size:.78em; border:1px solid var(--line); border-bottom-w
 .card .azioni{justify-content:center; flex:none; padding-top:clamp(.4rem,1.6vh,1rem)}
 .card{flex:none; height:100dvh; gap:clamp(.4rem,1.6vh,1rem); width:100%;
   padding:clamp(.75rem,2.5vh,1.6rem) 0; scroll-snap-align:start; scroll-snap-stop:always}
-.dissolve .card{opacity:.25; transform:translateY(2.5vh) scale(.97);
-  transition:opacity .55s ease, transform .55s cubic-bezier(.2,.7,.3,1)}
-.dissolve .card.in{opacity:1; transform:none}
+.dissolve .card{opacity:.25; transition:opacity .55s ease}
+.dissolve .card.in{opacity:1}
+/* Il movimento sta sul contenuto, mai sulla scheda: la scheda e' il punto a
+   cui si aggancia lo snap, e il browser lo misura con la trasformazione
+   dentro. Traslata di 2.5vh, lo snap si fermava 30px piu' in basso e poi la
+   rincorreva mentre tornava a posto: lo scatto all'indietro a ogni ritratto. */
+.dissolve .card > *{transform:translateY(2.5vh) scale(.97);
+  transition:transform .55s cubic-bezier(.2,.7,.3,1)}
+.dissolve .card.in > *{transform:none}
 .card .titolo-carta{font-size:var(--t-nome); color:var(--speaker,var(--ink)); text-align:center;
   padding-inline:1rem}
 .card p{margin:0; color:var(--muted); font-size:var(--t-corpo); line-height:1.45;
@@ -322,7 +330,6 @@ kbd{font:inherit; font-size:.78em; border:1px solid var(--line); border-bottom-w
 
 /* una scheda gia' scelta dice a chi si e' chiesto; una fuori portata non si apre */
 .clue .stato{margin-top:.35rem; font-size:.78em; font-weight:700; color:var(--speaker,var(--gold))}
-.clue.fuori{opacity:.4; cursor:not-allowed; box-shadow:none}
 .chiedi{display:flex; flex-wrap:wrap; gap:.6rem; margin-top:.9rem}
 /* Le persone a cui chiedere sono le stesse carte della scheda finale: si
    sceglie una faccia, non una parola. Qui in piu' c'e' lo stato — chi ha
@@ -556,7 +563,7 @@ kbd{font:inherit; font-size:.78em; border:1px solid var(--line); border-bottom-w
 </div>
 <div id="overlay" hidden></div>
 
-<script src="assets/assets.js?v=b35351ad"></script>
+<script src="assets/assets.js?v=0c823017"></script>
 <script>
 /* ------------------------------------------------------------------
    Tutto il copione vive qui dentro. Per correggere una battuta prima
@@ -573,7 +580,9 @@ const STORY = {
     {n:"Rosalia De Robertis", c:"Rosalia", d:"Nipote di Giuseppe. Gli vuole bene, ma è preoccupata per la sua scelta."},
     {n:"Roberto Vispero", c:"Roberto", d:"Fondatore degli Oliviani. Conosce bene gli ulivi e i prodotti agricoli."},
     {n:"Augusto De Virgilis", c:"Augusto", d:"Membro degli Oliviani. Parla spesso della produzione dell’olio."},
-    {n:"Mauro Damiani", c:"Mauro", d:"Nuovo adepto degli Oliviani. Marito di Rosalia. È molto serio, rigido e sospettoso."}
+    {n:"Mauro Damiani", c:"Mauro", d:"Nuovo adepto degli Oliviani. Marito di Rosalia. È molto serio, rigido e sospettoso."},
+    {n:"Elisa Lanzillotta", c:"Elisa", d:"Moglie di Augusto. Pittrice elegante, dipinge su commissione ed è sempre in ritardo con le consegne."},
+    {n:"Andrea Leuzzi", c:"Andrea", d:"Studente universitario brillante, di bell’aspetto. È spesso accanto a Giuseppe."}
   ],
 
   scene: [
@@ -649,7 +658,9 @@ const STORY = {
       cast:[{c:"Roberto",x:65.2,b:17.1,h:58},{c:"Giuseppe",posa:"presentazione",x:38.2,b:-10.1,h:87}],
       battute:[
         {c:"Giuseppe", t:"Gli ulivi durano secoli. Vorrei che anche questa casa durasse così a lungo."},
-        {c:"Roberto", t:"Allora il suo nome resterà fra queste mura, signor Giuseppe."}
+        {c:"Roberto", t:"Allora il suo nome resterà fra queste mura, signor Giuseppe."},
+        {c:"Giuseppe", t:"Una sola condizione: voglio un rendiconto. Ogni euro, dove va e per cosa."},
+        {c:"Roberto", t:"Ma certo. I conti li tiene Augusto: glieli mostrerà lui."}
       ],
     },
     {
@@ -677,24 +688,99 @@ const STORY = {
         {c:"Mauro", m:"piano", t:"E per avere olive sane… qualcuno usa sostanze pericolose."},
         {c:"Roberto", t:"Prodotti controllati, Mauro. Solo se usati nel modo giusto."},
         {c:"Augusto", t:"Rimetti quella bottiglietta nell’armadietto, Mauro. Non deve stare vicino al rinfresco."},
-        {c:"Mauro", t:"Certo. Ci penso io."}
+        {c:"Mauro", t:"Certo. Ci penso io."},
+        {c:"Roberto", m:"piano, ad Augusto", t:"I quadri della sala… sono usciti dalla cassa?"},
+        {c:"Augusto", m:"piano", t:"Non adesso, Roberto. Ne parliamo dopo."}
+      ],
+    },
+    {
+      titolo:"Fra gli ulivi",
+      img:null, slot:"oliveto", n:3, parte:"prima parte",
+      /* posizioni provvisorie, da rifare in regia (r) quando arrivano i ritagli */
+      cast:[{c:"Mauro",posa:"guardingo",x:6,b:28,h:42},{c:"Rosalia",posa:"pensierosa",x:15,b:14,h:52},{c:"Augusto",x:76,b:10,h:55},{c:"Elisa",x:62,b:5,h:62},{c:"Andrea",x:45,b:2,h:66},{c:"Giuseppe",posa:"presentazione",x:29,b:0,h:70}],
+      primo:[{lato:"dx",x:92,b:-20,h:60}],
+      battute:[
+        {c:"Augusto", t:"Usciamo un momento. L’oliveto, al tramonto, merita di essere visto."},
+        {c:"Augusto", t:"E finalmente posso presentarvi mia moglie. Elisa Lanzillotta, pittrice."},
+        {c:"Elisa", t:"Piacere. Qui fuori, a quest’ora, la luce sugli ulivi è perfetta."},
+        {c:"Giuseppe", t:"Signora Elisa, è un onore. Augusto parla spesso dei suoi quadri."},
+        {c:"Elisa", t:"Augusto parla spesso di tutto, signor Giuseppe. Ma lo ringrazio."},
+        {c:"Andrea", t:"Andrea Leuzzi. Studio all’università, e quando posso vengo a respirare un po’ di campagna."},
+        {c:"Giuseppe", t:"Andrea, che piacere vederti. Sei arrivato giusto in tempo."},
+        {c:"Andrea", t:"Non me lo sarei perso per niente al mondo, Giuseppe."},
+        {c:"Rosalia", t:"Zio, vi conoscete già?"},
+        {c:"Giuseppe", t:"Andrea mi aiuta con i libri e con le carte. Ha molta pazienza con un vecchio come me."},
+        {c:"Andrea", t:"Vecchio? Non dirlo nemmeno per scherzo."},
+        {c:"Mauro", m:"piano", t:"Gli dà del tu."},
+        {c:"Rosalia", m:"piano", t:"Lascia stare, Mauro."}
+      ],
+    },
+    {
+      titolo:"Il ritratto",
+      img:null, slot:"oliveto", n:3, parte:"seconda parte",
+      cast:[{c:"Mauro",posa:"guardingo",x:6,b:28,h:42},{c:"Rosalia",posa:"pensierosa",x:15,b:14,h:52},{c:"Augusto",x:76,b:10,h:55},{c:"Elisa",posa:"ritratto",x:62,b:5,h:62},{c:"Andrea",x:45,b:2,h:66},{c:"Giuseppe",posa:"presentazione",x:29,b:0,h:70}],
+      primo:[{lato:"dx",x:92,b:-20,h:60}],
+      battute:[
+        {c:"Giuseppe", t:"Elisa, a che punto è il mio ritratto?"},
+        {c:"Elisa", t:"Ho dovuto metterlo un poco da parte, mi scusi. Avevo altri lavori rimasti indietro."},
+        {c:"Elisa", t:"Ad Augusto ne ho già consegnati due, solo quest’anno."},
+        {c:"Elisa", t:"E tutti e due me li ha chiesti con urgenza."},
+        {c:"Augusto", t:"Uno era per la sala degli Oliviani. Serviva per stasera."},
+        {c:"Elisa", t:"Il suo arriverà, signor Giuseppe, glielo prometto. Un ritratto non si fa di corsa."},
+        {c:"Giuseppe", t:"Lo so bene. Volevo solo vederlo finito in tempo."},
+        {c:"Giuseppe", m:"con garbo", t:"Anche perché l’anticipo gliel’ho versato in primavera."},
+        {c:"Elisa", t:"Non l’ho dimenticato, signor Giuseppe. Glielo assicuro."},
+        {c:"Andrea", t:"Ne varrà la pena. Certi volti meritano tempo."},
+        {c:"Giuseppe", m:"sorridendo", t:"Sei sempre troppo gentile, Andrea."},
+        {c:"Elisa", t:"Ha ragione il ragazzo. Lei ha un viso che racconta molte cose."},
+        {c:"Andrea", t:"E uno sguardo che non si dimentica."},
+        {c:"Giuseppe", t:"Basta così, o finisco per arrossire davanti a tutti."},
+        {c:"Andrea", t:"Elisa, ha ancora del blu sulle dita."},
+        {c:"Elisa", t:"Oltremare. Ho ritoccato il quadro della sala fino a un’ora fa."}
+      ],
+    },
+    {
+      titolo:"La luce degli ulivi",
+      img:null, slot:"oliveto", n:3, parte:"terza parte",
+      cast:[{c:"Mauro",posa:"guardingo",x:6,b:28,h:42},{c:"Rosalia",posa:"pensierosa",x:15,b:14,h:52},{c:"Augusto",x:76,b:10,h:55},{c:"Elisa",x:62,b:5,h:62},{c:"Andrea",posa:"complice",x:45,b:2,h:66},{c:"Giuseppe",posa:"presentazione",x:29,b:0,h:70}],
+      primo:[{lato:"dx",x:92,b:-20,h:60}],
+      battute:[
+        {c:"Elisa", t:"Guardate le foglie quando si muove il vento: sopra sono verdi, sotto quasi d’argento."},
+        {c:"Augusto", t:"È la loro difesa. Quella peluria chiara limita la perdita d’acqua e le ripara dal sole."},
+        {c:"Augusto", t:"In Puglia ci sono ulivi che hanno visto passare secoli. Alcuni hanno più di mille anni."},
+        {c:"Elisa", t:"Anche Van Gogh dipinse gli ulivi, più di una volta. Diceva che erano difficilissimi da rendere."},
+        {c:"Andrea", t:"Allora il ritratto di Giuseppe dovrebbe avere un ulivo alle spalle."},
+        {c:"Giuseppe", t:"Un ulivo e un po’ di questa luce. Mi piacerebbe."},
+        {c:"Elisa", t:"Allora lo dipingerò così. Ma ci vorrà ancora un po’."},
+        {c:"Andrea", m:"piano, a Giuseppe", t:"Io aspetto volentieri. Basta che ci sia anche tu, quando sarà finito."},
+        {c:"Giuseppe", m:"piano", t:"Ci sarò, Andrea. Te lo prometto."},
+        {c:"Rosalia", m:"a Mauro", t:"Mio zio non mi aveva mai parlato di lui."},
+        {c:"Mauro", t:"Tuo zio non ti dice molte cose."},
+        {c:"Rosalia", t:"Prima l’ho visto uscire dallo studio con le carte dello zio in mano."},
+        {c:"Mauro", t:"Allora chiediti cosa c’era scritto."}
       ],
     },
     {
       titolo:"Il brindisi",
-      img:null, slot:"scena3_brindisi", n:3, parte:"prima parte", sfondoDa:"scena1",
+      img:null, slot:"scena3_brindisi", n:4, parte:"prima parte", sfondoDa:"scena1",
       sfondo:{scala:1, fx:58.7, fy:40.4},
-      cast:[{c:"Rosalia",posa:"brindisi",x:7.6,b:18.5,h:53},{c:"Roberto",posa:"brindisi",x:82,b:44,h:30},{c:"Augusto",posa:"brindisi",x:93.9,b:43.1,h:31},{c:"Mauro",posa:"brindisi",x:56.5,b:-7.9,h:76},{c:"Giuseppe",posa:"brindisi",x:25.7,b:-8.8,h:78,z:6}],
+      cast:[{c:"Rosalia",posa:"brindisi",x:7.6,b:18.5,h:53},{c:"Roberto",posa:"brindisi",x:82,b:44,h:30},{c:"Augusto",posa:"brindisi",x:93.9,b:43.1,h:31},{c:"Andrea",posa:"brindisi",x:40,b:22,h:50},{c:"Mauro",posa:"brindisi",x:56.5,b:-7.9,h:76},{c:"Giuseppe",posa:"brindisi",x:25.7,b:-8.8,h:78,z:6}],
       primo:[{lato:"sx",x:19.4,b:8.4,h:44},{lato:"dx",x:95.5,b:-36.4,h:76,z:7}],
       battute:[
         {c:"Mauro", t:"Signor Giuseppe, un brindisi per questo nuovo inizio."},
         {c:"Giuseppe", t:"Volentieri. Alla vostra comunità."},
+        {c:"Andrea", t:"E a chi ci ha portati fin qui, stasera."},
+        {c:"Giuseppe", m:"piano", t:"A te, allora."},
         {c:"Roberto", m:"sullo sfondo", t:"Un buon olio racconta il territorio da cui nasce."},
         {c:"Augusto", t:"E racconta anche il lavoro di chi cura gli ulivi."},
         {c:"Giuseppe", t:"E quali olive danno carattere agli oli pugliesi?"},
         {c:"Roberto", t:"Qui nel Brindisino l’Ogliarola dà oli delicati, con note di foglia, erba e carciofo."},
         {c:"Augusto", t:"La Cellina di Nardò ricorda il pomodoro e i frutti di bosco; la Coratina è più intensa, amara e piccante."},
         {c:"Giuseppe", t:"Tre olive, tre voci diverse della stessa terra."},
+        {c:"Andrea", t:"Dov’è finita Elisa?"},
+        {c:"Augusto", t:"È andata a lavarsi le mani. Quel blu non vuole venire via."},
+        {c:"Roberto", m:"piano, ad Augusto", t:"E il rendiconto? Giuseppe lo chiederà presto."},
+        {c:"Augusto", m:"piano", t:"Avrà tutto. Te l’ho detto."},
         {c:"Giuseppe", t:"Ho già firmato tutto, Rosalia. Non cambierò idea."},
         {c:"Rosalia", m:"tra sé", t:"Vorrei fermare tutto… ma ormai è tardi."},
         {c:"Mauro", m:"tra sé", t:"Il male va fermato prima che cresca."}
@@ -702,45 +788,55 @@ const STORY = {
     },
     {
       titolo:"Il malore dell’oliva blu",
-      img:null, slot:"scena3_malore", n:3, parte:"seconda parte", sfondoDa:"scena1",
+      img:null, slot:"scena3_malore", n:4, parte:"seconda parte", sfondoDa:"scena1",
       blu:true,
       sfondo:{scala:1, fx:58.7, fy:40.4},
-      cast:[{c:"Mauro",posa:"nervoso",x:63.4,b:31.2,h:43},{c:"Roberto",posa:"preoccupato",x:40.2,b:19.4,h:53},{c:"Augusto",posa:"sorpreso",x:76.2,b:-2.9,h:70},{c:"Rosalia",posa:"allarmata",x:8.3,b:-12.1,h:71,z:6},{c:"Giuseppe",posa:"malore",x:40.9,b:-33.9,h:87,z:6}],
+      cast:[{c:"Andrea",posa:"allarmato",x:22,b:24,h:48},{c:"Mauro",posa:"nervoso",x:63.4,b:31.2,h:43},{c:"Roberto",posa:"preoccupato",x:40.2,b:19.4,h:53},{c:"Augusto",posa:"sorpreso",x:76.2,b:-2.9,h:70},{c:"Rosalia",posa:"allarmata",x:8.3,b:-12.1,h:71,z:6},{c:"Giuseppe",posa:"malore",x:40.9,b:-33.9,h:87,z:6}],
       primo:[{lato:"sx",x:19.4,b:8.4,h:44},{lato:"dx",x:96.8,b:-36.7,h:76}],
       battute:[
         {c:"Giuseppe", t:"Mi… mi sento strano…"},
         {c:"Rosalia", t:"Zio Giuseppe! Che succede?"},
+        {c:"Andrea", t:"Giuseppe! Guardami, resta con me."},
         {c:"Roberto", t:"Presto, chiamate aiuto!"},
         {c:"Augusto", t:"La sua bocca… è diventata blu!"},
+        {c:"Andrea", t:"Il bicchiere… nessuno lo tocchi!"},
         {c:"Mauro", m:"molto piano", t:"Il giudizio è arrivato…"}
       ],
     },
     {
       titolo:"Gli indizi sul tavolo",
-      img:null, slot:"indagine", n:4, parte:"prima parte", sfondoDa:"indizio_bottiglietta",
+      img:null, slot:"indagine", n:5, parte:"prima parte", sfondoDa:"indizio_bottiglietta",
       /* la bottiglietta da sola: qui si guarda l'oggetto, non chi lo commenta */
       cast:[],
       battute:[
         {c:"Roberto", t:"Questa non è una bevanda. È un prodotto per le piante."},
-        {c:"Augusto", t:"Serve a proteggere gli ulivi, ma se usato male può essere pericoloso."}
+        {c:"Augusto", t:"Serve a proteggere gli ulivi, ma se usato male può essere pericoloso."},
+        {c:"Andrea", t:"Quel simbolo lo conosco. Non è roba da tenere in una sala da festa."},
+        {c:"Elisa", m:"entrando", t:"Che cosa è successo? Ero di là, a lavarmi le mani…"},
+        {c:"Roberto", t:"Elisa… le sue dita sono ancora blu."},
+        {c:"Elisa", t:"È colore! Oltremare, l’avete visto anche voi."}
       ],
     },
     {
       titolo:"Gli indizi sul tavolo",
-      img:null, slot:"indagine", n:4, parte:"seconda parte", sfondoDa:"indizio_bicchiere",
+      img:null, slot:"indagine", n:5, parte:"seconda parte", sfondoDa:"indizio_bicchiere",
       /* il bicchiere da solo, come la bottiglietta: l'oggetto e' la scena */
       cast:[],
       battute:[
         {c:"Augusto", t:"Quella sostanza è rischiosa, non andrebbe tenuta vicino agli alimenti!"},
-        {c:"Roberto", t:"Qualcuno ha visto il bicchiere da cui ha bevuto?"}
+        {c:"Roberto", t:"Qualcuno ha visto il bicchiere da cui ha bevuto?"},
+        {c:"Rosalia", t:"E il rendiconto, Augusto? Mio zio lo voleva per domani."},
+        {c:"Augusto", t:"Che c’entra adesso il rendiconto?"}
       ],
     },
     {
       titolo:"Gli indizi sul tavolo",
-      img:null, slot:"indagine", n:4, parte:"terza parte", sfondoDa:"scena2",
+      img:null, slot:"indagine", n:5, parte:"terza parte", sfondoDa:"scena2",
       sfondo:{scala:1, fx:0, fy:0},
-      cast:[{c:"Roberto",posa:"preoccupato",x:60.6,b:-0.3,h:59},{c:"Mauro",posa:"nervoso",x:9.6,b:22.3,h:41},{c:"Rosalia",posa:"allarmata",x:29.4,b:-35.4,h:80},{c:"Augusto",posa:"sorpreso",x:79,b:-21.1,h:81,z:6}],
+      cast:[{c:"Elisa",posa:"mani",x:44,b:24,h:44},{c:"Andrea",posa:"allarmato",x:93,b:24,h:46},{c:"Roberto",posa:"preoccupato",x:60.6,b:-0.3,h:59},{c:"Mauro",posa:"nervoso",x:9.6,b:22.3,h:41},{c:"Rosalia",posa:"allarmata",x:29.4,b:-35.4,h:80},{c:"Augusto",posa:"sorpreso",x:79,b:-21.1,h:81,z:6}],
       battute:[
+        {c:"Mauro", t:"E se fosse stato il ragazzo? Era sempre accanto a lui, con le sue carte."},
+        {c:"Andrea", t:"Io lo volevo vivo. Più di chiunque, in questa stanza."},
         {c:"Rosalia", t:"…"},
         {c:"Rosalia", t:"Ora che ci penso… prima del brindisi Mauro era vicino al tavolo dei bicchieri."},
         {c:"Mauro", t:"C’era confusione. Ho solo aiutato a distribuirli."},
@@ -760,18 +856,20 @@ const STORY = {
         Rosalia:"Ero dall’altra parte della sala. Ricordo solo che quel bicchiere era già pieno quando Mauro l’ha preso in mano.",
         Roberto:"Ho versato io per tutti, dalla stessa caraffa. Per tutti tranne che per quel bicchiere lì.",
         Augusto:"I bicchieri li avevo contati mettendoli sul vassoio. Dopo il malore ne mancava uno.",
-        Mauro:"L’ho solo portato. Era sul tavolo come gli altri, l’ho preso e gliel’ho offerto."
+        Mauro:"L’ho solo portato. Era sul tavolo come gli altri, l’ho preso e gliel’ho offerto.",
+        Elisa:"Guardo i colori per mestiere. Fra tutti quei bicchieri, uno solo aveva un riflesso azzurro.",
+        Andrea:"Ero accanto a Giuseppe. Il bicchiere gliel’ha messo in mano Mauro, e lui l’ha anche ringraziato."
       },
       tag:"Sul tavolo, rovesciato",
       d:"È il bicchiere che Giuseppe ha bevuto durante il brindisi. Il veleno era qui dentro. Chi lo ha tenuto in mano prima di lui?",
       refs:[
-        {s:3, c:"Mauro", t:"Signor Giuseppe, un brindisi per questo nuovo inizio."},
-        {s:3, c:"Giuseppe", t:"Volentieri. Alla vostra comunità."},
-        {s:3, c:"Augusto", t:"La sua bocca… è diventata blu!"},
-        {s:4, c:"Roberto", t:"Qualcuno ha visto il bicchiere da cui ha bevuto?"},
-        {s:4, c:"Rosalia", t:"Ora che ci penso… prima del brindisi Mauro era vicino al tavolo dei bicchieri."},
-        {s:4, c:"Mauro", t:"C’era confusione. Ho solo aiutato a distribuirli."},
-        {s:4, c:"Roberto", t:"Strano. Io avevo già servito tutti dalla stessa caraffa."}
+        {s:4, c:"Mauro", t:"Signor Giuseppe, un brindisi per questo nuovo inizio."},
+        {s:4, c:"Giuseppe", t:"Volentieri. Alla vostra comunità."},
+        {s:4, c:"Augusto", t:"La sua bocca… è diventata blu!"},
+        {s:5, c:"Roberto", t:"Qualcuno ha visto il bicchiere da cui ha bevuto?"},
+        {s:5, c:"Rosalia", t:"Ora che ci penso… prima del brindisi Mauro era vicino al tavolo dei bicchieri."},
+        {s:5, c:"Mauro", t:"C’era confusione. Ho solo aiutato a distribuirli."},
+        {s:5, c:"Roberto", t:"Strano. Io avevo già servito tutti dalla stessa caraffa."}
       ]
     },
     {
@@ -781,15 +879,17 @@ const STORY = {
         Rosalia:"Quella roba stava nell’armadietto in fondo. Mio marito lo sa meglio di me: se ne occupa lui delle cose della comunità.",
         Roberto:"Non doveva nemmeno essere in sala. Il posto suo è il magazzino, e del magazzino ho io la chiave.",
         Augusto:"Ho chiesto io che venisse messa via, quella sera. Non ho controllato che qualcuno lo facesse davvero.",
-        Mauro:"L’ho rimessa a posto. Quando esattamente non me lo ricordo, c’era confusione."
+        Mauro:"L’ho rimessa a posto. Quando esattamente non me lo ricordo, c’era confusione.",
+        Elisa:"Quando siamo rientrati dall’oliveto era ancora sul tavolo del rinfresco. Ho pensato che fosse olio.",
+        Andrea:"Studio chimica: quel simbolo lo riconoscerei ovunque. Ma l’ho vista solo dopo, quando era già tardi."
       },
       tag:"“Prodotto fitosanitario – Pericoloso – Non bere”",
       d:"Un prodotto che serve a proteggere gli ulivi. Non è cibo e non si beve mai. Qualcuno, nella sala, sapeva bene quanto fosse rischioso.",
       refs:[
         {s:2, c:"Mauro", t:"E per avere olive sane… qualcuno usa sostanze pericolose."},
         {s:2, c:"Roberto", t:"Prodotti controllati, Mauro. Solo se usati nel modo giusto."},
-        {s:4, c:"Roberto", t:"Questa non è una bevanda. È un prodotto per le piante."},
-        {s:4, c:"Augusto", t:"Serve a proteggere gli ulivi, ma se usato male può essere pericoloso."}
+        {s:5, c:"Roberto", t:"Questa non è una bevanda. È un prodotto per le piante."},
+        {s:5, c:"Augusto", t:"Serve a proteggere gli ulivi, ma se usato male può essere pericoloso."}
       ]
     },
     {
@@ -799,7 +899,9 @@ const STORY = {
         Rosalia:"Aveva già firmato prima di dirlo a noi. L’ho saputo dopo tutti gli altri, e sono la sua unica famiglia.",
         Roberto:"Con quella cifra compriamo l’uliveto grande. Ho già dato la mia parola a chi lo vende.",
         Augusto:"Gli Oliviani stanno in piedi anche senza. Non lo chiediamo noi, quel denaro.",
-        Mauro:"Un uomo non si compra il perdono firmando un foglio. Questo l’ho pensato dal primo momento."
+        Mauro:"Un uomo non si compra il perdono firmando un foglio. Questo l’ho pensato dal primo momento.",
+        Elisa:"Me ne aveva parlato mentre posava per il ritratto. Voleva lasciare qualcosa che durasse più di lui.",
+        Andrea:"Le carte le ho riordinate io, sì. Ma la decisione era soltanto sua, e ne era felice."
       },
       tag:"“Donazione agli Oliviani”",
       d:"Giuseppe vuole donare i suoi beni alla comunità. È la decisione che mette tutto in movimento: qualcuno la festeggia, qualcuno la teme.",
@@ -815,15 +917,86 @@ const STORY = {
         Rosalia:"L’ho scritto io, e l’ho perso quella stessa sera. A ritrovarlo è stato mio marito. Non ne abbiamo più parlato.",
         Roberto:"Di quel foglio non sapevo niente. So che marito e moglie discutevano nel corridoio, sottovoce.",
         Augusto:"Ho visto Mauro leggere qualcosa e restituirla a Rosalia. Non ho sentito una parola.",
-        Mauro:"L’ho letto, sì. E su una cosa sua moglie aveva ragione: quella donazione andava fermata."
+        Mauro:"L’ho letto, sì. E su una cosa sua moglie aveva ragione: quella donazione andava fermata.",
+        Elisa:"Rosalia ha tenuto qualcosa stretto in mano per tutta la sera. Una pittrice nota queste cose.",
+        Andrea:"Giuseppe non l’ha mai letto, ne sono sicuro. Me l’avrebbe detto: a me diceva tutto."
       },
       tag:"“Zio, ti prego: non fare la donazione”",
       d:"Un biglietto scritto per fermare la donazione — non per fare del male. Attenzione: voler fermare qualcuno non è la stessa cosa che avvelenarlo.",
       refs:[
         {s:1, c:"Rosalia", m:"a bassa voce", t:"Zio Giuseppe… spero che tu sia davvero sicuro."},
-        {s:3, c:"Rosalia", m:"tra sé", t:"Vorrei fermare tutto… ma ormai è tardi."},
-        {s:4, c:"Rosalia", t:"Io volevo solo che mio zio Giuseppe si fermasse…"},
-        {s:4, c:"Mauro", m:"agitato", t:"Lui stava sbagliando! Andava fermato!"}
+        {s:4, c:"Rosalia", m:"tra sé", t:"Vorrei fermare tutto… ma ormai è tardi."},
+        {s:5, c:"Rosalia", t:"Io volevo solo che mio zio Giuseppe si fermasse…"},
+        {s:5, c:"Mauro", m:"agitato", t:"Lui stava sbagliando! Andava fermato!"}
+      ]
+    }
+,
+    {
+      id:"rendiconto", nome:"Rendiconto",
+      /* Le risposte all'indagine: informazioni nuove, non nel copione. */
+      risposte:{
+        Rosalia:"Mio zio non regalava niente senza guardare i numeri. Ha chiesto quel rendiconto davanti a tutti, e Augusto è impallidito.",
+        Roberto:"La cassa la tiene Augusto: io firmo e mi fido. Stasera, per la prima volta, gli ho chiesto dei quadri, e non mi ha risposto.",
+        Augusto:"La ricevuta dei quadri è lì, intestata a me, non alla comunità. Li ho pagati io. Ma capisco come poteva sembrare.",
+        Mauro:"Un libro dei conti che nessuno controlla. Io me lo chiederei, dove sono finiti quei soldi.",
+        Elisa:"Quella ricevuta l’ho scritta io: pagati da Augusto, di tasca sua. Non voleva che si sapesse.",
+        Andrea:"Giuseppe mi aveva chiesto di dargli un’occhiata domani. Non ci siamo arrivati."
+      },
+      tag:"Il libro dei conti degli Oliviani",
+      d:"Il libro dove Augusto segna ogni entrata e ogni uscita della comunità. Giuseppe voleva vederlo prima di donare. Fra le pagine sporge una ricevuta.",
+      refs:[
+        {s:2, c:"Giuseppe", t:"Una sola condizione: voglio un rendiconto. Ogni euro, dove va e per cosa."},
+        {s:2, c:"Roberto", t:"Ma certo. I conti li tiene Augusto: glieli mostrerà lui."},
+        {s:2, c:"Roberto", m:"piano, ad Augusto", t:"I quadri della sala… sono usciti dalla cassa?"},
+        {s:2, c:"Augusto", m:"piano", t:"Non adesso, Roberto. Ne parliamo dopo."},
+        {s:4, c:"Roberto", m:"piano, ad Augusto", t:"E il rendiconto? Giuseppe lo chiederà presto."},
+        {s:4, c:"Augusto", m:"piano", t:"Avrà tutto. Te l’ho detto."},
+        {s:5, c:"Rosalia", t:"E il rendiconto, Augusto? Mio zio lo voleva per domani."},
+        {s:5, c:"Augusto", t:"Che c’entra adesso il rendiconto?"}
+      ]
+    },
+    {
+      id:"oltremare", nome:"Colore blu",
+      /* Le risposte all'indagine: informazioni nuove, non nel copione. */
+      risposte:{
+        Rosalia:"Elisa sparisce proprio durante il brindisi, e torna con le mani ancora blu. Ditemi voi.",
+        Roberto:"Ho annusato lo straccio: olio di lino e trementina. È colore da pittore, non quello che ha bevuto Giuseppe.",
+        Augusto:"Mia moglie dipinge da trent’anni. Il blu sulle mani ce l’ha da quando la conosco.",
+        Mauro:"Una pittrice sa bene come macchiare un bicchiere senza che nessuno se ne accorga.",
+        Elisa:"È oltremare, un pigmento che si usa da secoli. Lo conosco bene: sulle labbra non lascia quel colore.",
+        Andrea:"Il blu sulla bocca di Giuseppe tirava al verde, come il rame. Quello di Elisa è violaceo. Non sono lo stesso blu."
+      },
+      tag:"Un tubetto di oltremare e uno straccio",
+      d:"Trovati sul lavabo dell’ingresso, durante il brindisi. È lo stesso blu delle dita di Elisa. Ma è anche lo stesso blu della bocca di Giuseppe?",
+      refs:[
+        {s:3, c:"Andrea", t:"Elisa, ha ancora del blu sulle dita."},
+        {s:3, c:"Elisa", t:"Oltremare. Ho ritoccato il quadro della sala fino a un’ora fa."},
+        {s:4, c:"Augusto", t:"È andata a lavarsi le mani. Quel blu non vuole venire via."},
+        {s:4, c:"Augusto", t:"La sua bocca… è diventata blu!"},
+        {s:5, c:"Elisa", m:"entrando", t:"Che cosa è successo? Ero di là, a lavarmi le mani…"},
+        {s:5, c:"Roberto", t:"Elisa… le sue dita sono ancora blu."},
+        {s:5, c:"Elisa", t:"È colore! Oltremare, l’avete visto anche voi."}
+      ]
+    },
+    {
+      id:"lascito", nome:"Lascito",
+      /* Le risposte all'indagine: informazioni nuove, non nel copione. */
+      risposte:{
+        Rosalia:"Un estraneo fra le carte di mio zio, e io lo scopro stasera. L’ho visto con quei fogli in mano, prima del brindisi.",
+        Roberto:"Giuseppe me ne aveva accennato in primavera: voleva che i suoi libri restassero a qualcuno che li leggesse.",
+        Augusto:"Il notaio di Giuseppe è anche il mio. Quel foglio è depositato da mesi, non da stasera.",
+        Mauro:"Il ragazzo riordinava le carte. E chi riordina le carte può anche scegliere quali far firmare.",
+        Elisa:"Me ne aveva parlato mentre posava per il ritratto. Di quel foglio era felice.",
+        Andrea:"Era firmato da mesi, e non cambiava niente se lui viveva o no. Io lo volevo vivo. Il resto non m’interessa."
+      },
+      tag:"“Per Andrea”",
+      d:"Un foglio personale, legato con un cordino verde. Giuseppe lascia ad Andrea la sua biblioteca e una piccola rendita. Chi sapeva che esisteva?",
+      refs:[
+        {s:3, c:"Giuseppe", t:"Andrea mi aiuta con i libri e con le carte. Ha molta pazienza con un vecchio come me."},
+        {s:3, c:"Rosalia", t:"Prima l’ho visto uscire dallo studio con le carte dello zio in mano."},
+        {s:3, c:"Mauro", t:"Allora chiediti cosa c’era scritto."},
+        {s:5, c:"Mauro", t:"E se fosse stato il ragazzo? Era sempre accanto a lui, con le sue carte."},
+        {s:5, c:"Andrea", t:"Io lo volevo vivo. Più di chiunque, in questa stanza."}
       ]
     }
   ],
@@ -837,22 +1010,31 @@ const STORY = {
     "Aiutami a risolvere il caso!"
   ],
 
-  /* Le risposte sono sempre i quattro sospetti, nello stesso ordine: si sceglie
+  /* Le risposte sono sempre i sei sospetti, nello stesso ordine: si sceglie
      una persona, non una frase, e nessuna opzione si puo' escludere a occhio. */
-  /* `punti`: non tutte le domande pesano uguale. Il colpevole vale tre, i due
-     passaggi che lo mettono accanto agli oggetti valgono due, i dettagli uno.
-     In tutto dieci, ed e' su dieci che si giudica il caso. */
+  /* `punti`: nove domande, non tutte dello stesso peso. Cinque circostanze
+     valgono uno; il bicchiere, che incastra il colpevole, vale due; il nome
+     del colpevole vale tre. Due domande, la terza e la sesta, riguardano false
+     piste e non valgono niente: chi le sbaglia non perde, chi le indovina non
+     guadagna, e la scheda non lo dice. In tutto dieci, ed e' su dieci che si
+     giudica. */
+  /* `giusta` e' l'indice in SUSPECTS: Rosalia 0, Roberto 1, Augusto 2,
+     Mauro 3, Elisa 4, Andrea 5. */
   quiz: [
-    {q:"Chi ha portato il bicchiere a Giuseppe?", giusta:3, punti:2},
     {q:"Chi ha scritto il biglietto per fermare la donazione?", giusta:0, punti:1},
     {q:"Chi ha letto quel biglietto senza dirlo a Giuseppe?", giusta:3, punti:1},
-    {q:"Chi ha chiesto che la bottiglietta fosse messa via?", giusta:2, punti:2},
+    {q:"Chi aveva le dita sporche di blu?", giusta:4, punti:0},
+    {q:"Chi teneva i conti degli Oliviani?", giusta:2, punti:1},
     {q:"Chi ha riconosciuto che nella bottiglietta non c’era una bevanda?", giusta:1, punti:1},
+    {q:"Chi è stato visto con le carte di Giuseppe in mano?", giusta:5, punti:0},
+    {q:"Chi aveva già servito tutti dalla stessa caraffa?", giusta:1, punti:1},
+    {q:"Chi ha portato il bicchiere a Giuseppe?", giusta:3, punti:2},
     {q:"Il colpevole è…", giusta:3, punti:3}
   ],
 
   soluzione: [
-    "Giuseppe voleva donare i suoi beni agli Oliviani. Rosalia era preoccupata e voleva fermarlo, ma non voleva fargli del male. Mauro, invece, ha deciso di agire da solo. Ha portato a Giuseppe un bicchiere con un prodotto pericoloso. Per questo Giuseppe si è sentito male e la sua bocca è diventata blu. Il colpevole è Mauro."
+    "Giuseppe voleva donare i suoi beni agli Oliviani. Rosalia era preoccupata e voleva fermarlo, ma non voleva fargli del male. Mauro, invece, ha deciso di agire da solo. Ha portato a Giuseppe un bicchiere con un prodotto pericoloso. Per questo Giuseppe si è sentito male e la sua bocca è diventata blu. Il colpevole è Mauro.",
+    "Le altre piste erano false. Il blu sulle dita di Elisa era colore da pittrice: quello sulle labbra di Giuseppe veniva dal prodotto, che come molti trattamenti a base di rame usati sugli ulivi è azzurro. I quadri della sala Augusto li aveva pagati di tasca sua, e i conti potevano essere controllati. Il foglio per Andrea era firmato da mesi: dalla morte di Giuseppe non aveva niente da guadagnare."
   ],
 
   promptStile: "Illustrazione piatta, stile libro illustrato per ragazzi, palette verde oliva, crema e oro, luce calda da candele. Nessun elemento horror, nessun sangue, tono accogliente e un po’ misterioso. Formato orizzontale 16:9.",
@@ -861,7 +1043,7 @@ const STORY = {
     "Mantieni gli stessi cinque personaggi riconoscibili scena dopo scena: stessi vestiti, stessi colori.",
     "Il bicchiere deve essere il fuoco visivo della scena: mettilo in primo piano, illuminato.",
     "La bocca di Giuseppe è blu: evidente, ma non horror. Espressione di malessere, non di terrore.",
-    "I quattro oggetti sul tavolo devono essere leggibili uno per uno: contano più dello sfondo."
+    "Gli oggetti sul tavolo devono essere leggibili uno per uno: contano più dello sfondo."
   ]
 };
 </script>
@@ -983,11 +1165,13 @@ const DEV_ENABLED = AUTHOR_SURFACE;
    pubblico la scena si apre muta; dove si lavora, l'intestazione resta. */
 const TITLES_ENABLED = AUTHOR_SURFACE;
 
-/* L'indagine ha un prezzo: `scelti` sono gli indizi su cui il tavolo ha deciso
-   di spendere una domanda, `chiesto` dice a chi l'hanno fatta. Sopravvive al
-   cambio di schermata: si torna al tavolo e le domande spese restano spese. */
-const MAX_CLUES = 2;      // quanti oggetti si possono aprire
-const MAX_PEOPLE = 2;     // e a quante persone si puo' chiedere di ognuno
+/* L'indagine non ha un tetto, ha un prezzo: si apre ogni oggetto e si chiede
+   a chiunque, ma ogni domanda — una persona interrogata su un oggetto — costa
+   tempo. Ogni tre domande la scheda finale perde un punto, per difetto, e il
+   punteggio non scende sotto zero. Aprire un oggetto non costa. `scelti` sono
+   gli oggetti aperti, `chiesto` dice a chi si e' chiesto di ognuno; tutti e due
+   sopravvivono al cambio di schermata. */
+const QUESTIONS_PER_POINT = 3;
 /* Le schermate in cui si sceglie: il clic sullo sfondo non le attraversa. */
 const NO_STAGE_CLICK = new Set(["tavolo", "quiz"]);
 /* `chiesto[i]` e' l'elenco di chi e' stato interrogato su quell'oggetto. */
@@ -997,6 +1181,9 @@ const state = { n: 0, step: 0, demo: false, directorMode: false, developmentMode
   indagine: createInvestigation(), risposte: [], overlay: null };
 
 const stage = document.getElementById("stage");
+/* Tutto quello che sta dietro la finestra di conferma: si spegne in blocco
+   con `inert` finche' quella e' aperta. */
+const appElement = document.getElementById("app");
 const visibilityObserver = typeof IntersectionObserver === "function"
   ? new IntersectionObserver(ev => ev.forEach(e => e.target.classList.toggle("in", e.isIntersecting)),
       { threshold: .55 })
@@ -1067,6 +1254,7 @@ const renderBubble = righe => {
 
 function renderScene(i) {
   const s = STORY.scene[i];
+  state.step = Math.max(0, Math.min(s.battute.length, state.step));
   const attivo = state.step > 0 ? s.battute[state.step - 1].c : null;  // chi ha appena parlato viene avanti
   /* Le parti di una stessa scena non azzerano il tavolo: quello che e' gia'
      stato detto resta sotto, e una riga segna il punto in cui entra il nuovo
@@ -1109,24 +1297,24 @@ function renderScene(i) {
 /* La vittima non risponde: i sospetti sono tutti gli altri. */
 const VICTIM = "Giuseppe";
 const SUSPECTS = STORY.personaggi.map(p => p.c).filter(c => c !== VICTIM);
-const remainingClues = () => MAX_CLUES - state.indagine.scelti.length;
 const askedPeople = i => state.indagine.chiesto[i] || [];
-/* L'indagine e' completa quando entrambi gli oggetti sono stati scelti e su
-   ognuno si e' interrogato tutte le persone che si potevano interrogare. */
-const investigationComplete = () => state.indagine.scelti.length >= MAX_CLUES
-  && state.indagine.scelti.every(i => askedPeople(i).length >= MAX_PEOPLE);
+const questionsAsked = () => Object.values(state.indagine.chiesto).reduce((n, l) => n + l.length, 0);
+const timePenalty = () => Math.floor(questionsAsked() / QUESTIONS_PER_POINT);
+/* il conto che si legge al tavolo: quante domande, e quanto sono costate */
+const costNote = () => {
+  const n = questionsAsked(), p = timePenalty();
+  return `Domande fatte: <b>${n}</b>${p ? ` · <b>${p}</b> ${p === 1 ? "punto" : "punti"} in meno` : ""}.`;
+};
 
 function renderClue(i) {
   const o = STORY.oggetti[i];
   const chiesti = askedPeople(i);
-  const finite = chiesti.length >= MAX_PEOPLE;
-  /* i quattro sospetti sempre tutti in vista: chi ha gia' risposto resta
-     acceso col suo colore, chi non si puo' piu' interrogare si spegne */
+  /* i sei sospetti sempre tutti in vista: chi ha gia' risposto resta
+     acceso col suo colore, e chiedergli di nuovo non costa niente */
   const scelta = SUSPECTS.map(c => {
     const fatto = chiesti.includes(c);
-    const spento = !fatto && finite;
-    return suspectCard(c, { dati: `data-chiedi="${escapeHtml(c)}"`, spento,
-      classi: `voce ${fatto ? "fatto" : ""} ${spento ? "" : "sollevabile"}` });
+    return suspectCard(c, { dati: `data-chiedi="${escapeHtml(c)}"`,
+      classi: `voce ${fatto ? "fatto" : "sollevabile"}` });
   }).join("");
   /* sotto la risposta, in piccolo, quello che quella persona ha gia' detto in
      scena su questo oggetto: all'investigatore serve il collegamento */
@@ -1151,9 +1339,7 @@ function renderClue(i) {
       <h2 class="titolo-carta">${escapeHtml(o.nome)}</h2>
       <p class="eyebrow">${escapeHtml(o.tag)}</p>
       <p>${escapeHtml(o.d)}</p>
-      <p class="nota">${finite
-        ? "Hai già chiesto a due persone. Le altre, su questo oggetto, non parleranno."
-        : "Non hai tempo per chiedere a tutti: scegli <b>due</b> persone a cui chiedere informazioni."}</p>
+      <p class="nota">Ogni persona a cui chiedi è una domanda, e ogni domanda costa tempo: intanto le altre prove restano senza sorveglianza, e qualcuno potrebbe manometterle. Ogni <b>${QUESTIONS_PER_POINT}</b> domande perdi <b>1</b> punto. ${costNote()}</p>
       <div class="opts chiedi">${scelta}</div>
       ${risposte ? `<div class="refs">${risposte}</div>` : ""}
     </div>
@@ -1166,9 +1352,8 @@ function renderClueTable() {
   const { scelti, chiesto } = state.indagine;
   const cards = STORY.oggetti.map((o, i) => {
     const culpritFound = scelti.includes(i);
-    const fuori = !culpritFound && remainingClues() === 0;
     return `
-    <button class="clue slot carta ${fuori ? "fuori" : "sollevabile"}" data-clue="${i}" ${fuori ? "disabled" : ""}>
+    <button class="clue slot carta sollevabile" data-clue="${i}">
       <figure>
         ${optionalImage(clueImage(i), "", o.nome)}
         <div class="ph">${LEAF}</div>
@@ -1180,18 +1365,13 @@ function renderClueTable() {
         : "Scelto · a chi lo chiedi?"}</span>` : ""}
     </button>`;
   }).join("");
-  const rimasti = remainingClues();
   return `<div class="sheet indagine">
     <div class="apertura">
       ${detectiveFigure("detective_osservazione.png", "L’investigatore osserva")}
       <div>
         <p class="eyebrow">L’indagine</p>
         <h2 class="titolo">Gli indizi sul tavolo</h2>
-        <p class="nota">${rimasti === MAX_CLUES
-      ? `Quattro oggetti, ma puoi chiedere solo di <b>${MAX_CLUES}</b>. Scegli con calma.`
-      : rimasti
-        ? `Ti resta <b>una</b> domanda. Scegliela bene.`
-        : `Le tue domande sono finite. Quello che non hai chiesto resta fuori dal caso.`}</p>
+        <p class="nota">Puoi esaminare ogni oggetto e chiedere a chiunque, ma il tempo costa: ogni <b>${QUESTIONS_PER_POINT}</b> domande perdi <b>1</b> punto, e intanto qualcuno potrebbe manomettere le prove. ${costNote()}</p>
       </div>
     </div>
     <div class="clues">${cards}</div>
@@ -1283,8 +1463,10 @@ function verdict(punti, culpritFound) {
 /* La posa dice l'esito prima delle parole: in piedi con la soluzione in mano
    se e' tutto giusto, con la lente se il nome e' quello giusto e la
    ricostruzione regge, altrimenti quella di chi ci sta ancora pensando. */
-const score = () =>
+const quizScore = () =>
   state.risposte.reduce((n, r, i) => n + (r === STORY.quiz[i].giusta ? STORY.quiz[i].punti : 0), 0);
+/* il tempo dell'indagine si paga qui, e il conto si ferma a zero */
+const score = () => Math.max(0, quizScore() - timePenalty());
 const culpritFound = () => state.risposte[CULPRIT_QUESTION] === STORY.quiz[CULPRIT_QUESTION].giusta;
 
 function verdictPose(punti, date) {
@@ -1300,7 +1482,8 @@ function renderResult() {
   return `<div class="sheet centrata verdetto">
     ${detectiveFigure(verdictPose(punti, date), "L’investigatore")}
     ${date ? `<p class="score">${punti} <small>su ${TOTAL_POINTS}</small></p>
-      <div class="giudizio"><h2>${escapeHtml(v.t)}</h2><p>${escapeHtml(v.d)}</p></div>`
+      <div class="giudizio"><h2>${escapeHtml(v.t)}</h2><p>${escapeHtml(v.d)}</p>${timePenalty()
+        ? `<p>${questionsAsked()} domande all’indagine: ${timePenalty()} ${timePenalty() === 1 ? "punto" : "punti"} in meno.</p>` : ""}</div>`
       : `<p class="vuoto">La scheda è rimasta in bianco: nessuna accusa.</p>`}
   </div>`;
 }
@@ -1347,12 +1530,24 @@ function render() {
   if (state.developmentMode) renderDeveloperPanel();
 
   visibilityObserver?.disconnect();
-  if (visibilityObserver) { stage.classList.add("dissolve"); cards().forEach(c => visibilityObserver.observe(c)); }
+  stage.classList.toggle("dissolve", !!visibilityObserver && s.t === "cast");
+  if (visibilityObserver && s.t === "cast") cards().forEach(c => visibilityObserver.observe(c));
 
-  /* la battuta appena scoperta compare al ritmo della voce che la dice */
-  if (scena && state.step > 0) {
-    const b = STORY.scene[s.i].battute[state.step - 1];
-    animateSpeech(stage.querySelector(".bubbles .bubble .said p:last-child"), b.c, b.t);
+  /* La battuta appena scoperta compare al ritmo della voce che la dice — ma solo
+     quando e' davvero appena scoperta. `render()` lo chiamano anche `r`, `v`,
+     `d` e ogni cambio di profondita': ripartendo da capo il testo spariva e si
+     riscriveva da solo, in silenzio, mentre si sistemavano le figure. Se la
+     battuta e' la stessa il markup e' gia' testo intero, quindi si vede tutta:
+     basta buttare i timer rimasti in volo dal ritmo di prima. */
+  const battutaCorrente = scena && state.step > 0 ? `${state.n}:${state.step}` : null;
+  if (battutaCorrente !== animatedLine) {
+    animatedLine = battutaCorrente;
+    if (battutaCorrente) {
+      const b = STORY.scene[s.i].battute[state.step - 1];
+      animateSpeech(stage.querySelector(".bubbles .bubble .said p:last-child"), b.c, b.t);
+    } else stopRhythm();            // usciti dalla scena, i battiti in coda non servono
+  } else if (rhythmTimers.length) {
+    stopRhythm();                   // stessa battuta, markup rifatto: si vede gia' intera
   }
 
   /* la battuta appena scoperta si porta da sola sotto gli occhi dell'investigatore.
@@ -1374,6 +1569,12 @@ function render() {
    voce parte con lei. Aprire su una colonna vuota costava all'investigatore un
    gesto per far dire la prima parola a chi era gia' in scena. */
 function goTo(n) {
+  /* Una battuta chiesta e non ancora partita non deve parlare sopra la schermata
+     nuova: il contesto audio puo' metterci un attimo ad accendersi, e in quel
+     buco ci sta un cambio di pagina. Chi sta gia' suonando prosegue — qui si
+     annulla l'attesa, non la voce. Cambiando scena `speak()` piu' sotto rifa'
+     comunque il numero; questo serve alle schermate che non parlano. */
+  speechRequest++;
   state.n = Math.max(0, Math.min(SLIDES.length - 1, n));
   state.clue = null;
   const s = SLIDES[state.n];
@@ -1391,7 +1592,7 @@ function goTo(n) {
 /* Sulla pagina dei personaggi "avanti" scorre di una scheda: ogni scheda ha
    il suo pulsante sotto al testo, e premerlo porta al personaggio seguente.
    Dall'ultima non resta niente da scorrere, quindi la pagina si dichiara
-   finita e a cambiarla ci pensa `avanti()`. */
+   finita e a cambiarla ci pensa `advance()`. */
 /* Chi scorre davvero: lo stage quando ha scorrimento suo, il documento quando
    no. `#stage:has(.cast)` diventa il contenitore che scorre solo dove `:has()`
    funziona; dove non funziona scorre la pagina, e misurare l'uno mentre si
@@ -1464,10 +1665,11 @@ function advance() {
   goTo(state.n + 1);
 }
 
-/* Un clic scopre, mai cambia pagina: a cambiarla c'e' un pulsante solo, sempre
-   nello stesso angolo. Resta in vista per tutta la schermata, spento finche'
-   c'e' ancora qualcosa da scoprire: cosi' si vede dove si sta andando, ma non
-   ci si arriva prima del tempo. */
+/* Un clic scopre, mai cambia pagina: a cambiarla c'e' un pulsante solo. Resta
+   in vista per tutta la schermata; se sia anche premibile lo decide
+   `advanceButton()`, e non allo stesso modo dappertutto — nella scena e' sempre
+   vivo e la prima pressione scopre, altrove resta spento finche' c'e' una scelta
+   aperta. Questa funzione dice solo se resta qualcosa da scoprire. */
 function hasMoreToReveal() {
   const s = SLIDES[state.n];
   if (s.t === "scene")
@@ -1487,15 +1689,18 @@ function advanceLabel() {
   return "Prosegui";
 }
 
-/* Il pulsante sta nel flusso, non appiccicato a un angolo: in fondo ai dialoghi
-   nelle scene, in fondo alla pagina altrove. Essendo dentro #stage viene
-   riscritto a ogni render, quindi porta un `data-*` come tutti i suoi pari. */
+/* Il pulsante sta nel flusso, non appiccicato a un angolo. Nella scena `render()`
+   lo infila in `.azioni-scena`, che sta in **cima** alla colonna dei dialoghi,
+   sopra la battuta appena scoperta: e' li' che si guarda, ed e' li' che la
+   colonna torna a ogni riga. Altrove finisce in fondo al foglio. Essendo dentro
+   #stage viene riscritto a ogni render, quindi porta un `data-*` come tutti i
+   suoi pari. */
 function advanceButton() {
   const testo = advanceLabel();
   if (!testo) return "";
   /* Nella scena non si spegne mai: premerlo scopre la battuta seguente, come
-     il clic, e cambia schermata solo quando non resta altro — `avanti()` prova
-     `scopri()` per primo. Altrove resta spento finche' c'e' una scelta aperta,
+     il clic, e cambia schermata solo quando non resta altro — `advance()` prova
+     `reveal()` per primo. Altrove resta spento finche' c'e' una scelta aperta,
      perche' li' saltarla costerebbe una domanda o una risposta. */
   const spento = hasMoreToReveal() && SLIDES[state.n].t !== "scene";
   return `<div class="azioni">
@@ -1530,9 +1735,9 @@ function askForSolution() {
 
 function confirmAndAdvance() {
   if (SLIDES[state.n].t === "sol") return askForSolution();
-  if (SLIDES[state.n].t === "tavolo" && !investigationComplete())
+  if (SLIDES[state.n].t === "tavolo")
     return confirmAction("Giuseppe è morto durante la festa degli Oliviani.",
-      "Quattro persone erano in quella stanza, e non tutte hanno raccontato la stessa sera. Vuoi chiudere qui, o c’è ancora qualcosa che vuoi sapere?",
+      "Sei persone erano in quella stanza, e non tutte hanno raccontato la stessa sera. Vuoi chiudere qui, o c’è ancora qualcosa che vuoi sapere?",
       "Chiudo qui", advance);
   advance();
 }
@@ -1542,7 +1747,8 @@ function confirmAndAdvance() {
    Finche' Codex non consegna, il tasto "d" riempie sfondi e personaggi con
    sagome piatte: servono a provare posizioni, ritmo ed evidenziazione, non
    a somigliare a qualcosa. Si spengono premendo di nuovo "d". */
-const DEMO_COLORS = { giuseppe: "#DFA93C", rosalia: "#DA8FB2", roberto: "#9CB65C", augusto: "#78BFAA", mauro: "#7B96FF" };
+const DEMO_COLORS = { giuseppe: "#DFA93C", rosalia: "#DA8FB2", roberto: "#9CB65C", augusto: "#78BFAA", mauro: "#7B96FF",
+                      elisa: "#E8957A", andrea: "#E98C9E" };
 const svgDataUri = t => "data:image/svg+xml;utf8," + encodeURIComponent(t);
 const demoBackground = n => svgDataUri(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900">
   <rect width="1600" height="900" fill="#232B1C"/><rect y="620" width="1600" height="280" fill="#463A26"/>
@@ -1592,7 +1798,9 @@ const VOICE = {
   Rosalia:   { f: 395, onda: "triangle", passo: .092, nota: .070, deriva:  .20, taglio: 4500, den: 3.4, vol: .48 },
   Roberto:   { f: 198, onda: "sawtooth", passo: .094, nota: .095, deriva:  .02, taglio: 1300, den: 4.5, vol: .28 },
   Augusto:   { f: 312, onda: "square",   passo: .076, nota: .075, deriva:  .07, taglio: 2600, den: 3, vol: .14 },
-  Mauro:     { f: 183, onda: "square",   passo: .082, nota: .130, deriva:  .14, taglio: 4500, den: 6, vol: .07 }
+  Mauro:     { f: 183, onda: "square",   passo: .082, nota: .130, deriva:  .14, taglio: 4500, den: 6, vol: .07 },
+  Elisa:     { f: 330, onda: "sine",     passo: .100, nota: .090, deriva: -.05, taglio: 3200, den: 3.8, vol: .60 },
+  Andrea:    { f: 265, onda: "sine",     passo: .085, nota: .080, deriva:  .10, taglio: 3000, den: 3.6, vol: .55 }
 };
 /* Il volume e' una manopola, non un interruttore: 0 e' il silenzio, e `m`
    fa la spola fra zero e l'ultimo valore scelto. */
@@ -1604,8 +1812,18 @@ let audio = null, volume = .7, lastVolume = .7;
    gia' in coda. Gli oscillatori restano accesi fino alla loro fine, ma
    scollegati non si sentono. */
 let voiceOutput = null;
+/* Quale battuta sta gia' comparendo al suo ritmo: `schermata:passo`. */
+let animatedLine = null;
+/* Ogni richiesta di parlare porta un numero. `resume()` e' asincrono, quindi fra
+   la richiesta e i bip c'e' un buco in cui puo' succedere di tutto: azzerare il
+   volume, cambiare schermata, ricominciare da capo, chiedere un'altra battuta.
+   Quando succede, quella in volo non deve piu' atterrare. Prima atterrava, e con
+   il volume a zero programmava una rampa esponenziale verso 0 — che il browser
+   rifiuta, sollevando dentro una promise che nessuno ascoltava. */
+let speechRequest = 0;
 
 function stopVoice() {
+  speechRequest++;                  // anche se non c'e' niente da fermare: puo' esserci qualcosa in volo
   if (!voiceOutput) return;
   voiceOutput.gain.cancelScheduledValues(audio.currentTime);
   voiceOutput.gain.setValueAtTime(0, audio.currentTime);
@@ -1633,7 +1851,10 @@ function playVoice(c, testo) {
     o.type = v.onda;
     o.frequency.setValueAtTime(v.f * (1 + v.deriva * avanzamento) * (.95 + Math.random() * .1), t);
     g.gain.setValueAtTime(.0001, t);
-    g.gain.exponentialRampToValueAtTime(v.vol * volume, t + .008);
+    /* mai zero: la rampa esponenziale non ci arriva, e chiederglielo solleva.
+       Con il volume a zero non si dovrebbe nemmeno essere qui — questa e' la
+       rete sotto, non la porta. */
+    g.gain.exponentialRampToValueAtTime(Math.max(.0001, v.vol * volume), t + .008);
     g.gain.exponentialRampToValueAtTime(.0001, t + v.nota);
     o.connect(g).connect(filtro);
     if (i === bip - 1)
@@ -1650,14 +1871,16 @@ function playVoice(c, testo) {
 function withAudioContext(poi) {
   if (!volume || typeof AudioContext !== "function") return;
   audio = audio || new AudioContext();
-  if (audio.state === "suspended") audio.resume().then(poi, () => {});
-  else poi?.();
+  const mia = ++speechRequest;
+  const ancoraMia = () => mia === speechRequest && volume > 0;
+  if (audio.state === "suspended") audio.resume().then(() => { if (ancoraMia()) poi?.(); }, () => {});
+  else if (ancoraMia()) poi?.();
 }
 
 const speak = (c, testo) => withAudioContext(() => playVoice(c, testo));
 
 /* ---- la battuta al ritmo della voce ----
-   `suona()` programma i bip a intervalli di `passo`: il testo compare negli
+   `playVoice()` programma i bip a intervalli di `passo`: il testo compare negli
    stessi istanti, un pezzo per bip. I pezzi si tagliano fra una parola e
    l'altra, che e' quanto di piu' vicino a una sillaba si possa fare senza un
    dizionario, e restano tutti in pagina fin dal primo istante — invisibili,
@@ -1676,9 +1899,12 @@ function splitText(testo, n) {
 }
 
 let rhythmTimers = [];
+/* I battiti in coda del ritmo precedente: si buttano quando ne comincia un altro,
+   e quando il markup viene rifatto sotto di loro. */
+function stopRhythm() { rhythmTimers.forEach(clearTimeout); rhythmTimers = []; }
+
 function animateSpeech(nodo, c, testo) {
-  rhythmTimers.forEach(clearTimeout);
-  rhythmTimers = [];
+  stopRhythm();
   const v = VOICE[c];
   if (!nodo || !v) return;     // senza un profilo non c'e' un ritmo da seguire
   const pezzi = splitText(testo, BEEP_COUNT(v, testo));
@@ -1740,7 +1966,8 @@ function jumpScreenGroup(verso) {
 /* I due pannelli d'autore si tengono per riferimento. Cercarli per classe
    costava un bug muto: il pannello di sviluppo portava anche `.regia-pan`, e
    `querySelector` rende il primo che trova, cosi' `render()` cancellava quello
-   sbagliato a ogni battuta e `pannelloDev()` lo ricostruiva subito dopo. Con
+   sbagliato a ogni battuta e quello di sviluppo — allora `pannelloDev()` — lo
+   ricostruiva subito dopo. Con
    una variabile per pannello la classe torna a essere solo un fatto di stile. */
 let directorPanel = null, developerPanel = null;
 const closePanel = q => { q?.remove(); return null; };
@@ -1864,7 +2091,7 @@ function activateDirector(i) {
      Qui la selezione o si riaggancia ai nodi di adesso, o si azzera. */
   const gia = voci.indexOf(selection?.dato);
   if (gia >= 0) { nodi[gia].classList.add("sel"); selection = { nodo: nodi[gia], dato: voci[gia], nome: selection.nome }; }
-  else if (selection?.sfondo && selection.dato === sc.sfondo) selection = { ...selection, nodo: pal.querySelector(".sfondo") };
+  else if (selection?.sfondo && (selection.scena === sc || selection.dato === sc.sfondo)) selection = { ...selection, nodo: pal.querySelector(".sfondo") };
   else selection = null;
 
   nodi.forEach((n, k) => {
@@ -1876,16 +2103,27 @@ function activateDirector(i) {
       const r = pal.getBoundingClientRect();
       selection = { nodo: n, dato, nome };
       const x0 = dato.x, b0 = dato.b, px = e.clientX, py = e.clientY;
-      n.setPointerCapture(e.pointerId);
+      /* La cattura del puntatore e' un di piu': se il browser la rifiuta — un id
+         non piu' attivo, un puntatore gia' rilasciato — il trascinamento deve
+         cominciare lo stesso. Senza questo `try` l'eccezione partiva da qui e
+         si portava via i listener di `pointermove` e il pannello. */
+      try { n.setPointerCapture(e.pointerId); } catch { /* si trascina lo stesso */ }
       const muovi = ev => {
         dato.x = x0 + (ev.clientX - px) / r.width * 100;
         dato.b = b0 - (ev.clientY - py) / r.height * 100;
         positionElement(n, dato); renderDirectorPanel(i);
       };
-      const molla = () => { n.removeEventListener("pointermove", muovi); };
+      /* Si stacca tutto, non solo il movimento: `pointerup` e `pointercancel`
+         sono due `once` e ne scatta uno solo, quindi l'altro restava appeso
+         alla figura a ogni trascinamento. */
+      const molla = () => {
+        n.removeEventListener("pointermove", muovi);
+        n.removeEventListener("pointerup", molla);
+        n.removeEventListener("pointercancel", molla);
+      };
       n.addEventListener("pointermove", muovi);
-      n.addEventListener("pointerup", molla, { once: true });
-      n.addEventListener("pointercancel", molla, { once: true });
+      n.addEventListener("pointerup", molla);
+      n.addEventListener("pointercancel", molla);
       renderDirectorPanel(i);
     });
   });
@@ -1900,21 +2138,25 @@ function activateDirector(i) {
       e.preventDefault();
       nodi.forEach(o => o.classList.remove("sel"));
       const sc2 = STORY.scene[i];
-      sc2.sfondo = sc2.sfondo || { scala: 1, fx: 50, fy: 50 };
-      selection = { nodo: fondo, dato: sc2.sfondo, nome: "sfondo", sfondo: true };
+      selection = { nodo: fondo, dato: sc2.sfondo || { scala: 1, fx: 50, fy: 50 }, nome: "sfondo", sfondo: true, scena: sc2 };
       const r = pal.getBoundingClientRect();
-      const x0 = sc2.sfondo.fx, y0 = sc2.sfondo.fy, px = e.clientX, py = e.clientY;
-      fondo.setPointerCapture(e.pointerId);
+      const x0 = selection.dato.fx, y0 = selection.dato.fy, px = e.clientX, py = e.clientY;
+      try { fondo.setPointerCapture(e.pointerId); } catch { /* come sopra */ }
       const muovi = ev => {
-        const k = Math.max(1.01, sc2.sfondo.scala) - 1;
+        const k = Math.max(1.01, selection.dato.scala) - 1;
         selection.dato.fx = Math.max(0, Math.min(100, x0 - (ev.clientX - px) * 100 / (r.width * k)));
         selection.dato.fy = Math.max(0, Math.min(100, y0 - (ev.clientY - py) * 100 / (r.height * k)));
+        saveBackgroundSelection();
         positionBackground(fondo, selection.dato); renderDirectorPanel(i);
       };
-      const molla = () => fondo.removeEventListener("pointermove", muovi);
+      const molla = () => {
+        fondo.removeEventListener("pointermove", muovi);
+        fondo.removeEventListener("pointerup", molla);
+        fondo.removeEventListener("pointercancel", molla);
+      };
       fondo.addEventListener("pointermove", muovi);
-      fondo.addEventListener("pointerup", molla, { once: true });
-      fondo.addEventListener("pointercancel", molla, { once: true });
+      fondo.addEventListener("pointerup", molla);
+      fondo.addEventListener("pointercancel", molla);
       renderDirectorPanel(i);
     });
   }
@@ -1957,19 +2199,34 @@ function changeDepth(verso, target = selection) {
   const ordine = stageOrder(sc);
   const k = ordine.findIndex(e => e.dato === target.dato), j = k + verso;
   if (k < 0 || j < 0 || j >= ordine.length) return;   // ai due estremi non c'e' dove andare
-  const io = ordine[k], vicino = ordine[j];
-  const mio = depthOf(io), suo = depthOf(vicino);
-  if (mio === suo && io.attore === vicino.attore) {
-    const arr = io.attore ? sc.cast : sc.primo;
-    const a = arr.indexOf(io.dato), b = arr.indexOf(vicino.dato);
-    [arr[a], arr[b]] = [arr[b], arr[a]];
-  } else {
-    /* Stesso piano ma elenchi diversi: scambiare i due z non muoverebbe niente,
-       perche' a parita' di z decide il markup. Serve un gradino vero. */
-    setDepth(io, mio === suo ? suo + verso : suo);
-    if (mio !== suo) setDepth(vicino, mio);
-  }
+  const nuovo = ordine.slice();
+  nuovo.splice(j, 0, ...nuovo.splice(k, 1));    // un posto solo, avanti o indietro
+  applyOrder(nuovo);
   render();
+}
+
+/* Rende reale un ordine deciso: a ognuno il piano piu' basso che lo tiene dove
+   deve stare. Il vincolo e' che a parita' di z decide il markup, quindi chi ha
+   un `dom` minore del precedente ha bisogno di un gradino in piu'; gli altri
+   possono restare sul piano del vicino.
+
+   Prima qui si scambiavano i piani dei due vicini, e con dei pari merito non
+   bastava: in un cast con Giuseppe z2, Rosalia z1 e Roberto z1, `[` su Giuseppe
+   lo portava dall'ultimo posto al primo — due posti invece di uno. Riassegnare
+   tutta la fila e' l'unico modo di rispettare i pari merito.
+
+   Fra i piani possibili si sceglie sempre il piu' basso, e chi ricade sul piano
+   di partenza perde lo `z` esplicito: cosi' le righe da incollare si semplificano
+   invece di riempirsi di numeri. Un giro di andata e ritorno riporta l'ordine
+   che si vede, non per forza gli stessi numeri. */
+function applyOrder(nuovo) {
+  let prima = null;
+  for (const e of nuovo) {
+    const minimo = prima === null ? -Infinity : depthOf(prima) + (e.dom < prima.dom ? 1 : 0);
+    const scelte = [DEFAULT_DEPTH(e.attore), depthOf(e)].filter(v => v >= minimo).sort((a, b) => a - b);
+    setDepth(e, scelte.length ? scelte[0] : minimo);
+    prima = e;
+  }
 }
 
 /* Uno `z` uguale al piano di partenza non si scrive: il blocco da incollare
@@ -1983,10 +2240,18 @@ function setDepth(e, z) {
    rotella e per i tasti + e -. Erano due strade e la seconda conosceva solo
    `h`: sullo sfondo, che ha `scala` e non `h`, premere + non cambiava niente e
    ci aggiungeva un `h:NaN` che finiva pari pari nel blocco da incollare. */
+// La selezione usa valori provvisori: solo un cambiamento li rende esportabili.
+function saveBackgroundSelection() {
+  const d = selection.dato;
+  if (d.scala !== 1 || d.fx !== 50 || d.fy !== 50)
+    STORY.scene[SLIDES[state.n].i].sfondo = d;
+}
+
 function resizeSelection(verso) {
   if (!selection) return;
   if (selection.sfondo) {
     selection.dato.scala = Math.max(1, Math.min(4, selection.dato.scala + verso * .05));
+    saveBackgroundSelection();
     positionBackground(selection.nodo, selection.dato);
   } else {
     selection.dato.h = Math.max(2, selection.dato.h + verso);
@@ -2000,6 +2265,7 @@ function moveSelection(dx, db, grosso) {
     const p = grosso ? 4 : 1;
     selection.dato.fx = Math.max(0, Math.min(100, selection.dato.fx - dx * p));
     selection.dato.fy = Math.max(0, Math.min(100, selection.dato.fy + db * p));
+    saveBackgroundSelection();
     positionBackground(selection.nodo, selection.dato); renderDirectorPanel(SLIDES[state.n].i);
     return;
   }
@@ -2021,11 +2287,13 @@ function toggleDirector() {
    Una regola sola per tutti i tasti: quelli disegnati dentro #stage portano un
    `data-*` e li serve il gestore qui sotto, perche' il markup dello stage viene
    riscritto a ogni render e un ascoltatore attaccato addosso morirebbe con lui.
-   Quelli che vivono fuori - il pulsante per proseguire, i pannelli d'autore, il
-   "?" e il volume - sopravvivono al render e quindi portano il proprio gestore. */
+   Quelli che vivono fuori - i pannelli d'autore e il volume - sopravvivono al
+   render e quindi portano il proprio gestore. Il pulsante per proseguire stava
+   fuori fino al 1 settembre 2026, e per una pubblicazione si e' disegnato senza
+   fare niente proprio per questo: adesso e' dentro, con il suo `data-avanti`. */
 
 /* Aprire un indizio e' la scelta, non la lettura: da quel momento una delle due
-   domande e' spesa. Ci si passa da qui sia col clic sia coi tasti 1-4. */
+   domande e' spesa. Ci si passa da qui sia col clic sia coi tasti numerici, uno per oggetto. */
 function openClue(i) {
   /* La porta unica controlla anche di essere una porta: fuori dal tavolo
      aprire una scheda spenderebbe una domanda per una schermata che non la
@@ -2033,10 +2301,7 @@ function openClue(i) {
      a una scorciatoia nuova, il costo sarebbe muto. */
   if (SLIDES[state.n].t !== "tavolo") return;
   const { scelti } = state.indagine;
-  if (!scelti.includes(i)) {
-    if (scelti.length >= MAX_CLUES) return;      // domande finite: la scheda non si apre
-    scelti.push(i);
-  }
+  if (!scelti.includes(i)) scelti.push(i);
   state.clue = i;
   render();
 }
@@ -2051,11 +2316,14 @@ stage.addEventListener("click", e => {
     if (t.dataset.avanti !== undefined) return confirmAndAdvance();
     if (t.dataset.chiedi !== undefined) {
       const chi = t.dataset.chiedi, gia = askedPeople(state.clue);
-      if (!gia.includes(chi) && gia.length < MAX_PEOPLE)
-        state.indagine.chiesto[state.clue] = [...gia, chi];
+      if (!gia.includes(chi)) state.indagine.chiesto[state.clue] = [...gia, chi];
       return render();
     }
-    if (t.dataset.opt !== undefined) { state.risposte[currentQuestion()] = +t.dataset.opt; return render(); }
+    if (t.dataset.opt !== undefined) {
+      const q = currentQuestion();
+      if (q < 0) return;
+      state.risposte[q] = +t.dataset.opt; return render();
+    }
     return;
   }
   /* Via la barra, lo schermo e' il telecomando: un tocco manda avanti, e basta.
@@ -2072,21 +2340,23 @@ stage.addEventListener("click", e => {
 
 function renderHelp() {
   const k = [
-    ["clic", "scopre la battuta successiva"],
-    ["spazio / → / ↓", "scopre la battuta successiva"],
-    ["← / ↑", "niente: la storia non torna indietro"],
-    ["pulsante in basso", "l’unico modo di cambiare schermata"],
-    ["1–4", "apre l’indizio in quella posizione sul tavolo"],
+    ["clic", "nelle scene scopre la battuta successiva; sui personaggi scorre le schede"],
+    ["spazio / → / ↓ / Pag↓", "scopre la battuta successiva o scorre le schede dei personaggi"],
+    ["← / ↑ / Pag↑", "risfoglia le schede dei personaggi; la storia non torna indietro"],
+    ["pulsante per proseguire", "scopre o prosegue: sopra le battute nelle scene, in fondo alle altre pagine"],
+    [`1–${STORY.oggetti.length}`, "apre l’indizio in quella posizione sul tavolo"],
     ["d", "sagome colorate al posto delle illustrazioni"],
     ...(DIRECTOR_ENABLED ? [
-      ["r", "regia: sposta e ridimensiona personaggi e oggetti"],
-      ["[  ]", "in regia: porta chi è selezionato in secondo o in primo piano"]] : []),
+      ["r", "regia: sposta e ridimensiona personaggi, oggetti e sfondo"],
+      ["frecce / + −", "in regia: sposta / ridimensiona la selezione; Maiusc + frecce per passi più grandi"],
+      ["[  ]", "in regia: sposta la figura selezionata di un posto nella profondità"]] : []),
     ...(DEV_ENABLED ? [
-      ["v", "sviluppo: stato, immagini mancanti, salto a una schermata"],
+      ["v", "sviluppo: stato e elenco delle schermate per saltare a una di esse"],
       ["↑ ↓", "col pannello sviluppo aperto: salta fra le righe dell’elenco"],
-      ["← →", "col pannello sviluppo aperto: percorre la storia battuta per battuta"]] : []),
+      ["← →", "col pannello sviluppo aperto: ← torna una schermata; → scopre o prosegue"]] : []),
     ["m", "azzera il volume delle voci, o rimette l’ultimo"],
     ["f", "schermo intero"],
+    ["?", "apre i comandi"],
     ["esc", "chiude questa finestra"]
   ].map(([a, b]) => `<div><kbd>${escapeHtml(a)}</kbd><span>${escapeHtml(b)}</span></div>`).join("");
   overlayElement.innerHTML = `<div class="ov">
@@ -2099,6 +2369,12 @@ function renderHelp() {
 
 /* Una sola finestra sopra la scena, riempita di volta in volta: i comandi, o
    una domanda a cui rispondere prima di proseguire. */
+/* Finche' la finestra e' aperta, dietro non si tocca niente. `aria-modal` lo
+   dichiara ai lettori di schermo ma non lo impedisce a nessuno: col tab si
+   arrivava sui pulsanti sotto e li si premeva, con la conferma aperta. `inert`
+   sull'app li toglie dal giro del tab, dai clic e dall'albero accessibile in un
+   attributo solo — e basta metterlo li', perche' l'overlay e' fratello di
+   `#app`, non figlio. */
 function showOverlay(html, screenLabel) {
   state.overlay = true;
   overlayElement.innerHTML = html;
@@ -2107,6 +2383,7 @@ function showOverlay(html, screenLabel) {
   overlayElement.setAttribute("role", "dialog");
   overlayElement.setAttribute("aria-modal", "true");
   overlayElement.setAttribute("aria-label", screenLabel);
+  appElement.inert = true;
   overlayElement.querySelector("[data-close],#ov-no")?.focus();
 }
 
@@ -2132,7 +2409,12 @@ function confirmAction(domanda, spiega, avanza, poi, indietro = "Torna indietro"
   const no = overlayElement.querySelector("#ov-no");
   if (no) no.onclick = poiIndietro;   // non chiude: apre la domanda seguente
 }
-function closeOverlay() { state.overlay = false; overlayElement.hidden = true; stage.focus(); }
+function closeOverlay() {
+  state.overlay = false;
+  overlayElement.hidden = true;
+  appElement.inert = false;         // prima di rimettere il fuoco: su un inerte non si posa
+  stage.focus();
+}
 overlayElement.addEventListener("click", e => { if (e.target === overlayElement || e.target.closest("[data-close]")) closeOverlay(); });
 document.getElementById("k-vol").oninput = e => setVolume(e.target.value / 100, false);
 document.getElementById("k-vol").onchange = e => setVolume(e.target.value / 100, true);
@@ -2150,7 +2432,14 @@ document.addEventListener("keydown", e => {
      niente se lo si raggiungeva col tab, e nemmeno le risposte della scheda
      finale. Le altre scorciatoie restano anche col fuoco addosso, perche' non
      collidono con nessuna attivazione nativa. */
-  if (e.key === " " && isNativeControl(e.target)) return;
+  if (e.key === " " && isNativeControl(e.target)) {
+    /* Con una conferma aperta lo spazio vale solo per i pulsanti della conferma:
+       dietro non si preme niente. `inert` gia' toglie quelli sotto dal giro, ma
+       dove non e' supportato serve anche questa. */
+    if (!state.overlay || overlayElement.contains(e.target)) return;
+    e.preventDefault();
+    return;
+  }
   if (e.key === "Escape") { if (state.overlay) closeOverlay(); return; }
   if (state.overlay) return;
   switch (e.key) {
@@ -2199,7 +2488,7 @@ document.addEventListener("keydown", e => {
       else document.documentElement.requestFullscreen?.().catch(() => {});
       break;
     default:
-      if (/^[1-4]$/.test(e.key)) openClue(+e.key - 1);   // fuori dal tavolo si ferma da sola
+      if (/^[1-9]$/.test(e.key) && +e.key <= STORY.oggetti.length) openClue(+e.key - 1);   // fuori dal tavolo si ferma da sola
   }
 });
 

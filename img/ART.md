@@ -38,7 +38,8 @@ riutilizzano la sala di `scena1` e vi sovrappongono le pose specifiche.
 ## Stile condiviso (vale per tutte)
 
 > Illustrazione piatta, stile libro illustrato per ragazzi. Palette verde oliva, crema e oro,
-> luce calda di candele. **Gouache materica con pennellate ampie e ben visibili**: tracce di
+> luce calda coerente con ambiente e ora della scena: candele negli interni serali,
+> luce dorata e radente negli esterni al tramonto. **Gouache materica con pennellate ampie e ben visibili**: tracce di
 > setola direzionali, pigmento opaco sovrapposto, bordi a pennello asciutto e masse di colore
 > costruite col gesto. Evitare tratteggio da matita, microtexture ripetitiva, grana digitale,
 > effetto tela uniforme e filtri globali. Contorni morbidi e dipinti, nessun realismo fotografico.
@@ -52,11 +53,15 @@ riutilizzano la sala di `scena1` e vi sovrappongono le pose specifiche.
 Regole di continuità:
 
 - Il simbolo degli Oliviani — una **grande oliva stilizzata** — ricorre in ogni scena.
-- Gli stessi cinque personaggi, stessi vestiti e stessi colori, dalla scena 1 alla scena 5.
+- Ogni personaggio mantiene identità, capelli, incarnato, vestiti e colori in tutte le
+  scene e pose in cui compare. Il cast può ampliarsi con nuovi personaggi descritti nel brief.
+- Per ogni nuovo personaggio, generare prima il ritratto canonico e sottoporlo a revisione;
+  dopo approvazione, usarlo come riferimento visivo per volti e pose. Le variazioni di luce
+  devono restare coerenti con la scena senza cambiare i colori propri degli abiti.
 
 ## Come è fatta una scena
 
-L'app compone ogni scena a strati: **lo sfondo sotto, i cinque personaggi ritagliati sopra**.
+L'app compone ogni scena a strati: **lo sfondo sotto, i personaggi presenti nella scena ritagliati sopra**.
 Quando un personaggio parla, l'app lo porta avanti e schiarisce lui solo, lasciando gli altri
 indietro e in penombra. Perciò servono due cose diverse:
 
@@ -64,7 +69,7 @@ indietro e in penombra. Perciò servono due cose diverse:
    succede nella scena: serve a capire il luogo, la luce e gli oggetti sul tavolo. I personaggi
    descritti **non vanno disegnati**: lascia lo spazio dove staranno.
 2. `attore_*.png` — un ritaglio a figura intera per personaggio, su fondo trasparente, riusato
-   in tutte e cinque le scene.
+   nelle scene in cui compare, con eventuali pose narrative dedicate.
 3. `scenaN_foreground_nome.png` — **oggetti in primo piano**, su fondo trasparente,
    angolo basso. Stanno davanti a tutti, anche ai personaggi, e servono a dare profondità: un
    tavolo imbandito, una poltrona, un candelabro. Vanno disegnati **visti da vicino**, con la
@@ -96,7 +101,7 @@ mostra l'illustrazione così com'è e salta i livelli.
 ## Personaggi ritagliati — PNG con trasparenza
 
 Figura intera, in piedi, di tre quarti, sguardo verso il centro della scena. Stessa altezza
-relativa e stessa luce per tutti e cinque, piedi appoggiati al bordo inferiore dell'immagine
+relativa coerente fra personaggi e luce coerente con la scena, piedi appoggiati al bordo inferiore dell'immagine
 (l'app li appoggia sul pavimento della scena). Niente ombra dipinta: l'ombra la mette l'app.
 
 | File | Personaggio |
@@ -126,7 +131,7 @@ Restano disponibili anche `attore_giuseppe_presentazione.png` e
 
 ### Set coerente generato il 3 settembre 2026
 
-I cinque `ritratto_*` restano la fonte canonica per identità, capelli e incarnato. Le varianti
+I `ritratto_*` approvati restano la fonte canonica per identità, capelli e incarnato. Le varianti
 qui sotto sono state rigenerate nello stesso stile pittorico, con abiti, colori e proporzioni
 bloccati per personaggio. Sono file sorgente versionati: `sync-assets.py` li collega alle caselle
 logiche senza sovrascrivere le generazioni precedenti.

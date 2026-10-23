@@ -6,7 +6,7 @@ Questo script tiene la versione piu' alta di ogni personaggio, ne fa una copia
 web leggera in assets/web/ e riscrive la mappa ASSETS usata da oliva-blu.html.
 Da rilanciare a ogni consegna: python3 sync-assets.py
 """
-import base64, hashlib, json, re, subprocess, sys
+import base64, hashlib, json, re, subprocess, sys, os, tempfile
 from pathlib import Path
 from PIL import Image
 
@@ -31,7 +31,9 @@ SLOT_SOURCES = {"copertina.png": "copertina_quadro_oliva_animato",
           "scena1.png": "scena1_back_sala2",
           "scena1_sx.png": "scena1_foreground_sala2_oggettoSX",
           "scena1_dx.png": "scena1_foreground_sala2_oggettoDX",
-          "scena2.png": "scena2_back_sala1_scena2"}
+          "scena2.png": "scena2_back_sala1_scena2",
+          "oliveto.png": "scena3_back_oliveto",
+          "oliveto_dx.png": "scena3_foreground_oliveto_cavalletto"}
 try:
     INVENTORY = json.loads(subprocess.run(
         ["node", "asset-inventory.js"], check=True, capture_output=True, text=True
@@ -106,7 +108,18 @@ def write_if_changed(path, content):
     """Evita di toccare timestamp e watcher quando il contenuto e' identico."""
     if path.is_file() and path.read_text(encoding="utf-8") == content:
         return False
-    path.write_text(content, encoding="utf-8")
+    fd, name = tempfile.mkstemp(prefix=f".{path.name}.", suffix=".tmp", dir=path.parent)
+    temporary = Path(name)
+    os.close(fd)
+    try:
+        temporary.write_text(content, encoding="utf-8")
+        if path.exists():
+            temporary.chmod(path.stat().st_mode & 0o777)
+        else:
+            temporary.chmod(0o644)
+        os.replace(temporary, path)
+    finally:
+        temporary.unlink(missing_ok=True)
     return True
 
 def write_single_file(html, asset_block, expected_count):
@@ -145,6 +158,19 @@ def main():
         for slot in selected_sources.get(key, [key]):
             if version >= best_sources.get(slot, (-1, None))[0]:
                 best_sources[slot] = (version, f)
+
+    # Il controllo costa niente e va fatto prima di convertire: su una cartella
+    # a meta' lo script ricodificava tutto e solo alla fine si rifiutava di
+    # scrivere. Le caselle che si riempiranno si sanno gia' da `best_sources`.
+    previous_assets = set(re.findall(r'^  "([^"]+)":', ASSET_JS.read_text(encoding="utf-8"), re.M)) \
+        if ASSET_JS.is_file() else set()
+    will_fill = {k for k in best_sources if k in EXPECTED_ASSETS}
+    lost_assets = sorted(previous_assets - will_fill)
+    if lost_assets and "--sostituisci" not in sys.argv:
+        sys.exit(f"{len(lost_assets)} caselle sparirebbero da {ASSET_JS}: "
+                 + ", ".join(lost_assets[:6]) + ("…" if len(lost_assets) > 6 else "")
+                 + f"\nassets/images/ ha {len(will_fill)} sorgenti su {len(previous_assets)}."
+                 " Rimetti le consegne mancanti, o rilancia con --sostituisci se e' voluto.")
 
     WEB.mkdir(parents=True, exist_ok=True)
     try:
@@ -213,22 +239,14 @@ def main():
         asset_map[key] = f"data:image/webp;base64,{b64}"
         print(f"{f.name:32} -> {out.name:28} {out.stat().st_size // 1024:4}KB")
 
-    # `assets/assets.js` e' tracciato ed e' l'app pubblicata: qui una consegna
-    # incompleta la sovrascriverebbe con quello che c'e' adesso in
-    # assets/images/, che da quando la cartella e' fuori da git puo' essere
-    # mezza vuota. Provato: con una sorgente su quaranta il file scendeva da
-    # 3753KB a 46KB e lo script usciva contento — trentanove illustrazioni
-    # perse, e ad accorgersene era solo `smoke.js`, se qualcuno lo lanciava.
-    # La regola non e' "vietato un sync parziale", e' "non si perde una casella
-    # che c'era": chi vuole davvero rimuoverne una passa --sostituisci.
-    previous_assets = set(re.findall(r'^  "([^"]+)":', ASSET_JS.read_text(encoding="utf-8"), re.M)) \
-        if ASSET_JS.is_file() else set()
+    # La rete di sicurezza: `assets/assets.js` e' tracciato ed e' l'app pubblicata,
+    # e una consegna incompleta la sovrascriverebbe. Il controllo vero e' gia'
+    # passato prima della conversione; questo prende quello che fosse caduto per
+    # strada — una sorgente illeggibile, un ritaglio venuto vuoto.
     lost_assets = sorted(previous_assets - set(asset_map))
     if lost_assets and "--sostituisci" not in sys.argv:
-        sys.exit(f"{len(lost_assets)} caselle sparirebbero da {ASSET_JS}: "
-                 + ", ".join(lost_assets[:6]) + ("…" if len(lost_assets) > 6 else "")
-                 + f"\nassets/images/ ha {len(asset_map)} sorgenti su {len(previous_assets)}."
-                 " Rimetti le consegne mancanti, o rilancia con --sostituisci se e' voluto.")
+        sys.exit(f"{len(lost_assets)} caselle sparirebbero da {ASSET_JS} dopo la conversione: "
+                 + ", ".join(lost_assets[:6]) + ("…" if len(lost_assets) > 6 else ""))
 
     lines = "\n".join(f'  "{k}": "{v}",' for k, v in asset_map.items())
     asset_block = "const ASSETS = {\n" + lines + "\n};\n"

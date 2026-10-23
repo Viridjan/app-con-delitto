@@ -27,13 +27,24 @@ python3 prova-regia.py     # regia e tastiera in un browser vero: selezione, +/-
 python3 sync-assets.py     # converte le immagini e rigenera assets/assets.js
 python3 sync-assets.py --file-unico   # e in piu' la copia a pagina sola, per l'artefatto
 
-# la leggibilita' da telefono: l'app dentro una cornice da 390px, e il referto nel titolo
-chromium --headless --allow-file-access-from-files --dump-dom \
-  "file://$PWD/telaio-390.html?p=copia-con-audit-mobile.html"
+python3 prova-regia.py --script censimento.js --viewport 1280x900
+python3 prova-regia.py --script censimento.js --viewport 390x844
+python3 prova-regia.py --script audit-mobile.js --viewport 390x844
+python3 prova-sync.py       # scrittura interrotta su fixture, atomicita' e no-op
+python3 prova-mutazioni.py  # difetti reintrodotti e ripristinati su copie temporanee
 ```
 
-`censimento.js` non si lancia: si incolla in coda allo `<script>` di una copia dell'app e stampa
-quante misure e quanti stili di testo arrivano davvero sullo schermo. Cinque misure, su schermo grande e da telefono: se il conto sale, un gradino nuovo è entrato di nascosto.
+`prova-regia.py` e' il runner comune: inietta lo script richiesto, usa
+`telaio-390.html` a 390x844 e termina con stato non zero se il contratto fallisce.
+Gli audit percorrono tutte le schermate e le risposte del quiz (26 viste):
+`censimento.js` deve trovare cinque corpi complessivi; `audit-mobile.js` controlla
+larghezza, overflow (tolleranza 1px), testo almeno 14px, contrasto 4.5:1
+(3:1 da 24px) e bersagli almeno 44x44px. Le misure degli script sono invariate:
+il contrasto non tiene conto dell'opacita', e l'audit non misura overlay e pannelli.
+Il titolo viene letto a tempo reale tramite `browser-title.js` e il protocollo di
+debug locale di Chromium: serve Node >=22, gia' usato dai controlli della CI.
+Gli eventi di regia sono sintetici, non pressioni fisiche. Chromium vive nella CI,
+non nelle dipendenze dell'app. Il job smoke originale resta separato.
 
 Non c'e' watcher e non serve un server: `oliva-blu.html` si apre da disco insieme alla cartella
 `assets/`. `sync-assets.py` è l'unico passaggio di generazione. `smoke.js` runs the complete suite in less than a second; keep the suite intact.
@@ -73,7 +84,7 @@ Non c'e' watcher e non serve un server: `oliva-blu.html` si apre da disco insiem
   `python3 prova-regia.py` pastes `regia.js` into a copy of the app, reads the verdict out of the
   page title and exits non-zero on a failure. Every check drives the real functions; none
   restates the logic it is checking.
-- `censimento.js` — inject it into the page and it reports how many text sizes and how many
+- `censimento.js` — run with `prova-regia.py --script censimento.js`; reports how many text sizes and how many
   distinct text styles actually reach the screen, and which texts carry no rule of their own.
   The count is a contract: five sizes, on a big screen and on a phone alike.
 - `audit-mobile.js` + `telaio-390.html` — the phone readability audit. The frame exists because
@@ -205,7 +216,7 @@ they are the thing that covers the most — judging positions with those on top 
 SVG silhouette.
 
 **Nothing unused stays in the source folder.** From 4 September 2026 `assets/images/` holds
-exactly the files the pipeline picks — 40 of them, 71MB, one per slot — and nothing else. A
+exactly the files the pipeline picks — 56 of them on 23 October 2026, one per slot — and nothing else. A
 superseded delivery, a background no screen draws, a pose no `cast` selects: all of it goes to
 `trash/immagini/`, which is local and gitignored. The check is one line, and it must come back
 empty: `comm -23 <(ls assets/images/ | sort) <(python3 sync-assets.py | grep -oP '^\S+\.(png|webp)' | sort -u)`.
@@ -216,7 +227,7 @@ gets called `_v3` after a `_v3` that was already rejected.
 newly generated assets that have not been committed yet. Keep the original filename unchanged
 and save every revision with the next available numeric suffix (`_v2`, `_v3`, …). Version
 numbers already used must not be reused, rejected revisions included — the register of what has
-been spent is [docs/versioni-consumate.md](docs/versioni-consumate.md), 62 slots and 124 versions,
+been spent is [docs/versioni-consumate.md](docs/versioni-consumate.md), 78 slots and 156 versions,
 and the next delivery starts one above the highest listed. It used to be the filenames sitting in
 `trash/immagini/`; that folder was emptied on 7 September 2026, so the table is now the only
 record. Regenerate it before deleting anything else that carries a version number. A new
@@ -232,8 +243,8 @@ phone typography, departures from the PDF, investigation implementation and runn
 ## Screens vs scenes
 
 One scene is several screens: `n` is the number the audience reads, `parte` the sub-label,
-`slot` the artwork casella. Scene 2 is four screens all labelled "Scena 2 di 4"; scene 4 is
-three. **Nothing may be derived from the array index** — splitting a scene would shift every
+`slot` the artwork casella. Scene 2 is four screens all labelled "Scena 2 di 5"; scenes 3 and 5
+are three each. **Nothing may be derived from the array index** — splitting a scene would shift every
 later scene's artwork, and index-derived names have already leaked twice (the background's `alt`,
 and `demo()`).
 

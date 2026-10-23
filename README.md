@@ -27,12 +27,12 @@ lasciandola si sente una prova. `m` azzera il volume e, ripremuto, ripristina l'
 
 ## L'indagine
 
-Sul tavolo degli indizi si può chiedere di **due oggetti su quattro**, e per ognuno si possono
-interrogare **due dei quattro sospetti**: gli altri, su quell'oggetto, non parleranno. Le loro
-risposte non stanno nel copione — sono informazioni nuove, sedici in tutto, e in una partita se
-ne sentono quattro. Ogni nome porta il suo volto, dove si chiede e dove si risponde, e in tutta
-la sezione il testo ha una misura sola. Aprire una scheda è
-già la scelta, e la schermata dice quante domande restano prima di spenderle. Quello che non si è
+Sul tavolo degli indizi si può aprire **ogni oggetto** e interrogare **chiunque** dei sei
+sospetti, ma ogni domanda — una persona interrogata su un oggetto — costa tempo: ogni **tre
+domande** la scheda finale perde **un punto**, arrotondando per difetto, e il punteggio non scende
+mai sotto zero. Le risposte non stanno nel copione: sono informazioni nuove. Ogni nome porta il
+suo volto, dove si chiede e dove si risponde, e in tutta la sezione il testo ha una misura sola.
+La schermata tiene il conto delle domande fatte e di quanto sono costate. Quello che non si è
 chiesto resta non letto: è il punto della cosa, ed è da lì che viene la voglia di rigiocare.
 
 Un **clic scopre**, un **pulsante cambia pagina**. Toccando lo schermo esce la battuta seguente;
@@ -64,12 +64,14 @@ Da questa schermata **non si esce toccando lo sfondo**: si passa oltre solo con 
 l'indagine →`. Vale anche per le domande della scheda finale, dove il pulsante dice a che punto
 sei. Altrove il clic fa avanzare; dove si sceglie, costerebbe una domanda o una risposta.
 
-La **scheda finale** è una pagina sola con sei domande: si risponde, la domanda si chiude in una
-riga e la successiva compare sotto. Ognuna offre **i quattro sospetti**, col volto sotto il nome:
-si sceglie una persona, non una frase. Tre chiedono di ricordare, tre di mettere insieme due momenti diversi.
+La **scheda finale** è una pagina sola con nove domande: si risponde, la domanda si chiude in una
+riga e la successiva compare sotto. Ognuna offre **i sei sospetti**, col volto sotto il nome:
+si sceglie una persona, non una frase.
 
-Le domande non pesano uguale — 2, 1, 1, 2, 1 punti, e **3 per il colpevole**, dieci in tutto — e
-il finale dà uno di cinque verdetti, a seconda che il nome sia giusto e di quanto regga il resto:
+Le domande non pesano uguale: cinque circostanze da **1 punto**, il bicchiere che incastra il
+colpevole da **2**, il nome del colpevole da **3**, e due domande su false piste che **non
+valgono niente**, senza che la scheda lo dica. Dieci punti in tutto, meno il tempo speso
+nell'indagine. Il finale dà uno di cinque verdetti, a seconda che il nome sia giusto e di quanto regga il resto:
 dal *caso risolto perfettamente* al *qualcosa non torna*. Il verdetto sta da solo: `Vedi la
 soluzione` porta all'ultima schermata, dove l'investigatore racconta com'è andata e la storia
 si chiude con la parola *Fine*.
@@ -85,7 +87,7 @@ restano al plurale dove lo erano.
 | `spazio` / `→` / `↓` | scopre la battuta successiva |
 | `←` / `↑` | niente: la storia non torna indietro (sui personaggi risfoglia le schede) |
 | pulsante «Prosegui» | cambia schermata quando le battute sono finite |
-| `1`–`4` | apre un indizio sul tavolo, entro il limite di due oggetti |
+| `1`–`7` | apre un indizio sul tavolo: aprirlo non costa, costa chiedere | `1`–`4` | apre un indizio sul tavolo, entro il limite di due oggetti |
 | `d` | attiva o disattiva le sagome colorate al posto delle illustrazioni |
 | `m` | azzera il volume delle voci, o ripristina l'ultimo livello |
 | `f` | schermo intero |

@@ -7,7 +7,7 @@
 :root{
   --bg:#F3EEE1; --surface:#FBF8F0; --surface-2:#EDE6D4;
   --ink:#23281A; --muted:#6B7359; --line:#DBD2BD;
-  --olive:#5E7233; --gold:#A9741A; --blu:#1F3FC4; --plum:#96496D; --teal:#3F7565;
+  --olive:#5E7233; --gold:#A9741A; --blu:#1F3FC4; --plum:#96496D; --teal:#3F7565; --rust:#A64B2A; --vino:#8E2B3E;
   --shadow:0 1px 2px rgba(35,40,26,.06),0 8px 28px rgba(35,40,26,.08);
 }
 :root:not([data-theme="light"]){ color-scheme:light dark; }
@@ -15,14 +15,14 @@
   :root:not([data-theme="light"]){
     --bg:#12160F; --surface:#1B2016; --surface-2:#232A1D;
     --ink:#EDE7D6; --muted:#98A182; --line:#333C29;
-    --olive:#9CB65C; --gold:#DFA93C; --blu:#7B96FF; --plum:#DA8FB2; --teal:#78BFAA;
+    --olive:#9CB65C; --gold:#DFA93C; --blu:#7B96FF; --plum:#DA8FB2; --teal:#78BFAA; --rust:#E8957A; --vino:#E98C9E;
     --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 34px rgba(0,0,0,.45);
   }
 }
 :root[data-theme="dark"]{
   --bg:#12160F; --surface:#1B2016; --surface-2:#232A1D;
   --ink:#EDE7D6; --muted:#98A182; --line:#333C29;
-  --olive:#9CB65C; --gold:#DFA93C; --blu:#7B96FF; --plum:#DA8FB2; --teal:#78BFAA;
+  --olive:#9CB65C; --gold:#DFA93C; --blu:#7B96FF; --plum:#DA8FB2; --teal:#78BFAA; --rust:#E8957A; --vino:#E98C9E;
   --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 34px rgba(0,0,0,.45);
 }
 *{box-sizing:border-box}
@@ -115,10 +115,12 @@ const DEFAULT_VOICES = {
   Rosalia:   { f: 395, onda: "triangle", passo: .092, nota: .070, deriva:  .20, taglio: 4500, den: 3.4, vol: .48 },
   Roberto:   { f: 198, onda: "sawtooth", passo: .094, nota: .095, deriva:  .02, taglio: 1300, den: 4.5, vol: .28 },
   Augusto:   { f: 312, onda: "square",   passo: .076, nota: .075, deriva:  .07, taglio: 2600, den: 3, vol: .14 },
-  Mauro:     { f: 183, onda: "square",   passo: .082, nota: .130, deriva:  .14, taglio: 4500, den: 6, vol: .07 }
+  Mauro:     { f: 183, onda: "square",   passo: .082, nota: .130, deriva:  .14, taglio: 4500, den: 6, vol: .07 },
+  Elisa:     { f: 330, onda: "sine",     passo: .100, nota: .090, deriva: -.05, taglio: 3200, den: 3.8, vol: .60 },
+  Andrea:    { f: 265, onda: "sine",     passo: .085, nota: .080, deriva:  .10, taglio: 3000, den: 3.6, vol: .55 }
 };
 const CHARACTER_COLORS = { Giuseppe: "--gold", Rosalia: "--plum", Roberto: "--olive",
-                 Augusto: "--teal", Mauro: "--blu" };
+                 Augusto: "--teal", Mauro: "--blu", Elisa: "--rust", Andrea: "--vino" };
 const CONTROLS = [
   { k: "f",      eti: "altezza",  min: 60,  max: 520,  passo: 1,    suff: " Hz" },
   { k: "passo",  eti: "ritmo",    min: .05, max: .16,  passo: .002, suff: " s" },

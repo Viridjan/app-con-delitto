@@ -14,3 +14,16 @@ jobs:
         with:
           node-version: '22'
       - run: node smoke.js
+
+  browser:
+    runs-on: ubuntu-latest
+    container: node:22-bookworm
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install browser and Python for checks
+        run: apt-get update && apt-get install -y --no-install-recommends chromium python3 python3-pil
+      - run: python3 prova-regia.py
+      - run: python3 prova-regia.py --script censimento.js --viewport 1280x900
+      - run: python3 prova-regia.py --script censimento.js --viewport 390x844
+      - run: python3 prova-regia.py --script audit-mobile.js --viewport 390x844
+      - run: python3 prova-sync.py

@@ -6,14 +6,24 @@ il registro si'. **Un numero elencato qui non si riusa mai**, nemmeno se la revi
 lo portava e' stata bocciata: e' la regola che impedisce a due disegni diversi di
 chiamarsi allo stesso modo. La consegna successiva parte dal numero dopo il piu' alto.
 
+Aggiornato il 23 ottobre 2026 con le consegne per Elisa, Andrea, l'oliveto e i tre indizi
+nuovi: le prime versioni di Elisa superate e `ritratto_andrea` 1-3 sono in `trash/immagini/`.
+
 In grassetto la versione viva, quella che `sync-assets.py` aggancia oggi.
 
 | casella | versioni spese | prossima |
 |---|---|---|
+| `attore_andrea` | **1** | `_v2` |
+| `attore_andrea_allarmato` | **1** | `_v2` |
+| `attore_andrea_brindisi` | **1** | `_v2` |
+| `attore_andrea_complice` | **1** | `_v2` |
 | `attore_augusto` | 1, 2, **3** | `_v4` |
 | `attore_augusto_brindisi` | 1, **2** | `_v3` |
 | `attore_augusto_sorpreso` | 1, **2** | `_v3` |
 | `attore_augusto_spiegazione` | 1 | `_v2` |
+| `attore_elisa` | 1, 2, 3, **4** | `_v5` |
+| `attore_elisa_mani` | 1, 2, **3** | `_v4` |
+| `attore_elisa_ritratto` | 1, 2, 3, **4** | `_v5` |
 | `attore_giuseppe` | 1, 2, 3, **4** | `_v5` |
 | `attore_giuseppe_brindisi` | 1, 2, **3** | `_v4` |
 | `attore_giuseppe_malore` | 1, **2** | `_v3` |
@@ -43,8 +53,13 @@ In grassetto la versione viva, quella che `sync-assets.py` aggancia oggi.
 | `indizio_biglietto` | 1, **2** | `_v3` |
 | `indizio_bottiglietta` | **1** | `_v2` |
 | `indizio_foglio` | **1** | `_v2` |
+| `indizio_lascito` | **1** | `_v2` |
+| `indizio_oltremare` | **1** | `_v2` |
+| `indizio_rendiconto` | **1** | `_v2` |
 | `quadro_oliva` | 1 | `_v2` |
+| `ritratto_andrea` | 1, 2, 3, **4** | `_v5` |
 | `ritratto_augusto` | 1, 2, 3, **4** | `_v5` |
+| `ritratto_elisa` | 1, 2, 3, **4** | `_v5` |
 | `ritratto_giuseppe` | 1, 2, 3, **4** | `_v5` |
 | `ritratto_investigatore` | 1, 2, 3, 4 | `_v5` |
 | `ritratto_mauro` | 1, 2, 3, **4** | `_v5` |
@@ -62,13 +77,17 @@ In grassetto la versione viva, quella che `sync-assets.py` aggancia oggi.
 | `scena3` | 1, 2, 3 | `_v4` |
 | `scena3_back_brindisi` | 1 | `_v2` |
 | `scena3_back_malore` | 1 | `_v2` |
+| `scena3_back_oliveto` | **1** | `_v2` |
+| `scena3_foreground_oliveto_cavalletto` | **1** | `_v2` |
 | `scena3_panoramica` | 1, 2, 3 | `_v4` |
 | `scena3_sala1` | 4 | `_v5` |
 | `scena3_sala2` | 4 | `_v5` |
 | `scena3_sala_adiacente` | 1, 2, 3 | `_v4` |
 | `scena4` | 1 | `_v2` |
 | `scena5` | 1 | `_v2` |
+| `volto_andrea` | **1** | `_v2` |
 | `volto_augusto` | 1, **2** | `_v3` |
+| `volto_elisa` | 1, **2** | `_v3` |
 | `volto_mauro` | 1, **2** | `_v3` |
 | `volto_roberto` | 1, **2** | `_v3` |
 | `volto_rosalia` | 1, **2** | `_v3` |

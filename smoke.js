@@ -5,7 +5,7 @@ const { openApp } = require("./stub-dom");
 const appHtml = fs.readFileSync("oliva-blu.html", "utf8");
 const voiceBenchHtml = fs.readFileSync("voci.html", "utf8");
 
-const CODA = "{state,SLIDES,STORY,stageOrder,changeDepth,goTo,advance,reveal,advanceLabel,hasMoreToReveal,advanceButton,investigationComplete,verdictPose,render,toggleDirector,toggleDevelopment,openClue,askForSolution,overlayElement,MAX_CLUES,MAX_PEOPLE,SUSPECTS,DIRECTOR_ENABLED,DEV_ENABLED,TITLES_ENABLED,actorImage,clueImage,setupImageSlots,sceneNumber,ASSETS,demo,sceneImage,demoLayer:()=>DEMO_LAYER,splitText,VOICE}";
+const CODA = "{state,SLIDES,STORY,stageOrder,changeDepth,goTo,advance,reveal,advanceLabel,hasMoreToReveal,advanceButton,confirmAndAdvance,closeOverlay,questionsAsked,timePenalty,QUESTIONS_PER_POINT,verdictPose,render,toggleDirector,toggleDevelopment,openClue,askForSolution,overlayElement,SUSPECTS,DIRECTOR_ENABLED,DEV_ENABLED,TITLES_ENABLED,actorImage,clueImage,setupImageSlots,sceneNumber,ASSETS,demo,sceneImage,demoLayer:()=>DEMO_LAYER,splitText,VOICE}";
 const { app, stage } = openApp(CODA);
 assert.deepStrictEqual(Array.from(app.STORY.scene, app.sceneNumber),
   Array.from(app.STORY.scene, (scene, index) => scene.n || index + 1),
@@ -79,12 +79,74 @@ assert.deepStrictEqual(Array.from(app.STORY.scene, app.sceneNumber),
     "dalla pagina dei personaggi il pulsante non porta mai fuori");
 }
 
-/* `[` e `]` devono muovere di un posto nell'ordine che si vede, non nell'elenco.
-   Roberto nella scena 1 porta z:6 e stava davanti a tutti: scambiarlo di posto
-   dentro `cast` non cambiava profondita', e il comando non faceva niente di
-   visibile. Qui si guarda l'ordine vero prima e dopo, e si controlla anche che
-   il giro di andata e ritorno rimetta le cose com'erano — comprese le righe da
-   incollare, che non devono riempirsi di `z` inventati. */
+/* `[` e `]` devono muovere di un posto nell'ordine che si vede, non nell'elenco,
+   e di un posto solo anche quando piu' figure condividono lo stesso piano.
+   Le prove girano su una copia dell'app con un cast finto, cosi' la scena vera
+   non viene toccata: e' l'ordine che si controlla, non la regia approvata. */
+{
+  const conFixture = (cast, primo, fn) => {
+    const { app: a } = openApp("{STORY,SLIDES,state,goTo,stageOrder,changeDepth}");
+    const k = a.SLIDES.findIndex(x => x.t === "scene");
+    a.goTo(k);
+    const sc = a.STORY.scene[a.SLIDES[k].i];
+    sc.cast = cast; sc.primo = primo;
+    /* join, non l'array: fra due realm di `vm` `deepStrictEqual` non e' mai
+       soddisfatto nemmeno a contenuto identico. */
+    const ordine = () => a.stageOrder(sc).map(e => e.dato.c || e.dato.lato).join(" ");
+    return fn(a, sc, ordine);
+  };
+  const attore = (c, z) => z === undefined ? { c, x: 0, b: 0, h: 1 } : { c, z, x: 0, b: 0, h: 1 };
+
+  // pari merito: era il caso che rompeva lo scambio di piani fra vicini
+  conFixture([attore("Giuseppe", 2), attore("Rosalia", 1), attore("Roberto", 1)], [], (a, sc, ordine) => {
+    assert.strictEqual(ordine(), "Rosalia Roberto Giuseppe", "ordine di partenza inatteso");
+    a.changeDepth(-1, { dato: sc.cast[0] });
+    assert.strictEqual(ordine(), "Rosalia Giuseppe Roberto",
+      "[ con dei pari merito salta piu' di un posto");
+  });
+
+  // avanti, e il ritorno deve rimettere l'ordine di partenza
+  conFixture([attore("Giuseppe", 2), attore("Rosalia", 1), attore("Roberto", 1)], [], (a, sc, ordine) => {
+    const prima = ordine();
+    a.changeDepth(1, { dato: sc.cast[1] });
+    assert.strictEqual(ordine(), "Roberto Rosalia Giuseppe", "] non avanza di un posto");
+    a.changeDepth(-1, { dato: sc.cast[1] });
+    assert.strictEqual(ordine(), prima, "andata e ritorno non riportano l'ordine di partenza");
+  });
+
+  // pari merito fra un attore e un oggetto: a parita' di z decide il markup
+  conFixture([attore("A", 5)], [{ lato: "sx", x: 0, b: 0, h: 1 }], (a, sc, ordine) => {
+    assert.strictEqual(ordine(), "A sx", "ordine di partenza inatteso (attore/oggetto)");
+    a.changeDepth(1, { dato: sc.cast[0] });
+    assert.strictEqual(ordine(), "sx A", "] non scavalca l'oggetto in pari merito");
+    a.changeDepth(-1, { dato: sc.cast[0] });
+    assert.strictEqual(ordine(), "A sx", "[ non torna dietro l'oggetto");
+  });
+
+  conFixture([attore("A", 5)], [{ lato: "sx", x: 0, b: 0, h: 1 }], (a, sc, ordine) => {
+    for (let i = 0; i < 12; i++) {
+      a.changeDepth(1, { dato: sc.cast[0] });
+      assert.strictEqual(ordine(), "sx A");
+      assert.strictEqual(sc.cast[0].z, 6, "profondita' cresce a ogni giro");
+      assert.strictEqual(sc.primo[0].z, undefined, "oggetto non mosso rinumerato");
+      a.changeDepth(-1, { dato: sc.cast[0] });
+      assert.strictEqual(ordine(), "A sx");
+      assert.strictEqual(sc.cast[0].z, undefined, "ritorno non normalizzato");
+    }
+  });
+
+  // agli estremi non c'e' dove andare
+  conFixture([attore("A"), attore("B")], [], (a, sc, ordine) => {
+    a.changeDepth(-1, { dato: sc.cast[0] });
+    a.changeDepth(1, { dato: sc.cast[1] });
+    assert.strictEqual(ordine(), "A B", "ai due estremi qualcosa si e' mosso");
+  });
+}
+
+/* Sulla scena vera: l'ordine torna quello di partenza, e nessuno `z` esplicito
+   e' di troppo — toglierne uno qualsiasi deve cambiare quello che si vede.
+   Non si pretende che i numeri tornino identici: fra i piani validi si sceglie
+   sempre il piu' basso, quindi un giro puo' semplificarli. */
 {
   const scenaConZ = app.SLIDES.findIndex(x => x.t === "scene"
     && (app.STORY.scene[x.i].cast || []).some(a => a.z !== undefined));
@@ -92,24 +154,27 @@ assert.deepStrictEqual(Array.from(app.STORY.scene, app.sceneNumber),
   app.goTo(scenaConZ);
   const sc = app.STORY.scene[app.SLIDES[scenaConZ].i];
   const conZ = sc.cast.find(a => a.z !== undefined);
-  const nomi = () => app.stageOrder(sc).map(e => e.dato.c || e.dato.lato);
-  const prima = nomi(), primaZ = JSON.stringify([sc.cast, sc.primo]);
+  const nomi = () => app.stageOrder(sc).map(e => e.dato.c || e.dato.lato).join(" ");
+  const prima = nomi();
   const posto = () => app.stageOrder(sc).findIndex(e => e.dato === conZ);
   const partenza = posto();
 
   app.changeDepth(-1, { dato: conZ });
   assert.strictEqual(posto(), partenza - 1,
     `[ non arretra di un posto nell'ordine visivo: ${prima} -> ${nomi()}`);
-
   app.changeDepth(1, { dato: conZ });
-  assert.strictEqual(posto(), partenza, "] non riporta la figura dov'era");
-  assert.deepStrictEqual(nomi(), prima, "andata e ritorno cambiano l'ordine visivo");
-  assert.strictEqual(JSON.stringify([sc.cast, sc.primo]), primaZ,
-    "andata e ritorno lasciano coordinate o z diversi da quelli di partenza");
+  assert.strictEqual(nomi(), prima, "andata e ritorno cambiano l'ordine visivo");
+
+  [...sc.cast, ...(sc.primo || [])].filter(e => e.z !== undefined).forEach(e => {
+    const z = e.z; delete e.z;
+    const senza = nomi(); e.z = z;
+    assert.notStrictEqual(senza, prima,
+      `z:${z} su ${e.c || e.lato} non serve a niente: toglierlo non cambia l'ordine`);
+  });
 
   // sullo sfondo i due comandi non fanno niente: sta sotto a tutti per definizione
   app.changeDepth(1, { sfondo: true, dato: {} });
-  assert.deepStrictEqual(nomi(), prima, "[ o ] hanno mosso qualcosa partendo dallo sfondo");
+  assert.strictEqual(nomi(), prima, "[ o ] hanno mosso qualcosa partendo dallo sfondo");
 }
 
 // File fisici e chiavi ASSETS condividono la convenzione underscore-only.
@@ -263,12 +328,21 @@ app.STORY.scene.forEach(sc => sc.battute.forEach(b => {
 /* i cinque esiti, e nessun punteggio senza verdetto: senza i tre punti del
    colpevole non si supera il sette, quindi le fasce coprono tutto */
 const scoreCases = [
-  [answersOnly(0, 1, 2, 3, 4, 5), 10, "Caso risolto perfettamente"],
-  [answersOnly(0, 3, 4, 5),        8, "Caso risolto, ma qualcosa non torna"],
-  [answersOnly(1, 5),              4, "Caso risolto?"],
-  [answersOnly(0, 1, 2, 3, 4),     7, "I dettagli sono chiari"],
-  [answersOnly(0, 1),              3, "Qualcosa non torna"],
+  [answersOnly(0, 1, 2, 3, 4, 5, 6, 7, 8), 10, "Caso risolto perfettamente"],
+  [answersOnly(0, 1, 3, 7, 8),              8, "Caso risolto, ma qualcosa non torna"],
+  [answersOnly(1, 8),                       4, "Caso risolto?"],
+  [answersOnly(0, 1, 2, 3, 4, 5, 6, 7),     7, "I dettagli sono chiari"],
+  [answersOnly(0, 7),                       3, "Qualcosa non torna"],
 ];
+/* la scheda come e' stata decisa il 23 ottobre 2026: nove domande, due false
+   piste che non valgono niente, cinque circostanze da uno, il bicchiere da due
+   e il colpevole da tre, ultimo */
+assert.deepStrictEqual(Array.from(app.STORY.quiz, q => q.punti).sort(), [0, 0, 1, 1, 1, 1, 1, 2, 3],
+  "la scheda non e' piu' 2x0 + 5x1 + 2 + 3");
+assert.strictEqual(app.STORY.quiz.at(-1).punti, 3, "l'ultima domanda non e' quella del colpevole");
+assert.strictEqual(score(answersOnly(2, 5)), 0, "le false piste valgono dei punti");
+assert.strictEqual(score(app.STORY.quiz.map((q, i) => ([2, 5].includes(i) ? wrongAnswer(q) : q.giusta))), 10,
+  "sbagliare le false piste toglie punti");
 for (const [r, punti, atteso] of scoreCases) {
   assert.strictEqual(score(r), punti, `la prova per "${atteso}" non vale ${punti} punti`);
   assert.ok(renderAnswers(r).includes(atteso), `con ${punti} punti manca il verdetto "${atteso}"`);
@@ -292,7 +366,7 @@ app.state.risposte = [];
 assert.strictEqual(app.verdictPose(0, 0), "detective_riflessione.png", "scheda in bianco, posa sbagliata");
 
 // la risposta giusta non deve stare sempre nella stessa posizione, e ogni domanda
-// deve offrire tutti e quattro i sospetti: si sceglie una persona, non una frase
+// deve offrire tutti e sei i sospetti: si sceglie una persona, non una frase
 const correctPositions = new Set(app.STORY.quiz.map(q => q.giusta));
 assert.ok(correctPositions.size >= 3, "le risposte giuste sono tutte nella stessa colonna o quasi");
 app.STORY.quiz.forEach((q, i) => {
@@ -331,33 +405,32 @@ const applicationLines = [];
 app.STORY.scene.forEach(s => s.battute.forEach(b => applicationLines.push(b.t)));
 assert.deepStrictEqual(applicationLines, scriptLines, "STORY e copione.txt hanno battute diverse o in ordine diverso");
 
-// l'indagine ha un prezzo: due indizi soli, e due persone per indizio
+// l'indagine non ha tetto: tutti gli oggetti si aprono, e si chiede a chiunque
 app.goTo(app.SLIDES.findIndex(s => s.t === "tavolo"));
-[0, 1, 2, 3].forEach(app.openClue);
-assert.strictEqual(app.state.indagine.scelti.length, app.MAX_CLUES,
-  `il tavolo ha aperto ${app.state.indagine.scelti.length} indizi invece di ${app.MAX_CLUES}`);
-assert.ok(!app.state.indagine.scelti.includes(2), "il terzo indizio non doveva aprirsi");
-// ogni oggetto ha una risposta per ognuno dei quattro sospetti, e la vittima non e' fra loro
-assert.strictEqual(app.SUSPECTS.length, 4, `sospetti: ${app.SUSPECTS.join(", ")}`);
+app.state.indagine = { scelti: [], chiesto: {} };
+app.STORY.oggetti.forEach((_, i) => app.openClue(i));
+assert.strictEqual(app.state.indagine.scelti.length, app.STORY.oggetti.length,
+  `il tavolo ha aperto ${app.state.indagine.scelti.length} indizi su ${app.STORY.oggetti.length}`);
+// ogni oggetto ha una risposta per ognuno dei sei sospetti, e la vittima non e' fra loro
+assert.strictEqual(app.SUSPECTS.length, 6, `sospetti: ${app.SUSPECTS.join(", ")}`);
 assert.ok(!app.SUSPECTS.includes("Giuseppe"), "la vittima non puo' essere interrogata");
 app.STORY.oggetti.forEach(o => app.SUSPECTS.forEach(c =>
   assert.ok(o.risposte?.[c], `manca la risposta di ${c} su "${o.nome}"`)));
 
-// su un oggetto si interrogano due persone, non tre
+// su un oggetto si interroga chiunque, e la stessa persona conta una volta sola
 const glassClue = app.STORY.oggetti[0];
-app.state.indagine.chiesto[0] = ["Mauro", "Augusto", "Rosalia"].slice(0, 0);
-app.state.clue = 0;
-["Mauro", "Augusto", "Rosalia"].forEach(c => {
+app.state.clue = 0; app.state.indagine.chiesto = {};
+const clickAsk = c => {
   const gia = app.state.indagine.chiesto[0] || [];
-  if (!gia.includes(c) && gia.length < app.MAX_PEOPLE) app.state.indagine.chiesto[0] = [...gia, c];
-});
-assert.strictEqual(app.state.indagine.chiesto[0].length, app.MAX_PEOPLE,
-  "si sono interrogate piu' persone del consentito su un oggetto");
+  if (!gia.includes(c)) app.state.indagine.chiesto[0] = [...gia, c];
+};
+["Mauro", "Augusto", "Rosalia", "Mauro"].forEach(clickAsk);
+assert.strictEqual(app.questionsAsked(), 3, "una persona interrogata due volte conta due domande");
 app.render();
-["Mauro", "Augusto"].forEach(c =>
+["Mauro", "Augusto", "Rosalia"].forEach(c =>
   assert.ok(stage.innerHTML.includes(glassClue.risposte[c]), `${c} e' stato interrogato ma non risponde`));
-assert.ok(!stage.innerHTML.includes(glassClue.risposte.Rosalia), "risponde anche chi non e' stato interrogato");
-app.state.clue = null; app.state.indagine.chiesto[0] = [];
+assert.ok(!stage.innerHTML.includes(glassClue.risposte.Roberto), "risponde anche chi non e' stato interrogato");
+app.state.clue = null; app.state.indagine = { scelti: [], chiesto: {} };
 
 /* Un `data-nome` scritto nel markup si legge `dataset.nome`, e i due possono
    divergere in silenzio: rinominando le funzioni in inglese `dataset.avanti`
@@ -397,21 +470,41 @@ assert.deepStrictEqual(unhandledAttributes, [], `data-${unhandledAttributes.join
 const unusedAttributes = [...handledAttributes].filter(a => !renderedAttributes.has(a));
 assert.deepStrictEqual(unusedAttributes, [], `data-${unusedAttributes.join(", data-")}: nel gestore del clic ma in nessuna pagina`);
 
-/* Chiudere l'indagine a meta' costa: il pulsante deve chiedere conferma finche'
-   restano domande da fare, e passare dritto quando non ne restano. */
-const tavoloN = app.SLIDES.findIndex(s => s.t === "tavolo");
+/* Il tempo dell'indagine: un punto ogni tre domande, per difetto, e il
+   punteggio non va sotto zero. Si guarda il numero stampato nel verdetto. */
+assert.strictEqual(app.QUESTIONS_PER_POINT, 3, "il prezzo dell'indagine non e' piu' un punto ogni tre domande");
+const askN = n => {
+  app.state.indagine = { scelti: [], chiesto: {} };
+  for (let k = 0; k < n; k++) {
+    const o = k % app.STORY.oggetti.length, chi = app.SUSPECTS[Math.floor(k / app.STORY.oggetti.length)];
+    app.state.indagine.chiesto[o] = [...(app.state.indagine.chiesto[o] || []), chi];
+  }
+};
+for (const [n, meno] of [[0, 0], [2, 0], [3, 1], [5, 1], [6, 2], [8, 2], [9, 3]]) {
+  askN(n);
+  assert.strictEqual(app.questionsAsked(), n, `contate ${app.questionsAsked()} domande invece di ${n}`);
+  assert.strictEqual(app.timePenalty(), meno, `${n} domande tolgono ${app.timePenalty()} punti, non ${meno}`);
+  assert.ok(renderAnswers(app.STORY.quiz.map(q => q.giusta)).includes(`class="score">${totalPoints - meno} `),
+    `pieno con ${n} domande: atteso ${totalPoints - meno}`);
+}
+// 3 punti dalla scheda, 12 domande = 4 punti in meno: si resta a zero, non a -1
+askN(12);
+assert.strictEqual(score(answersOnly(0, 7)), 3, "la prova del pavimento non vale 3 punti");
+assert.ok(renderAnswers(answersOnly(0, 7)).includes('class="score">0 '), "il punteggio e' sceso sotto zero");
+assert.ok(stage.innerHTML.includes("12 domande all’indagine: 4 punti in meno."), "il verdetto non dice quanto e' costata l'indagine");
 app.state.indagine = { scelti: [], chiesto: {} };
-app.goTo(tavoloN);
-assert.strictEqual(app.investigationComplete(), false, "un'indagine appena aperta risulta gia' completa");
-app.openClue(0); app.state.indagine.chiesto[0] = [app.SUSPECTS[0], app.SUSPECTS[1]];
-app.state.clue = null;
-assert.strictEqual(app.investigationComplete(), false, "con un oggetto answersOnly l'indagine risulta completa");
-app.openClue(1); app.state.indagine.chiesto[1] = [app.SUSPECTS[0]];
-app.state.clue = null;
-assert.strictEqual(app.investigationComplete(), false, "con una persona sola sul secondo oggetto risulta completa");
-app.state.indagine.chiesto[1] = [app.SUSPECTS[0], app.SUSPECTS[2]];
-assert.strictEqual(app.investigationComplete(), true, "indagine finita ma non riconosciuta come tale");
-app.state.indagine = { scelti: [], chiesto: {} };
+assert.ok(!renderAnswers(app.STORY.quiz.map(q => q.giusta)).includes("domande all’indagine"), "senza penalita' il verdetto parla di domande");
+app.state.risposte = [];
+
+// chiudere l'indagine chiede sempre conferma: un tocco non deve bastare
+{
+  const tavoloN = app.SLIDES.findIndex(s => s.t === "tavolo");
+  app.goTo(tavoloN);
+  app.confirmAndAdvance();
+  assert.strictEqual(app.state.n, tavoloN, "dal tavolo si passa oltre senza conferma");
+  assert.ok(app.overlayElement.innerHTML.includes("Chiudo qui"), "chiudendo l'indagine non si chiede conferma");
+  app.closeOverlay();
+}
 
 // il tavolo degli indizi cita battute a mano: devono esistere davvero, e il numero
 // di scena dev'essere quello giusto - rinumerare una scena le lasciava indietro
@@ -454,11 +547,11 @@ assert.ok(!dominio.DIRECTOR_ENABLED && !dominio.DEV_ENABLED && !dominio.TITLES_E
 
 // il banco voci ha una copia deliberata del motore: i profili devono restare
 // identici, o si accordano le voci su una pagina e si recita con quelle dell'altra
-const voiceProfiles = t => Object.fromEntries([...t.matchAll(/^ *(Giuseppe|Rosalia|Roberto|Augusto|Mauro): *(\{[^}]*\})/gm)]
+const voiceProfiles = t => Object.fromEntries([...t.matchAll(/^ *(Giuseppe|Rosalia|Roberto|Augusto|Mauro|Elisa|Andrea): *(\{[^}]*\})/gm)]
   .map(m => [m[1], m[2].replace(/\s+/g, "")]));
 const benchProfiles = voiceProfiles(voiceBenchHtml);
 const appProfiles = voiceProfiles(appHtml);
-assert.strictEqual(Object.keys(appProfiles).length, 5, `nell'app trovo ${Object.keys(appProfiles).length} profili di voce, non 5`);
+assert.strictEqual(Object.keys(appProfiles).length, 7, `nell'app trovo ${Object.keys(appProfiles).length} profili di voce, non 7`);
 assert.deepStrictEqual(benchProfiles, appProfiles, "i profili di voce di voci.html e oliva-blu.html sono diversi");
 
 // Nelle conferme con un'azione alternativa ("Ritenta") non esiste data-close:
@@ -467,11 +560,17 @@ app.askForSolution();
 assert.strictEqual(app.overlayElement.focusedSelector, "[data-close],#ov-no",
   "la conferma della soluzione non mette il focus su Ritenta");
 
-// Web Audio comportamentale: la seconda battuta scollega l'uscita della prima
-// e ogni oscillatore termina liberando il filtro condiviso della propria frase.
+// Web Audio comportamentale: la seconda battuta scollega l'uscita della prima,
+// e a liberare il filtro condiviso e' l'ultimo oscillatore della frase — solo
+// lui installa la richiamata, perche' e' l'unico che sa di essere l'ultimo.
 const audioEvents = [];
+/* La rampa esponenziale si comporta come nel browser: verso zero solleva. Il
+   finto parametro di prima la ingoiava, ed e' il motivo per cui la corsa fra
+   `resume()` e il muto non era mai stata vista da nessun controllo. */
 const parameter = () => ({ value: 0, cancelScheduledValues() {}, setValueAtTime() {},
-  exponentialRampToValueAtTime() {} });
+  exponentialRampToValueAtTime(target) {
+    if (Math.abs(target) < 1e-6) throw new RangeError(`rampa esponenziale verso ${target}`);
+  } });
 const node = type => ({ type, gain: parameter(), frequency: parameter(), Q: parameter(),
   connect(target) { audioEvents.push(["connect", type, target.type]); return target; },
   disconnect() { audioEvents.push(["disconnect", type]); },
@@ -484,6 +583,20 @@ class FakeAudioContext {
   createOscillator() { return node("oscillator"); }
   resume() { return Promise.resolve(); }
 }
+/* Il contesto vero nasce sospeso e `resume()` risolve quando gli pare: qui
+   l'attesa si tiene in mano e si scioglie a comando, che e' l'unico modo di
+   guardare dentro il buco fra la richiesta e i bip.
+   Non e' una `Promise` ma un thenable: cosi' il seguito parte quando lo diciamo
+   noi invece che al prossimo giro di microtask, e in un controllo sincrono come
+   questo si puo' guardare il risultato subito dopo. L'app fa
+   `audio.resume().then(f, g)` e non guarda cosa torna, quindi il codice
+   esercitato e' lo stesso. */
+class DeferredAudioContext extends FakeAudioContext {
+  constructor() { super(); this.state = "suspended"; this.pending = []; }
+  resume() { const io = this; return { then(ok, ko) { io.pending.push({ ok, ko }); return this; } }; }
+  release() { const q = this.pending; this.pending = []; this.state = "running"; q.forEach(p => p.ok()); }
+  fail(err) { const q = this.pending; this.pending = []; q.forEach(p => p.ko?.(err)); }
+}
 const { app: audioApp } = openApp("{speak,setVolume}", undefined, { AudioContext: FakeAudioContext });
 audioApp.setVolume(.7, false);
 audioApp.speak("Giuseppe", "prima battuta");
@@ -495,6 +608,102 @@ assert.ok(audioEvents.some(e => e.join(":") === "connect:filter:gain"),
   "il filtro audio non passa dal gain della battuta");
 assert.ok(audioEvents.some(e => e[0] === "disconnect" && e[1] === "filter"),
   "il filtro audio non viene liberato alla fine della battuta");
+
+/* Il buco fra `resume()` e i bip. Ogni prova apre un'app sua, cosi' lo stato
+   audio non passa da una all'altra. */
+{
+  const conRitardo = () => {
+    let ctx = null;
+    const Ctx = class extends DeferredAudioContext { constructor() { super(); ctx = this; } };
+    const { app: a } = openApp("{speak,setVolume,state,goTo,SLIDES}", undefined, { AudioContext: Ctx });
+    a.setVolume(.7, false);
+    return { a, ctx: () => ctx };
+  };
+  const bipProgrammati = () => audioEvents.filter(e => e.join(":") === "connect:oscillator:gain").length;
+
+  // 1. muto mentre il contesto sta ancora partendo: la battuta non deve suonare
+  {
+    const { a, ctx } = conRitardo();
+    a.speak("Giuseppe", "prova");
+    const prima = bipProgrammati();
+    a.setVolume(0, false);
+    assert.doesNotThrow(() => ctx().release(),
+      "sciogliere il resume dopo il muto solleva: la rampa punta a zero");
+    assert.strictEqual(bipProgrammati(), prima,
+      "la battuta in volo suona lo stesso dopo il muto");
+  }
+
+  // 2. due battute di fila: quando il contesto parte deve parlare solo l'ultima
+  {
+    const { a, ctx } = conRitardo();
+    a.speak("Giuseppe", "prima");
+    a.speak("Rosalia", "seconda");
+    const prima = bipProgrammati();
+    ctx().release();
+    const nuovi = bipProgrammati() - prima;
+    assert.ok(nuovi > 0, "dopo il resume non parla nessuno");
+    // la stessa battuta da sola fa esattamente questi bip: se ne parlassero due
+    // insieme sarebbero il doppio abbondante
+    const { a: b, ctx: c2 } = conRitardo();
+    b.speak("Rosalia", "seconda");
+    const soloUna = bipProgrammati();
+    c2().release();
+    assert.strictEqual(bipProgrammati() - soloUna, nuovi,
+      "due richieste in volo fanno parlare piu' di una battuta");
+  }
+
+  // 3. cambiare schermata mentre il contesto parte: la battuta di prima resta muta
+  {
+    const { a, ctx } = conRitardo();
+    a.speak("Giuseppe", "prova");
+    const prima = bipProgrammati();
+    a.goTo(a.SLIDES.findIndex(x => x.t === "cast"));   // una schermata che non parla
+    ctx().release();
+    assert.strictEqual(bipProgrammati(), prima, "la battuta della schermata lasciata suona lo stesso");
+  }
+
+  // 4. un resume che fallisce non deve lasciare rifiuti non gestiti
+  {
+    let ctx = null;
+    const Rotto = class extends DeferredAudioContext { constructor() { super(); ctx = this; } };
+    const { app: a } = openApp("{speak,setVolume}", undefined, { AudioContext: Rotto });
+    a.setVolume(.7, false);
+    a.speak("Giuseppe", "prova");
+    const prima = bipProgrammati();
+    assert.doesNotThrow(() => ctx.fail(new Error("niente audio")),
+      "un resume fallito propaga l'errore invece di restare zitto");
+    assert.strictEqual(bipProgrammati(), prima, "un resume fallito programma bip lo stesso");
+  }
+
+  // 5. rialzando il volume si torna a parlare
+  {
+    const { a, ctx } = conRitardo();
+    a.setVolume(0, false);
+    a.setVolume(.7, false);
+    a.speak("Giuseppe", "prova");
+    const prima = bipProgrammati();
+    ctx().release();
+    assert.ok(bipProgrammati() > prima, "dopo aver rialzato il volume non parla piu' nessuno");
+  }
+}
+
+// Hardening: stato pubblico fuori intervallo, senza cambiare i percorsi normali.
+{
+  const { app: a } = openApp("{renderScene,state,STORY}");
+  for (const step of [-1, 10000]) {
+    a.state.step = step;
+    a.renderScene(0);
+    assert.ok(a.state.step >= 0 && a.state.step <= a.STORY.scene[0].battute.length);
+  }
+}
+{
+  const { app: a } = openApp("{renderHelp,overlayElement}");
+  a.renderHelp();
+  const help = a.overlayElement.innerHTML;
+  assert.ok(!help.includes("pulsante in basso"), "aiuto colloca male il pulsante");
+  assert.ok(!help.includes("immagini mancanti"), "aiuto descrive una riga rimossa");
+  assert.ok(help.includes("schede dei personaggi"), "aiuto ignora lo scorrimento del cast");
+}
 
 console.log(`copione: ${scriptLines.length} battute verificate`);
 console.log(`ok — ${app.SLIDES.length} schermate, ${dialogueCount} battute, quiz verificato`);

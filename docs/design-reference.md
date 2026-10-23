@@ -306,7 +306,12 @@ that edit:
   bottle to be put away, who read the note without telling Giuseppe. `smoke.js` scores from
   `giusta` rather than letters, fails if a question grows its own `opzioni`, and fails if the
   right answer sits in fewer than three distinct columns.
-- **One page, six questions**, 31 August 2026. The quiz was six slides; now it is one, and
+- **Nine questions from 23 October 2026**, over six suspects (Elisa and Andrea joined). Five
+  circumstances at 1 point, the glass that convicts at 2, the culprit's name at 3 and last, and
+  two questions on false leads worth **0**: 3, *Chi aveva le dita sporche di blu?*, and 6, *Chi è
+  stato visto con le carte di Giuseppe in mano?*. The sheet never says which are free. Still ten
+  in all; `smoke.js` pins the shape `2×0 + 5×1 + 2 + 3`.
+- **One page, one question at a time**, 31 August 2026. The quiz was six slides; now it is one, and
   `currentQuestion()` — the first unanswered index — is the whole state machine. A closed
   question collapses to a line with the name chosen and nothing else — **no points, no right or
   wrong**: the verdict lands once, at the end, and until then the sheet only records who was
@@ -421,15 +426,18 @@ Do not raise it again, and do not cut it.
 
 ## The investigation has a price
 
-Added 30 August 2026, and it is the game, not decoration. On *Gli indizi sul tavolo* the table
-may ask about **two** of the four objects, and for each one may question **one** person. Opening
-a card is the choice — from that moment a question is spent — so the screen says how many are
-left before they commit. `state.indagine = { scelti, chiesto }` holds it; `MAX_CLUES` is 2.
+Added 30 August 2026, and it is the game, not decoration. Since 23 October 2026 it has **no cap,
+only a cost**: the two-objects, two-people limit (`MAX_CLUES`, `MAX_PEOPLE`) went, and every
+object opens and every suspect answers. A question is one person asked about one object; opening
+an object is free. Every `QUESTIONS_PER_POINT` (3) questions take one point off the final card,
+rounded down — `timePenalty()` is `Math.floor(questionsAsked() / 3)` — and `score()` is
+`Math.max(0, quizScore() - timePenalty())`, so the score never goes negative. Both notes on the
+table say so and keep a running count; the verdict adds a line with the cost when there is one.
+`state.indagine = { scelti, chiesto }` still holds it: `scelti` is now only what was opened.
 
-All four suspects are always offered — `SUSPECTS` is every character except `VICTIM`, since
-Giuseppe is dead and does not answer — and **two of them** can be questioned per object
-(`MAX_PEOPLE`). Two objects times two people is four answers out of sixteen in a game, which is
-where the replay value lives.
+All six suspects are always offered — `SUSPECTS` is every character except `VICTIM`, since
+Giuseppe is dead and does not answer. Asking everything is allowed and simply expensive, which is
+where the tension now lives.
 
 `o.risposte[personaggio]` holds those sixteen, written on 30 August 2026 and **not in the
 copione**: each is information the scene did not give. They are the culprit's problem — Mauro's
@@ -550,32 +558,38 @@ nowhere else. Because that callback removes `data-close`, `showOverlay()` focuse
 `[data-close],#ov-no`: selecting only the former left both solution confirmations without an
 initial keyboard focus. `smoke.js` exercises this exception through `askForSolution()`.
 
-**Closing the investigation early asks first.** While `investigationComplete()` is false — both
-objects chosen and every one of them questioned to the limit — `Chiudi l'indagine` opens a
+**Closing the investigation asks first, always.** With no cap there is no "complete" state any
+more (`investigationComplete()` went with the limits), so `Chiudi l'indagine` always opens a
 confirmation instead of moving on. The wording is the investigator's, not the rulebook's: it
 recaps the evening and asks whether you have enough, and it **never mentions the clues** or how
 many questions are left, because that would be coaching. `Torna indietro` takes the focus; going
 on has to be wanted. `showOverlay()` now fills the one overlay for both the commands window and
 the confirmation.
 
-`openClue(i)` is the single door: the click handler and the `1`–`4` keys both go through it,
-or the keys would spend nothing and open everything. `smoke.js` opens all four and asserts only
-two took, and that a questioned character's lines appear while the others' do not.
+`openClue(i)` is the single door: the click handler and the `1`–`4` keys both go through it.
+`smoke.js` opens every object, checks a questioned character's lines appear while the others' do
+not, and walks the penalty table — 0, 2, 3, 5, 6, 8, 9 questions — plus the floor at zero.
 
 ## The running order, 29 August 2026
 
-Four scenes, twelve scene screens, twenty in all:
+Five scenes, fifteen scene screens, twenty-three in all:
 
 ```
 copertina · avviso · personaggi
 1  L'inaugurazione degli Oliviani   sala + il biglietto + sala
 2  La donazione                     il foglio + sala + Il racconto dell'olio + La tensione
-3  Il brindisi                      sala + Il malore dell'oliva blu
-4  Gli indizi sul tavolo            la bottiglietta + il bicchiere + sala
+3  Fra gli ulivi                    oliveto + Il ritratto + La luce degli ulivi
+4  Il brindisi                      sala + Il malore dell'oliva blu
+5  Gli indizi sul tavolo            la bottiglietta + il bicchiere + sala
 tavolo degli indizi · investigatore · scheda finale · verdetto · soluzione e congedo
 ```
 
-Twenty screens, twelve of them scenes. Codex delivered five meeple-detective poses on
+Scene 3 was added on 23 October 2026 with two new characters, Elisa Lanzillotta (Augusto's
+wife, a painter) and Andrea Leuzzi (a student, Giuseppe's secret companion). Both are suspects:
+they appear in the clue answers and in every question of the final card, whose correct answers
+are unchanged. Its casella is `oliveto`; the outdoor background has not been delivered yet.
+
+Twenty-three screens, fifteen of them scenes. Codex delivered five meeple-detective poses on
 31 August 2026; `detective_riflessione` stands **above** the recap, the pose where he
 holds his chin while the case is handed over. He was beside it past 62rem until 1 September 2026,
 which fitted six large lines but left the button hanging at mid height, far from the text it

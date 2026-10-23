@@ -13,6 +13,8 @@ Rosalia De Robertis - Nipote di Giuseppe. Gli vuole bene, ma è preoccupata per 
 Roberto Vispero - Fondatore degli Oliviani. Conosce bene gli ulivi e i prodotti agricoli.
 Augusto De Virgilis - Membro degli Oliviani. Parla spesso della produzione dell’olio.
 Mauro Damiani - Nuovo adepto degli Oliviani. Marito di Rosalia. È molto serio, rigido e sospettoso.
+Elisa Lanzillotta - Moglie di Augusto. Pittrice elegante, dipinge su commissione ed è sempre in ritardo con le consegne.
+Andrea Leuzzi - Studente universitario brillante, di bell’aspetto. È spesso accanto a Giuseppe.
 
 — SCENA 1, prima parte: L’inaugurazione degli Oliviani —
 
@@ -64,6 +66,8 @@ Roberto: «È un gesto generoso. Con il suo aiuto potremo crescere.»
 
 Giuseppe: «Gli ulivi durano secoli. Vorrei che anche questa casa durasse così a lungo.»
 Roberto: «Allora il suo nome resterà fra queste mura, signor Giuseppe.»
+Giuseppe: «Una sola condizione: voglio un rendiconto. Ogni euro, dove va e per cosa.»
+Roberto: «Ma certo. I conti li tiene Augusto: glieli mostrerà lui.»
 
 — SCENA 2, terza parte: Il racconto dell’olio —
 
@@ -83,41 +87,110 @@ Mauro, piano: «E per avere olive sane… qualcuno usa sostanze pericolose.»
 Roberto: «Prodotti controllati, Mauro. Solo se usati nel modo giusto.»
 Augusto: «Rimetti quella bottiglietta nell’armadietto, Mauro. Non deve stare vicino al rinfresco.»
 Mauro: «Certo. Ci penso io.»
+Roberto, piano, ad Augusto: «I quadri della sala… sono usciti dalla cassa?»
+Augusto, piano: «Non adesso, Roberto. Ne parliamo dopo.»
 
-— SCENA 3, prima parte: Il brindisi —
+— SCENA 3, prima parte: Fra gli ulivi —
+
+Augusto: «Usciamo un momento. L’oliveto, al tramonto, merita di essere visto.»
+Augusto: «E finalmente posso presentarvi mia moglie. Elisa Lanzillotta, pittrice.»
+Elisa: «Piacere. Qui fuori, a quest’ora, la luce sugli ulivi è perfetta.»
+Giuseppe: «Signora Elisa, è un onore. Augusto parla spesso dei suoi quadri.»
+Elisa: «Augusto parla spesso di tutto, signor Giuseppe. Ma lo ringrazio.»
+Andrea: «Andrea Leuzzi. Studio all’università, e quando posso vengo a respirare un po’ di campagna.»
+Giuseppe: «Andrea, che piacere vederti. Sei arrivato giusto in tempo.»
+Andrea: «Non me lo sarei perso per niente al mondo, Giuseppe.»
+Rosalia: «Zio, vi conoscete già?»
+Giuseppe: «Andrea mi aiuta con i libri e con le carte. Ha molta pazienza con un vecchio come me.»
+Andrea: «Vecchio? Non dirlo nemmeno per scherzo.»
+Mauro, piano: «Gli dà del tu.»
+Rosalia, piano: «Lascia stare, Mauro.»
+
+— SCENA 3, seconda parte: Il ritratto —
+
+Giuseppe: «Elisa, a che punto è il mio ritratto?»
+Elisa: «Ho dovuto metterlo un poco da parte, mi scusi. Avevo altri lavori rimasti indietro.»
+Elisa: «Ad Augusto ne ho già consegnati due, solo quest’anno.»
+Elisa: «E tutti e due me li ha chiesti con urgenza.»
+Augusto: «Uno era per la sala degli Oliviani. Serviva per stasera.»
+Elisa: «Il suo arriverà, signor Giuseppe, glielo prometto. Un ritratto non si fa di corsa.»
+Giuseppe: «Lo so bene. Volevo solo vederlo finito in tempo.»
+Giuseppe, con garbo: «Anche perché l’anticipo gliel’ho versato in primavera.»
+Elisa: «Non l’ho dimenticato, signor Giuseppe. Glielo assicuro.»
+Andrea: «Ne varrà la pena. Certi volti meritano tempo.»
+Giuseppe, sorridendo: «Sei sempre troppo gentile, Andrea.»
+Elisa: «Ha ragione il ragazzo. Lei ha un viso che racconta molte cose.»
+Andrea: «E uno sguardo che non si dimentica.»
+Giuseppe: «Basta così, o finisco per arrossire davanti a tutti.»
+Andrea: «Elisa, ha ancora del blu sulle dita.»
+Elisa: «Oltremare. Ho ritoccato il quadro della sala fino a un’ora fa.»
+
+— SCENA 3, terza parte: La luce degli ulivi —
+
+Elisa: «Guardate le foglie quando si muove il vento: sopra sono verdi, sotto quasi d’argento.»
+Augusto: «È la loro difesa. Quella peluria chiara limita la perdita d’acqua e le ripara dal sole.»
+Augusto: «In Puglia ci sono ulivi che hanno visto passare secoli. Alcuni hanno più di mille anni.»
+Elisa: «Anche Van Gogh dipinse gli ulivi, più di una volta. Diceva che erano difficilissimi da rendere.»
+Andrea: «Allora il ritratto di Giuseppe dovrebbe avere un ulivo alle spalle.»
+Giuseppe: «Un ulivo e un po’ di questa luce. Mi piacerebbe.»
+Elisa: «Allora lo dipingerò così. Ma ci vorrà ancora un po’.»
+Andrea, piano, a Giuseppe: «Io aspetto volentieri. Basta che ci sia anche tu, quando sarà finito.»
+Giuseppe, piano: «Ci sarò, Andrea. Te lo prometto.»
+Rosalia, a Mauro: «Mio zio non mi aveva mai parlato di lui.»
+Mauro: «Tuo zio non ti dice molte cose.»
+Rosalia: «Prima l’ho visto uscire dallo studio con le carte dello zio in mano.»
+Mauro: «Allora chiediti cosa c’era scritto.»
+
+— SCENA 4, prima parte: Il brindisi —
 
 Mauro: «Signor Giuseppe, un brindisi per questo nuovo inizio.»
 Giuseppe: «Volentieri. Alla vostra comunità.»
+Andrea: «E a chi ci ha portati fin qui, stasera.»
+Giuseppe, piano: «A te, allora.»
 Roberto, sullo sfondo: «Un buon olio racconta il territorio da cui nasce.»
 Augusto: «E racconta anche il lavoro di chi cura gli ulivi.»
 Giuseppe: «E quali olive danno carattere agli oli pugliesi?»
 Roberto: «Qui nel Brindisino l’Ogliarola dà oli delicati, con note di foglia, erba e carciofo.»
 Augusto: «La Cellina di Nardò ricorda il pomodoro e i frutti di bosco; la Coratina è più intensa, amara e piccante.»
 Giuseppe: «Tre olive, tre voci diverse della stessa terra.»
+Andrea: «Dov’è finita Elisa?»
+Augusto: «È andata a lavarsi le mani. Quel blu non vuole venire via.»
+Roberto, piano, ad Augusto: «E il rendiconto? Giuseppe lo chiederà presto.»
+Augusto, piano: «Avrà tutto. Te l’ho detto.»
 Giuseppe: «Ho già firmato tutto, Rosalia. Non cambierò idea.»
 Rosalia, tra sé: «Vorrei fermare tutto… ma ormai è tardi.»
 Mauro, tra sé: «Il male va fermato prima che cresca.»
 
-— SCENA 3, seconda parte: Il malore dell’oliva blu —
+— SCENA 4, seconda parte: Il malore dell’oliva blu —
 
 Giuseppe: «Mi… mi sento strano…»
 Rosalia: «Zio Giuseppe! Che succede?»
+Andrea: «Giuseppe! Guardami, resta con me.»
 Roberto: «Presto, chiamate aiuto!»
 Augusto: «La sua bocca… è diventata blu!»
+Andrea: «Il bicchiere… nessuno lo tocchi!»
 Mauro, molto piano: «Il giudizio è arrivato…»
 
-— SCENA 4, prima parte: Gli indizi sul tavolo —
+— SCENA 5, prima parte: Gli indizi sul tavolo —
 
 Roberto: «Questa non è una bevanda. È un prodotto per le piante.»
 Augusto: «Serve a proteggere gli ulivi, ma se usato male può essere pericoloso.»
+Andrea: «Quel simbolo lo conosco. Non è roba da tenere in una sala da festa.»
+Elisa, entrando: «Che cosa è successo? Ero di là, a lavarmi le mani…»
+Roberto: «Elisa… le sue dita sono ancora blu.»
+Elisa: «È colore! Oltremare, l’avete visto anche voi.»
 
-— SCENA 4, seconda parte: Gli indizi sul tavolo —
+— SCENA 5, seconda parte: Gli indizi sul tavolo —
 
 Augusto: «Quella sostanza è rischiosa, non andrebbe tenuta vicino agli alimenti!»
 Roberto: «Qualcuno ha visto il bicchiere da cui ha bevuto?»
+Rosalia: «E il rendiconto, Augusto? Mio zio lo voleva per domani.»
+Augusto: «Che c’entra adesso il rendiconto?»
 
-— SCENA 4, terza parte: Gli indizi sul tavolo —
+— SCENA 5, terza parte: Gli indizi sul tavolo —
 
+Mauro: «E se fosse stato il ragazzo? Era sempre accanto a lui, con le sue carte.»
+Andrea: «Io lo volevo vivo. Più di chiunque, in questa stanza.»
 Rosalia: «…»
 Rosalia: «Ora che ci penso… prima del brindisi Mauro era vicino al tavolo dei bicchieri.»
 Mauro: «C’era confusione. Ho solo aiutato a distribuirli.»
@@ -132,36 +205,70 @@ Giuseppe stava per donare tutto quello che aveva. Qualcuno, in quella stanza, er
 Aiutami a risolvere il caso!
 
 — SCHEDA FINALE —
-1. Chi ha portato il bicchiere a Giuseppe?   [2 punti]
-   A. Rosalia
-   B. Roberto
-   C. Augusto
-   D. Mauro   ← giusta
-2. Chi ha scritto il biglietto per fermare la donazione?   [1 punto]
+1. Chi ha scritto il biglietto per fermare la donazione?   [1 punto]
    A. Rosalia   ← giusta
    B. Roberto
    C. Augusto
    D. Mauro
-3. Chi ha letto quel biglietto senza dirlo a Giuseppe?   [1 punto]
+   E. Elisa
+   F. Andrea
+2. Chi ha letto quel biglietto senza dirlo a Giuseppe?   [1 punto]
    A. Rosalia
    B. Roberto
    C. Augusto
    D. Mauro   ← giusta
-4. Chi ha chiesto che la bottiglietta fosse messa via?   [2 punti]
+   E. Elisa
+   F. Andrea
+3. Chi aveva le dita sporche di blu?   [0 punti]
+   A. Rosalia
+   B. Roberto
+   C. Augusto
+   D. Mauro
+   E. Elisa   ← giusta
+   F. Andrea
+4. Chi teneva i conti degli Oliviani?   [1 punto]
    A. Rosalia
    B. Roberto
    C. Augusto   ← giusta
    D. Mauro
+   E. Elisa
+   F. Andrea
 5. Chi ha riconosciuto che nella bottiglietta non c’era una bevanda?   [1 punto]
    A. Rosalia
    B. Roberto   ← giusta
    C. Augusto
    D. Mauro
-6. Il colpevole è…   [3 punti]
+   E. Elisa
+   F. Andrea
+6. Chi è stato visto con le carte di Giuseppe in mano?   [0 punti]
+   A. Rosalia
+   B. Roberto
+   C. Augusto
+   D. Mauro
+   E. Elisa
+   F. Andrea   ← giusta
+7. Chi aveva già servito tutti dalla stessa caraffa?   [1 punto]
+   A. Rosalia
+   B. Roberto   ← giusta
+   C. Augusto
+   D. Mauro
+   E. Elisa
+   F. Andrea
+8. Chi ha portato il bicchiere a Giuseppe?   [2 punti]
    A. Rosalia
    B. Roberto
    C. Augusto
    D. Mauro   ← giusta
+   E. Elisa
+   F. Andrea
+9. Il colpevole è…   [3 punti]
+   A. Rosalia
+   B. Roberto
+   C. Augusto
+   D. Mauro   ← giusta
+   E. Elisa
+   F. Andrea
 
 — SOLUZIONE NARRATA —
 Giuseppe voleva donare i suoi beni agli Oliviani. Rosalia era preoccupata e voleva fermarlo, ma non voleva fargli del male. Mauro, invece, ha deciso di agire da solo. Ha portato a Giuseppe un bicchiere con un prodotto pericoloso. Per questo Giuseppe si è sentito male e la sua bocca è diventata blu. Il colpevole è Mauro.
+Le altre piste erano false. Il blu sulle dita di Elisa era colore da pittrice: quello sulle labbra di Giuseppe veniva dal prodotto, che come molti trattamenti a base di rame usati sugli ulivi è azzurro. I quadri della sala Augusto li aveva pagati di tasca sua, e i conti potevano essere controllati. Il foglio per Andrea era firmato da mesi: dalla morte di Giuseppe non aveva niente da guadagnare.
