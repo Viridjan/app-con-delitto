@@ -2369,6 +2369,14 @@ function openClue(i) {
 
 stage.addEventListener("click", e => {
   const t = e.target.closest("[data-clue],[data-chiedi],[data-avanti],[data-opt]");
+  /* Il secondo clic di un doppio clic non chiede un'altra battuta. Il primo
+     ha gia' rifatto il markup: senza questo filtro la nuova riga spariva
+     subito sotto la successiva. Le scelte degli indizi e del quiz restano
+     indipendenti; i clic da tastiera hanno detail 0 e passano normalmente. */
+  if (e.detail > 1 && (!t || t.dataset.avanti !== undefined)) {
+    e.preventDefault();
+    return;
+  }
   if (t) {
     if (t.dataset.clue !== undefined) {
       if (t.dataset.clue === "close") { state.clue = null; return render(); }
@@ -2488,6 +2496,16 @@ const isNativeControl = el =>
 document.addEventListener("keydown", e => {
   if (e.metaKey || e.ctrlKey || e.altKey) return;
   if (/^(INPUT|TEXTAREA)$/.test(e.target.tagName)) return;
+  /* Un tasto tenuto premuto produce altri keydown: sono lo stesso gesto,
+     non nuove richieste di dialogo. Su Prosegui si ferma anche l'Invio
+     ripetuto, prima che il browser lo trasformi in un altro clic nativo.
+     In regia la ripetizione serve invece a spostare le figure. */
+  if (e.repeat && !state.directorMode
+      && ([" ", "ArrowRight", "ArrowDown", "PageDown"].includes(e.key)
+          || (e.key === "Enter" && e.target.closest?.("[data-avanti]")))) {
+    e.preventDefault();
+    return;
+  }
   /* Lo spazio, quando il fuoco sta su un controllo, e' del controllo: premere un
      pulsante da tastiera si fa cosi'. Intercettandolo qui `Prosegui` non faceva
      niente se lo si raggiungeva col tab, e nemmeno le risposte della scheda

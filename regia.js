@@ -211,6 +211,53 @@
     return null;
   });
 
+  /* Un gesto deve scoprire una sola battuta: gli eventi ripetuti dal sistema
+     e il secondo clic di un doppio clic non sono richieste nuove. */
+  prova("tenere premuto un tasto non salta battute", () => {
+    if (state.directorMode) toggleDirector();
+    if (state.developmentMode) toggleDevelopment();
+    for (const key of [" ", "ArrowRight", "ArrowDown", "PageDown"]) {
+      goTo(scene[0][1]);
+      tasto(key, stage);
+      const prima = state.step;
+      const ripetuto = new KeyboardEvent("keydown", { key, repeat:true, bubbles:true, cancelable:true });
+      stage.dispatchEvent(ripetuto);
+      if (state.step !== prima) return `${key}: ripetizione scopre un'altra battuta`;
+      if (!ripetuto.defaultPrevented) return `${key}: ripetizione non annullata`;
+      stage.dispatchEvent(new KeyboardEvent("keyup", { key, bubbles:true }));
+      tasto(key, stage);
+      if (state.step !== prima + 1) return `${key}: una nuova pressione non avanza`;
+    }
+    return null;
+  });
+
+  prova("Invio tenuto premuto non riattiva Prosegui", () => {
+    goTo(scene[0][1]);
+    const prima = state.step;
+    const pulsante = stage.querySelector("[data-avanti]");
+    const evento = new KeyboardEvent("keydown", { key:"Enter", repeat:true, bubbles:true, cancelable:true });
+    pulsante.dispatchEvent(evento);
+    if (!evento.defaultPrevented) return "l'attivazione nativa ripetuta non viene fermata";
+    if (state.step !== prima) return "Invio ripetuto avanza";
+    pulsante.click();
+    if (state.step !== prima + 1) return "l'attivazione singola del pulsante non avanza";
+    return null;
+  });
+
+  prova("il secondo clic di un doppio clic non salta battute", () => {
+    if (state.directorMode) toggleDirector();
+    for (const selettore of [".palco", "[data-avanti]"]) {
+      goTo(scene[0][1]);
+      stage.querySelector(selettore).dispatchEvent(new MouseEvent("click", { detail:1, bubbles:true }));
+      const prima = state.step;
+      stage.querySelector(selettore).dispatchEvent(new MouseEvent("click", { detail:2, bubbles:true }));
+      if (state.step !== prima) return `${selettore}: il secondo clic scopre un'altra battuta`;
+      stage.querySelector(selettore).dispatchEvent(new MouseEvent("click", { detail:1, bubbles:true }));
+      if (state.step !== prima + 1) return `${selettore}: un nuovo clic non avanza`;
+    }
+    return null;
+  });
+
   prova("dissolve appartiene solo al cast e le schede partono attenuate", () => {
     if (state.directorMode) toggleDirector();
     for (let i = 0; i < SLIDES.length; i++) {
