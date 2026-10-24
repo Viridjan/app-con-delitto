@@ -170,7 +170,12 @@ kbd{font:inherit; font-size:.78em; border:1px solid var(--line); border-bottom-w
    braccia: `roberto_accoglienza` (642x900) restava figura intera dove
    `mauro_guardingo` (229x900) era gia' mezzo busto. La sfumatura sul fondo sta
    sul contenitore, non sull'immagine, o cadrebbe fuori campo. */
-.parlante .figura-parlante{display:block; height:265%; width:auto; max-width:none;
+/* Sul telefono la colonna e' stretta e il 265% ingrandiva la figura fino a
+   lasciare fuori la faccia di chi non ha la testa al centro del ritaglio
+   (Andrea, 24 ottobre 2026): l'altezza ha anche un tetto legato alla
+   larghezza della colonna. Sugli schermi larghi vince ancora il 265%. */
+.parlante{container-type:size}
+.parlante .figura-parlante{display:block; height:min(265%, 350cqw); width:auto; max-width:none;
   animation:entra .35s ease-out both}
 .parlante .ph.sigla{width:100%; font-size:clamp(2rem,6vw,3.4rem); opacity:.55}
 @keyframes entra{from{opacity:0; transform:translateY(6px)}to{opacity:1; transform:none}}
@@ -1293,15 +1298,11 @@ function renderCast() {
   </div>`;
 }
 
-/* Chi parla due volte di fila non prende due riquadri: il suo si allunga.
-   L'inciso fa testo - "tra se'" dopo una battuta detta a voce alta e' un altro
-   momento - quindi un inciso diverso apre comunque un riquadro nuovo. */
-const groupLines = battute => battute.reduce((gr, b) => {
-  const ultimo = gr[gr.length - 1];
-  if (ultimo && ultimo[0].c === b.c && (ultimo[0].m || "") === (b.m || "")) ultimo.push(b);
-  else gr.push([b]);
-  return gr;
-}, []);
+/* Ogni battuta ha il suo riquadro, anche quando chi parla e' lo stesso di
+   prima: la nuova compare sopra la precedente, come un intervento a se'. Fino
+   al 24 ottobre 2026 le battute consecutive dello stesso personaggio si
+   univano in un riquadro solo, che si allungava. */
+const groupLines = battute => battute.map(b => [b]);
 
 const renderBubble = righe => {
   const b = righe[0];

@@ -147,7 +147,9 @@ Two declared regions: the top holds the title and the stage, and never moves; th
 bottom scrolls on its own. Nothing draws the line between them — a hairline ran along it until
 3 September 2026 and the gap does the job on its own. The bottom is split `32% 1fr` — the speaker's **actor cutout**
 (`attore_*.png`, not the portrait) cropped head to waist, faded out at the bottom — and the
-dialogue column. The figure is sized **on its height**, `height:265%` of the frame, anchored at
+dialogue column. The figure is sized **on its height**, `height:min(265%, 350cqw)` of the frame
+(the `cqw` cap, from 24 October 2026, only bites on phones: the column is so narrow there that
+265% pushed off-centre faces, Andrea's first, out of the frame), anchored at
 the top, whatever leaves the sides clipped by the container's `overflow:hidden`; the fade lives
 on `.parlante`, not on the image, or it would fall outside the visible band. It was a 3:4 box
 with `object-fit:cover` until 4 September 2026, which took the scale from the *width* — and
@@ -175,9 +177,10 @@ every one of them is a decision; see *Type and the phone*. `--t-cifra` was a six
 it had been removed, and the verdict overrides the score with `--t-voce`. A step nobody can see
 is not a step.
 
-Consecutive lines by the same speaker share one bubble — `groupLines()` collapses the run and
-`renderBubble()` renders one `<p>` per line inside a single `.said`. A different `m` breaks the run: a
-line said out loud and one said "tra sé" are two moments, not one speech.
+Every line gets its own bubble, stacked newest on top, even when the same character speaks twice
+in a row: each line reads as a new intervention. Until 24 October 2026 consecutive lines by the
+same speaker (with the same `m`) shared one bubble that grew; the user asked for one box per line.
+`groupLines()` now just wraps each line, so `renderBubble()` still takes a list.
 
 **A line arrives at the speed of the voice.** `playVoice()` schedules its blips every `passo`
 seconds; `animateSpeech()` wraps each piece in a `.sillaba` and reveals them on the same beats, one per blip,
