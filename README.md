@@ -1,7 +1,7 @@
 # Il mistero dell'oliva blu
 
-App per l'investigatore di una "cena con delitto": quattro scene illustrate divise in dodici
-schermate (venti in tutto), un tavolo di indizi da
+App per l'investigatore di una "cena con delitto": sei scene illustrate divise in diciassette
+schermate (venticinque in tutto), un tavolo di indizi da
 esaminare in ordine libero, la scheda finale e la soluzione. L'investigatore la guida davanti al
 tavolo dei giocatori — da proiettore, da tablet o da telefono.
 

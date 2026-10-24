@@ -572,15 +572,16 @@ not, and walks the penalty table — 0, 2, 3, 5, 6, 8, 9 questions — plus the 
 
 ## The running order, 29 August 2026
 
-Five scenes, fifteen scene screens, twenty-three in all:
+Six scenes, seventeen scene screens, twenty-five in all:
 
 ```
 copertina · avviso · personaggi
 1  L'inaugurazione degli Oliviani   sala + il biglietto + sala
 2  La donazione                     il foglio + sala + Il racconto dell'olio + La tensione
 3  Fra gli ulivi                    oliveto + Il ritratto + La luce degli ulivi
-4  Il brindisi                      sala + Il malore dell'oliva blu
-5  Gli indizi sul tavolo            la bottiglietta + il bicchiere + sala
+4  Il quadro della sala             due schermate nella sala del quadro (sfondoDa scena2)
+5  Il brindisi                      sala + Il malore dell'oliva blu
+6  Gli indizi sul tavolo            la bottiglietta + il bicchiere + sala
 tavolo degli indizi · investigatore · scheda finale · verdetto · soluzione e congedo
 ```
 
@@ -589,7 +590,12 @@ wife, a painter) and Andrea Leuzzi (a student, Giuseppe's secret companion). Bot
 they appear in the clue answers and in every question of the final card, whose correct answers
 are unchanged. Its casella is `oliveto`; the outdoor background has not been delivered yet.
 
-Twenty-three screens, fifteen of them scenes. Codex delivered five meeple-detective poses on
+Scene 4, *Il quadro della sala*, was added on 24 October 2026: Giuseppe's advances to Elisa,
+Andrea's jealousy and Augusto's coldness, and the reason Elisa is at the washbasin during the
+toast. Its casella is `quadro` and it borrows the hall of scene 2 (`sfondoDa:"scena2"`); the
+staging is provisional. Brindisi and malore became scene 5, the investigation scene 6.
+
+Twenty-five screens, seventeen of them scenes. Codex delivered five meeple-detective poses on
 31 August 2026; `detective_riflessione` stands **above** the recap, the pose where he
 holds his chin while the case is handed over. He was beside it past 62rem until 1 September 2026,
 which fitted six large lines but left the button hanging at mid height, far from the text it

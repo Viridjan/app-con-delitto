@@ -243,7 +243,7 @@ phone typography, departures from the PDF, investigation implementation and runn
 ## Screens vs scenes
 
 One scene is several screens: `n` is the number the audience reads, `parte` the sub-label,
-`slot` the artwork casella. Scene 2 is four screens all labelled "Scena 2 di 5"; scenes 3 and 5
+`slot` the artwork casella. Scene 2 is four screens all labelled "Scena 2 di 6"; scenes 1, 3 and 6
 are three each. **Nothing may be derived from the array index** — splitting a scene would shift every
 later scene's artwork, and index-derived names have already leaked twice (the background's `alt`,
 and `demo()`).

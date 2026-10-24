@@ -582,7 +582,7 @@ const STORY = {
     {n:"Augusto De Virgilis", c:"Augusto", d:"Membro degli Oliviani. Parla spesso della produzione dell’olio."},
     {n:"Mauro Damiani", c:"Mauro", d:"Nuovo adepto degli Oliviani. Marito di Rosalia. È molto serio, rigido e sospettoso."},
     {n:"Elisa Lanzillotta", c:"Elisa", d:"Moglie di Augusto. Pittrice elegante, dipinge su commissione ed è sempre in ritardo con le consegne."},
-    {n:"Andrea Leuzzi", c:"Andrea", d:"Studente universitario brillante, di bell’aspetto. È spesso accanto a Giuseppe."}
+    {n:"Andrea Leuzzi", c:"Andrea", d:"Studente universitario e membro degli Oliviani. Brillante, di bell’aspetto. È spesso accanto a Giuseppe."}
   ],
 
   scene: [
@@ -613,8 +613,7 @@ const STORY = {
         {c:"Giuseppe", t:"Sono felice di essere qui. Questa comunità merita fiducia."},
         {c:"Rosalia", m:"a bassa voce", t:"Zio Giuseppe… spero che tu sia davvero sicuro."},
         {c:"Mauro", m:"alla moglie", t:"Tuo zio ascolta soltanto se stesso."},
-        {c:"Rosalia", m:"piano", t:"Parla piano, Mauro. Qui siamo ospiti."},
-        {c:"Mauro", m:"osservando Giuseppe", t:"Per voi è una festa. Per una famiglia può essere una perdita."}
+        {c:"Rosalia", m:"piano", t:"Parla piano, Mauro. Qui siamo ospiti."}
       ],
     },
     {
@@ -699,16 +698,15 @@ const STORY = {
     {
       titolo:"Fra gli ulivi",
       img:null, slot:"oliveto", n:3, parte:"prima parte",
-      /* posizioni provvisorie, da rifare in regia (r) quando arrivano i ritagli */
-      cast:[{c:"Mauro",posa:"guardingo",x:6,b:28,h:42},{c:"Rosalia",posa:"pensierosa",x:15,b:14,h:52},{c:"Augusto",x:76,b:10,h:55},{c:"Elisa",x:62,b:5,h:62},{c:"Andrea",x:45,b:2,h:66},{c:"Giuseppe",posa:"presentazione",x:29,b:0,h:70}],
-      primo:[{lato:"dx",x:92,b:-20,h:60}],
+      cast:[{c:"Mauro",posa:"guardingo",x:24.3,b:31.2,h:32},{c:"Rosalia",posa:"pensierosa",x:12.7,b:29.6,h:35},{c:"Augusto",x:90.7,b:17.3,h:51},{c:"Elisa",x:80.7,b:17,h:49},{c:"Andrea",x:60.9,b:31.4,h:34},{c:"Giuseppe",posa:"presentazione",x:50.7,b:-13.2,h:70}],
+      primo:[{lato:"dx",x:94.6,b:-20.1,h:60}],
       battute:[
         {c:"Augusto", t:"Usciamo un momento. L’oliveto, al tramonto, merita di essere visto."},
         {c:"Augusto", t:"A chi non la conosce, presento mia moglie: Elisa Lanzillotta, pittrice."},
         {c:"Elisa", t:"Piacere. Qui fuori, a quest’ora, la luce sugli ulivi è perfetta."},
         {c:"Giuseppe", t:"Elisa, finalmente ci rivediamo fuori dal suo studio!"},
         {c:"Elisa", t:"Qui almeno non dovrà stare immobile, signor Giuseppe. Può godersi il tramonto."},
-        {c:"Andrea", t:"Andrea Leuzzi. Studio all’università, e quando posso vengo a respirare un po’ di campagna."},
+        {c:"Andrea", t:"Andrea Leuzzi. Studio all’università, e sono anch’io degli Oliviani: quando posso vengo qui a respirare un po’ di campagna."},
         {c:"Giuseppe", t:"Andrea, che piacere vederti. Sei arrivato giusto in tempo."},
         {c:"Andrea", t:"Non me lo sarei perso per niente al mondo, Giuseppe."},
         {c:"Rosalia", t:"Zio, vi conoscete già?"},
@@ -723,8 +721,8 @@ const STORY = {
     {
       titolo:"Il ritratto",
       img:null, slot:"oliveto", n:3, parte:"seconda parte",
-      cast:[{c:"Mauro",posa:"guardingo",x:6,b:28,h:42},{c:"Rosalia",posa:"pensierosa",x:15,b:14,h:52},{c:"Augusto",x:76,b:10,h:55},{c:"Elisa",posa:"ritratto",x:62,b:5,h:62},{c:"Andrea",x:45,b:2,h:66},{c:"Giuseppe",posa:"presentazione",x:29,b:0,h:70}],
-      primo:[{lato:"dx",x:92,b:-20,h:60}],
+      cast:[{c:"Mauro",posa:"guardingo",x:24.3,b:31.2,h:32},{c:"Rosalia",posa:"pensierosa",x:12.7,b:29.6,h:35},{c:"Augusto",x:90.7,b:17.3,h:51},{c:"Elisa",posa:"ritratto",x:80.7,b:17,h:49},{c:"Andrea",x:60.9,b:31.4,h:34},{c:"Giuseppe",posa:"presentazione",x:50.7,b:-13.2,h:70}],
+      primo:[{lato:"dx",x:94.6,b:-20.1,h:60}],
       battute:[
         {c:"Giuseppe", t:"Elisa, a che punto è il mio ritratto?"},
         {c:"Elisa", t:"Ho dovuto metterlo un poco da parte, mi scusi. Avevo altri lavori rimasti indietro."},
@@ -741,14 +739,17 @@ const STORY = {
         {c:"Andrea", t:"E uno sguardo che non si dimentica."},
         {c:"Giuseppe", t:"Basta così, o finisco per arrossire davanti a tutti."},
         {c:"Andrea", t:"Le è rimasto un poco di colore sulle dita, Elisa."},
-        {c:"Elisa", t:"Oltremare. Ho ritoccato il quadro della sala fino a un’ora fa."}
+        {c:"Elisa", t:"Oltremare. Ho ritoccato il quadro della sala fino a un’ora fa."},
+        {c:"Giuseppe", m:"piano, a Elisa", t:"Le sue mani mi piacciono anche così, sporche di colore."},
+        {c:"Elisa", m:"piano", t:"Signor Giuseppe, ci stanno guardando tutti."},
+        {c:"Andrea", m:"freddo", t:"Giuseppe, ti aspettano sul sentiero."}
       ],
     },
     {
       titolo:"La luce degli ulivi",
       img:null, slot:"oliveto", n:3, parte:"terza parte",
-      cast:[{c:"Mauro",posa:"guardingo",x:6,b:28,h:42},{c:"Rosalia",posa:"pensierosa",x:15,b:14,h:52},{c:"Augusto",x:76,b:10,h:55},{c:"Elisa",x:62,b:5,h:62},{c:"Andrea",posa:"complice",x:45,b:2,h:66},{c:"Giuseppe",posa:"presentazione",x:29,b:0,h:70}],
-      primo:[{lato:"dx",x:92,b:-20,h:60}],
+      cast:[{c:"Mauro",posa:"guardingo",x:24.3,b:31.2,h:32},{c:"Rosalia",posa:"pensierosa",x:12.7,b:29.6,h:35},{c:"Augusto",x:90.7,b:17.3,h:51},{c:"Elisa",x:80.7,b:17,h:49},{c:"Andrea",posa:"complice",x:60.9,b:31.4,h:34},{c:"Giuseppe",posa:"presentazione",x:50.7,b:-13.2,h:70}],
+      primo:[{lato:"dx",x:94.6,b:-20.1,h:60}],
       battute:[
         {c:"Elisa", t:"Guardate le foglie quando si muove il vento: sopra sono verdi, sotto quasi d’argento."},
         {c:"Augusto", t:"È la loro difesa. Quella peluria chiara limita la perdita d’acqua e le ripara dal sole."},
@@ -757,6 +758,8 @@ const STORY = {
         {c:"Andrea", t:"Allora il ritratto di Giuseppe dovrebbe avere un ulivo alle spalle."},
         {c:"Giuseppe", t:"Un ulivo e un po’ di questa luce. Mi piacerebbe."},
         {c:"Elisa", t:"Allora lo dipingerò così. Ma ci vorrà ancora un po’."},
+        {c:"Giuseppe", t:"Mi dica lei quando posare. Per lei libero qualunque sera."},
+        {c:"Elisa", t:"Le sere le tengo per mio marito, signor Giuseppe. Le darò un mattino, con la luce giusta."},
         {c:"Andrea", m:"piano, a Giuseppe", t:"Io aspetto volentieri. Basta che ci sia anche tu, quando sarà finito."},
         {c:"Giuseppe", m:"piano", t:"Ci sarò, Andrea. Te lo prometto."},
         {c:"Rosalia", m:"a Mauro", t:"Mio zio non mi aveva mai parlato di lui."},
@@ -766,8 +769,47 @@ const STORY = {
       ],
     },
     {
+      titolo:"Il quadro della sala",
+      img:null, slot:"quadro", n:4, parte:"prima parte", sfondoDa:"scena2",
+      /* posizioni provvisorie, da rifare in regia (r) */
+      cast:[{c:"Elisa",posa:"mani",x:66,b:4,h:70},{c:"Giuseppe",posa:"presentazione",x:34,b:-8,h:82}],
+      battute:[
+        {c:"Giuseppe", t:"Elisa, mentre gli altri restano fra gli ulivi, mi mostri il quadro della sala."},
+        {c:"Elisa", t:"Eccolo. L’ho finito fino all’ultima foglia, questo pomeriggio."},
+        {c:"Giuseppe", t:"È bellissimo. Ma io continuo a guardare la pittrice."},
+        {c:"Elisa", t:"I quadri si guardano da qui, signor Giuseppe. Non così da vicino."},
+        {c:"Giuseppe", t:"Allora finisca il mio ritratto a casa mia. Senza fretta, e senza Augusto."},
+        {c:"Elisa", t:"Io dipingo nel mio studio, signor Giuseppe. Con la porta aperta."},
+        {c:"Giuseppe", t:"Suo marito conta i soldi degli altri. Io saprei contare altre cose."},
+        {c:"Elisa", t:"Conti l’anticipo che le devo. È l’unico conto che abbiamo in sospeso."},
+        {c:"Giuseppe", t:"Non mi tratti come un cliente, Elisa. Sa bene perché aspetto quel ritratto."},
+        {c:"Elisa", m:"ritraendo la mano", t:"Lo so. Ed è per questo che lo dipingerò di giorno."}
+      ],
+    },
+    {
+      titolo:"Il quadro della sala",
+      img:null, slot:"quadro", n:4, parte:"seconda parte", sfondoDa:"scena2",
+      /* posizioni provvisorie, da rifare in regia (r) */
+      cast:[{c:"Augusto",x:88,b:12,h:58},{c:"Andrea",x:14,b:6,h:64},{c:"Elisa",posa:"mani",x:66,b:4,h:70},{c:"Giuseppe",posa:"presentazione",x:38,b:-8,h:82}],
+      battute:[
+        {c:"Andrea", m:"entrando", t:"Giuseppe, ti cercavo. Gli altri stanno rientrando."},
+        {c:"Giuseppe", t:"Andrea. Elisa mi stava mostrando il suo quadro."},
+        {c:"Andrea", m:"freddo", t:"Lo vedo. Da molto vicino."},
+        {c:"Elisa", t:"Il signor Giuseppe ama i dettagli. Ora però li lascio a voi."},
+        {c:"Augusto", m:"entrando", t:"Elisa, eccoti. Rosalia e Mauro sono già dentro da un pezzo; gli altri arrivano."},
+        {c:"Augusto", t:"Tutto bene? Hai una faccia…"},
+        {c:"Elisa", t:"Benissimo. Ho ancora il colore sulle dita: vado al lavabo prima del brindisi."},
+        {c:"Augusto", m:"a Giuseppe", t:"Le piace il quadro, signor Giuseppe?"},
+        {c:"Giuseppe", t:"Molto. Sua moglie ha mani preziose, Augusto."},
+        {c:"Augusto", m:"secco", t:"Lo so. Le ho sposate."},
+        {c:"Andrea", m:"piano, a Giuseppe", t:"Perché lo fai? E davanti a me, poi."},
+        {c:"Giuseppe", m:"piano", t:"È un gioco, Andrea. Non c’è niente da perdere."},
+        {c:"Andrea", m:"piano", t:"Per te no."}
+      ],
+    },
+    {
       titolo:"Il brindisi",
-      img:null, slot:"scena3_brindisi", n:4, parte:"prima parte", sfondoDa:"scena1",
+      img:null, slot:"scena3_brindisi", n:5, parte:"prima parte", sfondoDa:"scena1",
       sfondo:{scala:1, fx:58.7, fy:40.4},
       cast:[{c:"Rosalia",posa:"brindisi",x:7.6,b:18.5,h:53},{c:"Roberto",posa:"brindisi",x:82,b:44,h:30},{c:"Augusto",posa:"brindisi",x:93.9,b:43.1,h:31},{c:"Andrea",posa:"brindisi",x:40,b:22,h:50},{c:"Mauro",posa:"brindisi",x:56.5,b:-7.9,h:76},{c:"Giuseppe",posa:"brindisi",x:25.7,b:-8.8,h:78,z:6}],
       primo:[{lato:"sx",x:19.4,b:8.4,h:44},{lato:"dx",x:95.5,b:-36.4,h:76,z:7}],
@@ -784,8 +826,9 @@ const STORY = {
         {c:"Roberto", t:"Qui nel Brindisino l’Ogliarola dà oli delicati, con note di foglia, erba e carciofo."},
         {c:"Augusto", t:"La Cellina di Nardò ricorda il pomodoro e i frutti di bosco; la Coratina è più intensa, amara e piccante."},
         {c:"Giuseppe", t:"Tre olive, tre voci diverse della stessa terra."},
-        {c:"Andrea", t:"Dov’è finita Elisa?"},
+        {c:"Giuseppe", t:"Dov’è finita Elisa? Speravo di brindare accanto a lei."},
         {c:"Augusto", t:"È andata a lavarsi le mani. Ci raggiunge tra poco."},
+        {c:"Andrea", m:"piano", t:"Accanto a te c’ero io, Giuseppe."},
         {c:"Roberto", m:"piano, ad Augusto", t:"E il rendiconto? Giuseppe lo chiederà presto."},
         {c:"Augusto", m:"piano", t:"Avrà tutto. Te l’ho detto."},
         {c:"Giuseppe", t:"Ho firmato l’impegno, Rosalia. Il versamento aspetterà il controllo dei conti, ma la mia decisione è presa."},
@@ -795,7 +838,7 @@ const STORY = {
     },
     {
       titolo:"Il malore dell’oliva blu",
-      img:null, slot:"scena3_malore", n:4, parte:"seconda parte", sfondoDa:"scena1",
+      img:null, slot:"scena3_malore", n:5, parte:"seconda parte", sfondoDa:"scena1",
       blu:true,
       sfondo:{scala:1, fx:58.7, fy:40.4},
       cast:[{c:"Andrea",posa:"allarmato",x:22,b:24,h:48},{c:"Mauro",posa:"nervoso",x:63.4,b:31.2,h:43},{c:"Roberto",posa:"preoccupato",x:40.2,b:19.4,h:53},{c:"Augusto",posa:"sorpreso",x:76.2,b:-2.9,h:70},{c:"Rosalia",posa:"allarmata",x:8.3,b:-12.1,h:71,z:6},{c:"Giuseppe",posa:"malore",x:40.9,b:-33.9,h:87,z:6}],
@@ -813,7 +856,7 @@ const STORY = {
     },
     {
       titolo:"Gli indizi sul tavolo",
-      img:null, slot:"indagine", n:5, parte:"prima parte", sfondoDa:"indizio_bottiglietta",
+      img:null, slot:"indagine", n:6, parte:"prima parte", sfondoDa:"indizio_bottiglietta",
       /* la bottiglietta da sola: qui si guarda l'oggetto, non chi lo commenta */
       cast:[],
       battute:[
@@ -831,7 +874,7 @@ const STORY = {
     },
     {
       titolo:"Gli indizi sul tavolo",
-      img:null, slot:"indagine", n:5, parte:"seconda parte", sfondoDa:"indizio_bicchiere",
+      img:null, slot:"indagine", n:6, parte:"seconda parte", sfondoDa:"indizio_bicchiere",
       /* il bicchiere da solo, come la bottiglietta: l'oggetto e' la scena */
       cast:[],
       battute:[
@@ -845,7 +888,7 @@ const STORY = {
     },
     {
       titolo:"Gli indizi sul tavolo",
-      img:null, slot:"indagine", n:5, parte:"terza parte", sfondoDa:"scena2",
+      img:null, slot:"indagine", n:6, parte:"terza parte", sfondoDa:"scena2",
       sfondo:{scala:1, fx:0, fy:0},
       cast:[{c:"Elisa",posa:"mani",x:44,b:24,h:44},{c:"Andrea",posa:"allarmato",x:93,b:24,h:46},{c:"Roberto",posa:"preoccupato",x:60.6,b:-0.3,h:59},{c:"Mauro",posa:"nervoso",x:9.6,b:22.3,h:41},{c:"Rosalia",posa:"allarmata",x:29.4,b:-35.4,h:80},{c:"Augusto",posa:"sorpreso",x:79,b:-21.1,h:81,z:6}],
       battute:[
@@ -853,6 +896,8 @@ const STORY = {
         {c:"Andrea", t:"Io lo voglio vivo. Più di qualunque foglio, mi importa di lui."},
         {c:"Rosalia", t:"Quel foglio col cordino… è quello che avevi preso nello studio?"},
         {c:"Andrea", t:"Sì. Riguarda i libri e il contributo per gli studi. Ci sono anche le ricevute: potete leggerle."},
+        {c:"Mauro", t:"O il marito. Tutti hanno visto come Giuseppe guardava sua moglie."},
+        {c:"Augusto", t:"Attento a quello che dici, Mauro."},
         {c:"Rosalia", t:"Ora che ci penso… prima del brindisi Mauro era vicino al tavolo dei bicchieri."},
         {c:"Mauro", t:"C’era confusione. Ho solo aiutato a distribuirli."},
         {c:"Roberto", t:"Io avevo riempito i bicchieri sul vassoio, dalla stessa caraffa. Quello che hai portato a Giuseppe non l’ho visto riempire."},
@@ -878,13 +923,13 @@ const STORY = {
       tag:"Sul tavolo, rovesciato",
       d:"Il bicchiere da cui Giuseppe ha bevuto prima del malore. È stato posato separato dagli altri. Chi lo ha tenuto in mano prima di lui?",
       refs:[
-        {s:4, c:"Mauro", t:"Signor Giuseppe, un brindisi per questo nuovo inizio."},
-        {s:4, c:"Giuseppe", t:"Volentieri. Alla vostra comunità."},
-        {s:4, c:"Augusto", t:"La sua bocca… è diventata blu!"},
-        {s:5, c:"Roberto", t:"Qualcuno ha visto il bicchiere da cui ha bevuto?"},
-        {s:5, c:"Rosalia", t:"Ora che ci penso… prima del brindisi Mauro era vicino al tavolo dei bicchieri."},
-        {s:5, c:"Mauro", t:"C’era confusione. Ho solo aiutato a distribuirli."},
-        {s:5, c:"Roberto", t:"Io avevo riempito i bicchieri sul vassoio, dalla stessa caraffa. Quello che hai portato a Giuseppe non l’ho visto riempire."}
+        {s:5, c:"Mauro", t:"Signor Giuseppe, un brindisi per questo nuovo inizio."},
+        {s:5, c:"Giuseppe", t:"Volentieri. Alla vostra comunità."},
+        {s:5, c:"Augusto", t:"La sua bocca… è diventata blu!"},
+        {s:6, c:"Roberto", t:"Qualcuno ha visto il bicchiere da cui ha bevuto?"},
+        {s:6, c:"Rosalia", t:"Ora che ci penso… prima del brindisi Mauro era vicino al tavolo dei bicchieri."},
+        {s:6, c:"Mauro", t:"C’era confusione. Ho solo aiutato a distribuirli."},
+        {s:6, c:"Roberto", t:"Io avevo riempito i bicchieri sul vassoio, dalla stessa caraffa. Quello che hai portato a Giuseppe non l’ho visto riempire."}
       ]
     },
     {
@@ -903,8 +948,8 @@ const STORY = {
       refs:[
         {s:2, c:"Mauro", t:"E per avere olive sane… qualcuno usa sostanze pericolose."},
         {s:2, c:"Roberto", t:"Prodotti controllati, Mauro. Solo se usati nel modo giusto."},
-        {s:5, c:"Roberto", t:"Questa non è una bevanda. È un prodotto per le piante."},
-        {s:5, c:"Augusto", t:"Serve a proteggere gli ulivi, ma se usato male può essere pericoloso."}
+        {s:6, c:"Roberto", t:"Questa non è una bevanda. È un prodotto per le piante."},
+        {s:6, c:"Augusto", t:"Serve a proteggere gli ulivi, ma se usato male può essere pericoloso."}
       ]
     },
     {
@@ -940,9 +985,9 @@ const STORY = {
       d:"Un biglietto con cui Rosalia chiede allo zio di rinunciare alla donazione. Mauro l’ha letto prima del brindisi. Che cosa ha capito delle intenzioni di sua moglie?",
       refs:[
         {s:1, c:"Rosalia", m:"a bassa voce", t:"Zio Giuseppe… spero che tu sia davvero sicuro."},
-        {s:4, c:"Rosalia", m:"tra sé", t:"Vorrei fermare tutto… ma ormai è tardi."},
-        {s:5, c:"Rosalia", t:"Io volevo solo che mio zio Giuseppe si fermasse…"},
-        {s:5, c:"Mauro", m:"agitato", t:"Lui stava sbagliando! Andava fermato!"}
+        {s:5, c:"Rosalia", m:"tra sé", t:"Vorrei fermare tutto… ma ormai è tardi."},
+        {s:6, c:"Rosalia", t:"Io volevo solo che mio zio Giuseppe si fermasse…"},
+        {s:6, c:"Mauro", m:"agitato", t:"Lui stava sbagliando! Andava fermato!"}
       ]
     }
 ,
@@ -964,10 +1009,10 @@ const STORY = {
         {s:2, c:"Roberto", t:"Ma certo. I conti li tiene Augusto: glieli mostrerà lui."},
         {s:2, c:"Roberto", m:"piano, ad Augusto", t:"I quadri della sala… sono usciti dalla cassa?"},
         {s:2, c:"Augusto", m:"piano", t:"Non adesso, Roberto. Ne parliamo dopo."},
-        {s:4, c:"Roberto", m:"piano, ad Augusto", t:"E il rendiconto? Giuseppe lo chiederà presto."},
-        {s:4, c:"Augusto", m:"piano", t:"Avrà tutto. Te l’ho detto."},
-        {s:5, c:"Rosalia", t:"E il rendiconto, Augusto? Mio zio lo voleva per domani."},
-        {s:5, c:"Augusto", t:"Che c’entra adesso il rendiconto?"}
+        {s:5, c:"Roberto", m:"piano, ad Augusto", t:"E il rendiconto? Giuseppe lo chiederà presto."},
+        {s:5, c:"Augusto", m:"piano", t:"Avrà tutto. Te l’ho detto."},
+        {s:6, c:"Rosalia", t:"E il rendiconto, Augusto? Mio zio lo voleva per domani."},
+        {s:6, c:"Augusto", t:"Che c’entra adesso il rendiconto?"}
       ]
     },
     {
@@ -986,11 +1031,11 @@ const STORY = {
       refs:[
         {s:3, c:"Andrea", t:"Le è rimasto un poco di colore sulle dita, Elisa."},
         {s:3, c:"Elisa", t:"Oltremare. Ho ritoccato il quadro della sala fino a un’ora fa."},
-        {s:4, c:"Augusto", t:"È andata a lavarsi le mani. Ci raggiunge tra poco."},
-        {s:4, c:"Augusto", t:"La sua bocca… è diventata blu!"},
-        {s:5, c:"Elisa", m:"entrando", t:"Ho sentito le grida. Che cosa è successo? Ero al lavabo…"},
-        {s:5, c:"Roberto", t:"Elisa, mi faccia vedere quella mano."},
-        {s:5, c:"Elisa", t:"È rimasto un poco di oltremare. Stavo cercando di toglierlo."}
+        {s:5, c:"Augusto", t:"È andata a lavarsi le mani. Ci raggiunge tra poco."},
+        {s:5, c:"Augusto", t:"La sua bocca… è diventata blu!"},
+        {s:6, c:"Elisa", m:"entrando", t:"Ho sentito le grida. Che cosa è successo? Ero al lavabo…"},
+        {s:6, c:"Roberto", t:"Elisa, mi faccia vedere quella mano."},
+        {s:6, c:"Elisa", t:"È rimasto un poco di oltremare. Stavo cercando di toglierlo."}
       ]
     },
     {
@@ -1010,8 +1055,8 @@ const STORY = {
         {s:3, c:"Giuseppe", t:"Andrea mi aiuta con i libri e con le carte. Ha molta pazienza con un vecchio come me."},
         {s:3, c:"Rosalia", t:"Prima l’ho visto uscire dallo studio con le carte dello zio in mano."},
         {s:3, c:"Mauro", t:"Allora chiediti cosa c’era scritto."},
-        {s:5, c:"Mauro", t:"E se fosse stato il ragazzo? Era sempre accanto a lui, con le sue carte."},
-        {s:5, c:"Andrea", t:"Io lo voglio vivo. Più di qualunque foglio, mi importa di lui."}
+        {s:6, c:"Mauro", t:"E se fosse stato il ragazzo? Era sempre accanto a lui, con le sue carte."},
+        {s:6, c:"Andrea", t:"Io lo voglio vivo. Più di qualunque foglio, mi importa di lui."}
       ]
     }
   ],
@@ -1049,7 +1094,7 @@ const STORY = {
 
   soluzione: [
     "Giuseppe voleva donare una parte importante dei suoi beni agli Oliviani. Rosalia gli aveva chiesto di ripensarci; Mauro ha deciso di agire da solo. Aveva preso in consegna la bottiglietta e la chiave del magazzino, ma al rientro la bottiglietta era ancora al rinfresco. Ha poi portato a Giuseppe un bicchiere separato da quelli preparati da Roberto. La caraffa era la stessa per gli altri ospiti, che non si sono sentiti male. Sono questi passaggi, insieme alle sue risposte contraddittorie, a indicare Mauro: ha contaminato il bicchiere per fermare la donazione.",
-    "Le altre piste trovano una spiegazione nei riscontri. Le piccole tracce sulle dita di Elisa corrispondono al colore del suo tubetto e dello straccio trovato al lavabo: il blu, da solo, non prova un avvelenamento. La ricevuta e la conferma del pagamento mostrano che Augusto aveva pagato i quadri dal proprio conto. Le ricevute di Andrea riguardano invece libri già consegnati e un contributo già versato: quel documento non gli avrebbe procurato alcun nuovo beneficio, nemmeno se Giuseppe fosse morto. Nessuno di questi elementi, preso da solo, risolve il caso. A incastrare Mauro è il percorso della bottiglietta e del bicchiere."
+    "Le altre piste trovano una spiegazione nei riscontri. Le piccole tracce sulle dita di Elisa corrispondono al colore del suo tubetto e dello straccio trovato al lavabo: il blu, da solo, non prova un avvelenamento. La ricevuta e la conferma del pagamento mostrano che Augusto aveva pagato i quadri dal proprio conto. Le ricevute di Andrea riguardano invece libri già consegnati e un contributo già versato: quel documento non gli avrebbe procurato alcun nuovo beneficio, nemmeno se Giuseppe fosse morto. Le attenzioni di Giuseppe per Elisa avevano irritato Augusto e ferito Andrea, ma nessuno dei due ha toccato quel bicchiere. Nessuno di questi elementi, preso da solo, risolve il caso. A incastrare Mauro è il percorso della bottiglietta e del bicchiere."
   ],
 
   promptStile: "Illustrazione piatta, stile libro illustrato per ragazzi, palette verde oliva, crema e oro, luce calda da candele. Nessun elemento horror, nessun sangue, tono accogliente e un po’ misterioso. Formato orizzontale 16:9.",

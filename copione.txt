@@ -14,7 +14,7 @@ Roberto Vispero - Fondatore degli Oliviani. Conosce bene gli ulivi e i prodotti 
 Augusto De Virgilis - Membro degli Oliviani. Parla spesso della produzione dell’olio.
 Mauro Damiani - Nuovo adepto degli Oliviani. Marito di Rosalia. È molto serio, rigido e sospettoso.
 Elisa Lanzillotta - Moglie di Augusto. Pittrice elegante, dipinge su commissione ed è sempre in ritardo con le consegne.
-Andrea Leuzzi - Studente universitario brillante, di bell’aspetto. È spesso accanto a Giuseppe.
+Andrea Leuzzi - Studente universitario e membro degli Oliviani. Brillante, di bell’aspetto. È spesso accanto a Giuseppe.
 
 — SCENA 1, prima parte: L’inaugurazione degli Oliviani —
 
@@ -40,7 +40,6 @@ Giuseppe: «Sono felice di essere qui. Questa comunità merita fiducia.»
 Rosalia, a bassa voce: «Zio Giuseppe… spero che tu sia davvero sicuro.»
 Mauro, alla moglie: «Tuo zio ascolta soltanto se stesso.»
 Rosalia, piano: «Parla piano, Mauro. Qui siamo ospiti.»
-Mauro, osservando Giuseppe: «Per voi è una festa. Per una famiglia può essere una perdita.»
 
 — SCENA 1, seconda parte: L’inaugurazione degli Oliviani —
 
@@ -100,7 +99,7 @@ Augusto: «A chi non la conosce, presento mia moglie: Elisa Lanzillotta, pittric
 Elisa: «Piacere. Qui fuori, a quest’ora, la luce sugli ulivi è perfetta.»
 Giuseppe: «Elisa, finalmente ci rivediamo fuori dal suo studio!»
 Elisa: «Qui almeno non dovrà stare immobile, signor Giuseppe. Può godersi il tramonto.»
-Andrea: «Andrea Leuzzi. Studio all’università, e quando posso vengo a respirare un po’ di campagna.»
+Andrea: «Andrea Leuzzi. Studio all’università, e sono anch’io degli Oliviani: quando posso vengo qui a respirare un po’ di campagna.»
 Giuseppe: «Andrea, che piacere vederti. Sei arrivato giusto in tempo.»
 Andrea: «Non me lo sarei perso per niente al mondo, Giuseppe.»
 Rosalia: «Zio, vi conoscete già?»
@@ -129,6 +128,9 @@ Andrea: «E uno sguardo che non si dimentica.»
 Giuseppe: «Basta così, o finisco per arrossire davanti a tutti.»
 Andrea: «Le è rimasto un poco di colore sulle dita, Elisa.»
 Elisa: «Oltremare. Ho ritoccato il quadro della sala fino a un’ora fa.»
+Giuseppe, piano, a Elisa: «Le sue mani mi piacciono anche così, sporche di colore.»
+Elisa, piano: «Signor Giuseppe, ci stanno guardando tutti.»
+Andrea, freddo: «Giuseppe, ti aspettano sul sentiero.»
 
 — SCENA 3, terza parte: La luce degli ulivi —
 
@@ -139,6 +141,8 @@ Elisa: «Anche Van Gogh dipinse gli ulivi, più di una volta. Diceva che erano d
 Andrea: «Allora il ritratto di Giuseppe dovrebbe avere un ulivo alle spalle.»
 Giuseppe: «Un ulivo e un po’ di questa luce. Mi piacerebbe.»
 Elisa: «Allora lo dipingerò così. Ma ci vorrà ancora un po’.»
+Giuseppe: «Mi dica lei quando posare. Per lei libero qualunque sera.»
+Elisa: «Le sere le tengo per mio marito, signor Giuseppe. Le darò un mattino, con la luce giusta.»
 Andrea, piano, a Giuseppe: «Io aspetto volentieri. Basta che ci sia anche tu, quando sarà finito.»
 Giuseppe, piano: «Ci sarò, Andrea. Te lo prometto.»
 Rosalia, a Mauro: «Mio zio non mi aveva mai parlato di lui.»
@@ -146,7 +150,36 @@ Mauro: «Tuo zio non ti dice molte cose.»
 Rosalia: «Prima l’ho visto uscire dallo studio con le carte dello zio in mano.»
 Mauro: «Allora chiediti cosa c’era scritto.»
 
-— SCENA 4, prima parte: Il brindisi —
+— SCENA 4, prima parte: Il quadro della sala —
+
+Giuseppe: «Elisa, mentre gli altri restano fra gli ulivi, mi mostri il quadro della sala.»
+Elisa: «Eccolo. L’ho finito fino all’ultima foglia, questo pomeriggio.»
+Giuseppe: «È bellissimo. Ma io continuo a guardare la pittrice.»
+Elisa: «I quadri si guardano da qui, signor Giuseppe. Non così da vicino.»
+Giuseppe: «Allora finisca il mio ritratto a casa mia. Senza fretta, e senza Augusto.»
+Elisa: «Io dipingo nel mio studio, signor Giuseppe. Con la porta aperta.»
+Giuseppe: «Suo marito conta i soldi degli altri. Io saprei contare altre cose.»
+Elisa: «Conti l’anticipo che le devo. È l’unico conto che abbiamo in sospeso.»
+Giuseppe: «Non mi tratti come un cliente, Elisa. Sa bene perché aspetto quel ritratto.»
+Elisa, ritraendo la mano: «Lo so. Ed è per questo che lo dipingerò di giorno.»
+
+— SCENA 4, seconda parte: Il quadro della sala —
+
+Andrea, entrando: «Giuseppe, ti cercavo. Gli altri stanno rientrando.»
+Giuseppe: «Andrea. Elisa mi stava mostrando il suo quadro.»
+Andrea, freddo: «Lo vedo. Da molto vicino.»
+Elisa: «Il signor Giuseppe ama i dettagli. Ora però li lascio a voi.»
+Augusto, entrando: «Elisa, eccoti. Rosalia e Mauro sono già dentro da un pezzo; gli altri arrivano.»
+Augusto: «Tutto bene? Hai una faccia…»
+Elisa: «Benissimo. Ho ancora il colore sulle dita: vado al lavabo prima del brindisi.»
+Augusto, a Giuseppe: «Le piace il quadro, signor Giuseppe?»
+Giuseppe: «Molto. Sua moglie ha mani preziose, Augusto.»
+Augusto, secco: «Lo so. Le ho sposate.»
+Andrea, piano, a Giuseppe: «Perché lo fai? E davanti a me, poi.»
+Giuseppe, piano: «È un gioco, Andrea. Non c’è niente da perdere.»
+Andrea, piano: «Per te no.»
+
+— SCENA 5, prima parte: Il brindisi —
 
 Roberto: «Eccovi di ritorno. Ho preparato i bicchieri sul vassoio.»
 Mauro, restituendo la chiave a Roberto: «Ecco la chiave. Ho sistemato tutto.»
@@ -160,15 +193,16 @@ Giuseppe: «E quali olive danno carattere agli oli pugliesi?»
 Roberto: «Qui nel Brindisino l’Ogliarola dà oli delicati, con note di foglia, erba e carciofo.»
 Augusto: «La Cellina di Nardò ricorda il pomodoro e i frutti di bosco; la Coratina è più intensa, amara e piccante.»
 Giuseppe: «Tre olive, tre voci diverse della stessa terra.»
-Andrea: «Dov’è finita Elisa?»
+Giuseppe: «Dov’è finita Elisa? Speravo di brindare accanto a lei.»
 Augusto: «È andata a lavarsi le mani. Ci raggiunge tra poco.»
+Andrea, piano: «Accanto a te c’ero io, Giuseppe.»
 Roberto, piano, ad Augusto: «E il rendiconto? Giuseppe lo chiederà presto.»
 Augusto, piano: «Avrà tutto. Te l’ho detto.»
 Giuseppe: «Ho firmato l’impegno, Rosalia. Il versamento aspetterà il controllo dei conti, ma la mia decisione è presa.»
 Rosalia, tra sé: «Vorrei fermare tutto… ma ormai è tardi.»
 Mauro, tra sé: «Una firma non chiude ogni discorso.»
 
-— SCENA 4, seconda parte: Il malore dell’oliva blu —
+— SCENA 5, seconda parte: Il malore dell’oliva blu —
 
 Giuseppe: «Mi… mi sento strano…»
 Rosalia: «Zio Giuseppe! Che succede?»
@@ -179,7 +213,7 @@ Andrea: «Il bicchiere… nessuno lo tocchi!»
 Mauro, molto piano: «Ma come è potuto succedere…»
 Rosalia: «Ho chiamato i soccorsi. Stanno arrivando.»
 
-— SCENA 5, prima parte: Gli indizi sul tavolo —
+— SCENA 6, prima parte: Gli indizi sul tavolo —
 
 Elisa, entrando: «Ho sentito le grida. Che cosa è successo? Ero al lavabo…»
 Andrea: «Giuseppe si è sentito male. Rosalia ha chiamato i soccorsi.»
@@ -192,7 +226,7 @@ Andrea: «Quel simbolo lo conosco. Non è roba da tenere in una sala da festa.»
 Roberto: «Elisa, mi faccia vedere quella mano.»
 Elisa: «È rimasto un poco di oltremare. Stavo cercando di toglierlo.»
 
-— SCENA 5, seconda parte: Gli indizi sul tavolo —
+— SCENA 6, seconda parte: Gli indizi sul tavolo —
 
 Augusto: «Quella sostanza è rischiosa, non andrebbe tenuta vicino agli alimenti!»
 Roberto: «Qualcuno ha visto il bicchiere da cui ha bevuto?»
@@ -201,12 +235,14 @@ Augusto: «Che c’entra adesso il rendiconto?»
 Rosalia: «Il versamento dipendeva da quei conti. Voglio capire che cosa è successo, anche prima del brindisi.»
 Roberto: «Apriamo il registro. C’è una ricevuta fra le pagine: riguarda i quadri della sala.»
 
-— SCENA 5, terza parte: Gli indizi sul tavolo —
+— SCENA 6, terza parte: Gli indizi sul tavolo —
 
 Mauro: «E se fosse stato il ragazzo? Era sempre accanto a lui, con le sue carte.»
 Andrea: «Io lo voglio vivo. Più di qualunque foglio, mi importa di lui.»
 Rosalia: «Quel foglio col cordino… è quello che avevi preso nello studio?»
 Andrea: «Sì. Riguarda i libri e il contributo per gli studi. Ci sono anche le ricevute: potete leggerle.»
+Mauro: «O il marito. Tutti hanno visto come Giuseppe guardava sua moglie.»
+Augusto: «Attento a quello che dici, Mauro.»
 Rosalia: «Ora che ci penso… prima del brindisi Mauro era vicino al tavolo dei bicchieri.»
 Mauro: «C’era confusione. Ho solo aiutato a distribuirli.»
 Roberto: «Io avevo riempito i bicchieri sul vassoio, dalla stessa caraffa. Quello che hai portato a Giuseppe non l’ho visto riempire.»
@@ -286,4 +322,4 @@ Aiutami a risolvere il caso!
 
 — SOLUZIONE NARRATA —
 Giuseppe voleva donare una parte importante dei suoi beni agli Oliviani. Rosalia gli aveva chiesto di ripensarci; Mauro ha deciso di agire da solo. Aveva preso in consegna la bottiglietta e la chiave del magazzino, ma al rientro la bottiglietta era ancora al rinfresco. Ha poi portato a Giuseppe un bicchiere separato da quelli preparati da Roberto. La caraffa era la stessa per gli altri ospiti, che non si sono sentiti male. Sono questi passaggi, insieme alle sue risposte contraddittorie, a indicare Mauro: ha contaminato il bicchiere per fermare la donazione.
-Le altre piste trovano una spiegazione nei riscontri. Le piccole tracce sulle dita di Elisa corrispondono al colore del suo tubetto e dello straccio trovato al lavabo: il blu, da solo, non prova un avvelenamento. La ricevuta e la conferma del pagamento mostrano che Augusto aveva pagato i quadri dal proprio conto. Le ricevute di Andrea riguardano invece libri già consegnati e un contributo già versato: quel documento non gli avrebbe procurato alcun nuovo beneficio, nemmeno se Giuseppe fosse morto. Nessuno di questi elementi, preso da solo, risolve il caso. A incastrare Mauro è il percorso della bottiglietta e del bicchiere.
+Le altre piste trovano una spiegazione nei riscontri. Le piccole tracce sulle dita di Elisa corrispondono al colore del suo tubetto e dello straccio trovato al lavabo: il blu, da solo, non prova un avvelenamento. La ricevuta e la conferma del pagamento mostrano che Augusto aveva pagato i quadri dal proprio conto. Le ricevute di Andrea riguardano invece libri già consegnati e un contributo già versato: quel documento non gli avrebbe procurato alcun nuovo beneficio, nemmeno se Giuseppe fosse morto. Le attenzioni di Giuseppe per Elisa avevano irritato Augusto e ferito Andrea, ma nessuno dei due ha toccato quel bicchiere. Nessuno di questi elementi, preso da solo, risolve il caso. A incastrare Mauro è il percorso della bottiglietta e del bicchiere.
