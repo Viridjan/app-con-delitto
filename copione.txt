@@ -40,7 +40,7 @@ Giuseppe: «Sono felice di essere qui. Questa comunità merita fiducia.»
 Rosalia, a bassa voce: «Zio Giuseppe… spero che tu sia davvero sicuro.»
 Mauro, alla moglie: «Tuo zio ascolta soltanto se stesso.»
 Rosalia, piano: «Parla piano, Mauro. Qui siamo ospiti.»
-Mauro, osservando Giuseppe: «Certe ricchezze non diventano pulite solo perché vengono donate.»
+Mauro, osservando Giuseppe: «Per voi è una festa. Per una famiglia può essere una perdita.»
 
 — SCENA 1, seconda parte: L’inaugurazione degli Oliviani —
 
@@ -52,7 +52,7 @@ Mauro, restituendole il foglio: «Tienilo. Ma quello che c’è scritto non lo d
 
 — SCENA 1, terza parte: L’inaugurazione degli Oliviani —
 
-Roberto: «La serata volge al termine, signor Giuseppe. Le è piaciuta la nostra casa?»
+Roberto: «Prima di passare al rinfresco, signor Giuseppe: le è piaciuta la nostra casa?»
 Giuseppe: «Molto. Più di quanto immaginassi.»
 Rosalia, a Mauro, piano: «Di quel foglio non dire niente a nessuno.»
 Mauro: «Non serve che lo dica io.»
@@ -66,8 +66,9 @@ Roberto: «È un gesto generoso. Con il suo aiuto potremo crescere.»
 
 Giuseppe: «Gli ulivi durano secoli. Vorrei che anche questa casa durasse così a lungo.»
 Roberto: «Allora il suo nome resterà fra queste mura, signor Giuseppe.»
-Giuseppe: «Una sola condizione: voglio un rendiconto. Ogni euro, dove va e per cosa.»
+Giuseppe: «Una sola condizione: prima di versare il denaro voglio un rendiconto. Ogni euro, dove va e per cosa.»
 Roberto: «Ma certo. I conti li tiene Augusto: glieli mostrerà lui.»
+Giuseppe: «Bene. L’impegno è firmato; domani controlleremo i conti, poi arriverà il versamento.»
 
 — SCENA 2, terza parte: Il racconto dell’olio —
 
@@ -85,18 +86,20 @@ Augusto: «E anche l’olio migliore va protetto da luce, aria e calore.»
 
 Mauro, piano: «E per avere olive sane… qualcuno usa sostanze pericolose.»
 Roberto: «Prodotti controllati, Mauro. Solo se usati nel modo giusto.»
-Augusto: «Rimetti quella bottiglietta nell’armadietto, Mauro. Non deve stare vicino al rinfresco.»
+Augusto: «Riporta quella bottiglietta nel magazzino, Mauro. Non deve stare vicino al rinfresco.»
 Mauro: «Certo. Ci penso io.»
+Roberto: «Ecco la chiave del magazzino. Poi riportamela: la porta deve restare chiusa.»
+Mauro: «Ve la restituisco appena ho finito.»
 Roberto, piano, ad Augusto: «I quadri della sala… sono usciti dalla cassa?»
 Augusto, piano: «Non adesso, Roberto. Ne parliamo dopo.»
 
 — SCENA 3, prima parte: Fra gli ulivi —
 
 Augusto: «Usciamo un momento. L’oliveto, al tramonto, merita di essere visto.»
-Augusto: «E finalmente posso presentarvi mia moglie. Elisa Lanzillotta, pittrice.»
+Augusto: «A chi non la conosce, presento mia moglie: Elisa Lanzillotta, pittrice.»
 Elisa: «Piacere. Qui fuori, a quest’ora, la luce sugli ulivi è perfetta.»
-Giuseppe: «Signora Elisa, è un onore. Augusto parla spesso dei suoi quadri.»
-Elisa: «Augusto parla spesso di tutto, signor Giuseppe. Ma lo ringrazio.»
+Giuseppe: «Elisa, finalmente ci rivediamo fuori dal suo studio!»
+Elisa: «Qui almeno non dovrà stare immobile, signor Giuseppe. Può godersi il tramonto.»
 Andrea: «Andrea Leuzzi. Studio all’università, e quando posso vengo a respirare un po’ di campagna.»
 Giuseppe: «Andrea, che piacere vederti. Sei arrivato giusto in tempo.»
 Andrea: «Non me lo sarei perso per niente al mondo, Giuseppe.»
@@ -105,6 +108,8 @@ Giuseppe: «Andrea mi aiuta con i libri e con le carte. Ha molta pazienza con un
 Andrea: «Vecchio? Non dirlo nemmeno per scherzo.»
 Mauro, piano: «Gli dà del tu.»
 Rosalia, piano: «Lascia stare, Mauro.»
+Rosalia, a Giuseppe: «Non voglio decidere dei tuoi soldi. Vorrei capire perché una scelta così grande l’hai raccontata prima a loro che a me.»
+Giuseppe: «Avrei dovuto parlartene prima, hai ragione. Ma non sto rinunciando a voi.»
 
 — SCENA 3, seconda parte: Il ritratto —
 
@@ -122,7 +127,7 @@ Giuseppe, sorridendo: «Sei sempre troppo gentile, Andrea.»
 Elisa: «Ha ragione il ragazzo. Lei ha un viso che racconta molte cose.»
 Andrea: «E uno sguardo che non si dimentica.»
 Giuseppe: «Basta così, o finisco per arrossire davanti a tutti.»
-Andrea: «Elisa, ha ancora del blu sulle dita.»
+Andrea: «Le è rimasto un poco di colore sulle dita, Elisa.»
 Elisa: «Oltremare. Ho ritoccato il quadro della sala fino a un’ora fa.»
 
 — SCENA 3, terza parte: La luce degli ulivi —
@@ -143,6 +148,8 @@ Mauro: «Allora chiediti cosa c’era scritto.»
 
 — SCENA 4, prima parte: Il brindisi —
 
+Roberto: «Eccovi di ritorno. Ho preparato i bicchieri sul vassoio.»
+Mauro, restituendo la chiave a Roberto: «Ecco la chiave. Ho sistemato tutto.»
 Mauro: «Signor Giuseppe, un brindisi per questo nuovo inizio.»
 Giuseppe: «Volentieri. Alla vostra comunità.»
 Andrea: «E a chi ci ha portati fin qui, stasera.»
@@ -154,12 +161,12 @@ Roberto: «Qui nel Brindisino l’Ogliarola dà oli delicati, con note di foglia
 Augusto: «La Cellina di Nardò ricorda il pomodoro e i frutti di bosco; la Coratina è più intensa, amara e piccante.»
 Giuseppe: «Tre olive, tre voci diverse della stessa terra.»
 Andrea: «Dov’è finita Elisa?»
-Augusto: «È andata a lavarsi le mani. Quel blu non vuole venire via.»
+Augusto: «È andata a lavarsi le mani. Ci raggiunge tra poco.»
 Roberto, piano, ad Augusto: «E il rendiconto? Giuseppe lo chiederà presto.»
 Augusto, piano: «Avrà tutto. Te l’ho detto.»
-Giuseppe: «Ho già firmato tutto, Rosalia. Non cambierò idea.»
+Giuseppe: «Ho firmato l’impegno, Rosalia. Il versamento aspetterà il controllo dei conti, ma la mia decisione è presa.»
 Rosalia, tra sé: «Vorrei fermare tutto… ma ormai è tardi.»
-Mauro, tra sé: «Il male va fermato prima che cresca.»
+Mauro, tra sé: «Una firma non chiude ogni discorso.»
 
 — SCENA 4, seconda parte: Il malore dell’oliva blu —
 
@@ -169,16 +176,21 @@ Andrea: «Giuseppe! Guardami, resta con me.»
 Roberto: «Presto, chiamate aiuto!»
 Augusto: «La sua bocca… è diventata blu!»
 Andrea: «Il bicchiere… nessuno lo tocchi!»
-Mauro, molto piano: «Il giudizio è arrivato…»
+Mauro, molto piano: «Ma come è potuto succedere…»
+Rosalia: «Ho chiamato i soccorsi. Stanno arrivando.»
 
 — SCENA 5, prima parte: Gli indizi sul tavolo —
 
+Elisa, entrando: «Ho sentito le grida. Che cosa è successo? Ero al lavabo…»
+Andrea: «Giuseppe si è sentito male. Rosalia ha chiamato i soccorsi.»
+Roberto, poco dopo: «I soccorritori hanno portato Giuseppe in ospedale. Ora è affidato a loro.»
+Andrea: «Ci avviseranno appena possibile. Intanto cerchiamo di capire che cosa ha bevuto.»
+Roberto: «Questa bottiglietta era ancora sul tavolo del rinfresco.»
 Roberto: «Questa non è una bevanda. È un prodotto per le piante.»
 Augusto: «Serve a proteggere gli ulivi, ma se usato male può essere pericoloso.»
 Andrea: «Quel simbolo lo conosco. Non è roba da tenere in una sala da festa.»
-Elisa, entrando: «Che cosa è successo? Ero di là, a lavarmi le mani…»
-Roberto: «Elisa… le sue dita sono ancora blu.»
-Elisa: «È colore! Oltremare, l’avete visto anche voi.»
+Roberto: «Elisa, mi faccia vedere quella mano.»
+Elisa: «È rimasto un poco di oltremare. Stavo cercando di toglierlo.»
 
 — SCENA 5, seconda parte: Gli indizi sul tavolo —
 
@@ -186,22 +198,25 @@ Augusto: «Quella sostanza è rischiosa, non andrebbe tenuta vicino agli aliment
 Roberto: «Qualcuno ha visto il bicchiere da cui ha bevuto?»
 Rosalia: «E il rendiconto, Augusto? Mio zio lo voleva per domani.»
 Augusto: «Che c’entra adesso il rendiconto?»
+Rosalia: «Il versamento dipendeva da quei conti. Voglio capire che cosa è successo, anche prima del brindisi.»
+Roberto: «Apriamo il registro. C’è una ricevuta fra le pagine: riguarda i quadri della sala.»
 
 — SCENA 5, terza parte: Gli indizi sul tavolo —
 
 Mauro: «E se fosse stato il ragazzo? Era sempre accanto a lui, con le sue carte.»
-Andrea: «Io lo volevo vivo. Più di chiunque, in questa stanza.»
-Rosalia: «…»
+Andrea: «Io lo voglio vivo. Più di qualunque foglio, mi importa di lui.»
+Rosalia: «Quel foglio col cordino… è quello che avevi preso nello studio?»
+Andrea: «Sì. Riguarda i libri e il contributo per gli studi. Ci sono anche le ricevute: potete leggerle.»
 Rosalia: «Ora che ci penso… prima del brindisi Mauro era vicino al tavolo dei bicchieri.»
 Mauro: «C’era confusione. Ho solo aiutato a distribuirli.»
-Roberto: «Strano. Io avevo già servito tutti dalla stessa caraffa.»
+Roberto: «Io avevo riempito i bicchieri sul vassoio, dalla stessa caraffa. Quello che hai portato a Giuseppe non l’ho visto riempire.»
 Rosalia: «Io volevo solo che mio zio Giuseppe si fermasse…»
 Mauro, agitato: «Lui stava sbagliando! Andava fermato!»
 Rosalia: «Mauro… non era quello che intendevo…»
 
 — FRASE FINALE DELL’INVESTIGATORE —
 La festa degli Oliviani è finita con un malore.
-Giuseppe stava per donare tutto quello che aveva. Qualcuno, in quella stanza, era contrario.
+Giuseppe voleva donare una parte importante dei suoi beni. Qualcuno, in quella stanza, era contrario.
 Aiutami a risolvere il caso!
 
 — SCHEDA FINALE —
@@ -247,7 +262,7 @@ Aiutami a risolvere il caso!
    D. Mauro
    E. Elisa
    F. Andrea   ← giusta
-7. Chi aveva già servito tutti dalla stessa caraffa?   [1 punto]
+7. Chi aveva riempito i bicchieri sul vassoio?   [1 punto]
    A. Rosalia
    B. Roberto   ← giusta
    C. Augusto
@@ -270,5 +285,5 @@ Aiutami a risolvere il caso!
    F. Andrea
 
 — SOLUZIONE NARRATA —
-Giuseppe voleva donare i suoi beni agli Oliviani. Rosalia era preoccupata e voleva fermarlo, ma non voleva fargli del male. Mauro, invece, ha deciso di agire da solo. Ha portato a Giuseppe un bicchiere con un prodotto pericoloso. Per questo Giuseppe si è sentito male e la sua bocca è diventata blu. Il colpevole è Mauro.
-Le altre piste erano false. Il blu sulle dita di Elisa era colore da pittrice: quello sulle labbra di Giuseppe veniva dal prodotto, che come molti trattamenti a base di rame usati sugli ulivi è azzurro. I quadri della sala Augusto li aveva pagati di tasca sua, e i conti potevano essere controllati. Il foglio per Andrea era firmato da mesi: dalla morte di Giuseppe non aveva niente da guadagnare.
+Giuseppe voleva donare una parte importante dei suoi beni agli Oliviani. Rosalia gli aveva chiesto di ripensarci; Mauro ha deciso di agire da solo. Aveva preso in consegna la bottiglietta e la chiave del magazzino, ma al rientro la bottiglietta era ancora al rinfresco. Ha poi portato a Giuseppe un bicchiere separato da quelli preparati da Roberto. La caraffa era la stessa per gli altri ospiti, che non si sono sentiti male. Sono questi passaggi, insieme alle sue risposte contraddittorie, a indicare Mauro: ha contaminato il bicchiere per fermare la donazione.
+Le altre piste trovano una spiegazione nei riscontri. Le piccole tracce sulle dita di Elisa corrispondono al colore del suo tubetto e dello straccio trovato al lavabo: il blu, da solo, non prova un avvelenamento. La ricevuta e la conferma del pagamento mostrano che Augusto aveva pagato i quadri dal proprio conto. Le ricevute di Andrea riguardano invece libri già consegnati e un contributo già versato: quel documento non gli avrebbe procurato alcun nuovo beneficio, nemmeno se Giuseppe fosse morto. Nessuno di questi elementi, preso da solo, risolve il caso. A incastrare Mauro è il percorso della bottiglietta e del bicchiere.
